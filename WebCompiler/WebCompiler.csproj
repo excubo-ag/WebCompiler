@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    
+    <Title>Web Compiler</Title>
+    <PackageId>BuildWebCompiler</PackageId>
+
+    <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LibSassHost" Version="1.2.10" />
+      <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" Condition=" '$(OS)' != 'Unix' " />
+      <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" Condition=" '$(OS)' == 'Unix' " />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.5.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.5.0" PrivateAssets="All" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" PrivateAssets="All" />
+    <PackageReference Include="NUglify" Version="1.5.14" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MSBuild\*.targets" PackagePath="build\" />
+  </ItemGroup>
+</Project>
