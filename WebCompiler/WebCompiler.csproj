@@ -9,12 +9,12 @@
 
         <Authors>Stefan Lörwald, Mads Kristensen</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.0</Version>
+        <Version>1.0.3</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="LibSassHost" Version="1.2.10" />
-        <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" Condition=" '$(OS)' != 'Unix' " />
-        <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" Condition=" '$(OS)' == 'Unix' " />
+        <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" />
+        <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" />
         <PackageReference Include="Microsoft.Build.Framework" Version="16.5.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.5.0" PrivateAssets="All" />
         <PackageReference Include="NUglify" Version="1.5.14" />
