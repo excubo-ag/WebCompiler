@@ -78,6 +78,7 @@ namespace WebCompiler
         private void RunCompilerProcess(Config config, FileInfo info)
         {
             string arguments = ConstructArguments(config);
+            _output = File.ReadAllText(info.FullName);
 
             ////ProcessStartInfo start = new ProcessStartInfo
             ////{
