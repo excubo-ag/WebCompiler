@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace WebCompiler
 {
@@ -13,10 +14,23 @@ namespace WebCompiler
         /// </summary>
         public static string MakeRelative(string baseFile, string file)
         {
+            Console.WriteLine($"MakeRelative({baseFile}, {file})");
             Uri baseUri = new Uri(baseFile, UriKind.RelativeOrAbsolute);
             Uri fileUri = new Uri(file, UriKind.RelativeOrAbsolute);
-
-            return Uri.UnescapeDataString(baseUri.MakeRelativeUri(fileUri).ToString());
+            Console.WriteLine($"Modified: {baseUri}, {fileUri}");
+            var base_segments = baseUri.Segments;
+            var file_segments = fileUri.Segments;
+            int i = 0;
+            for (; i < base_segments.Length && i < file_segments.Length; ++i)
+            {
+                if (base_segments[i] != file_segments[i])
+                {
+                    break;
+                }
+            }
+            var relative_portion_base = string.Join(string.Empty, Enumerable.Repeat(".." + Path.DirectorySeparatorChar, base_segments.Length - i - 1));
+            var relative_portion_file = string.Join(string.Empty, file_segments.Skip(i));
+            return Uri.UnescapeDataString(relative_portion_base + relative_portion_file);
         }
 
         /// <summary>
