@@ -1,6 +1,6 @@
 ## Web Compiler
 
-A dotnet global tool that compiles Scss files (other languages on the road map, see [contributing](#Contributing).
+A dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
 
 This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules has been removed, to facilitate a pure dotnet core implementation.
 As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
@@ -16,7 +16,7 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Roadmap
 
-1. language support 
+#### 1. language support 
 
 Due to the removal of node as a dependency (as opposed to [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler)), support for languages other than Scss is not yet available.
 Please get in touch if you want to [contribute](#Contributing) to any of the following languages, or if you want to add yet another language.
@@ -27,22 +27,22 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 - ES6
 - (Iced)CoffeeScript
 
-2. wildcard or recursive file config support
+#### 2. wildcard or recursive file config support
 
 Currently, the `compilerconfig.json` file only supports individual files.
 
-3. auto-generate `compilerconfig.json`
+#### 3. auto-generate `compilerconfig.json`
 
 This tool should facilitate the generation of configuration files. This will probably be a call like `webcompiler --configure`.
 
 ### Getting started
 
-1. Install the tool as dotnet global tool
+#### 1. Install the tool as dotnet global tool
 ```
 dotnet tool install Excubo.WebCompiler --version 1.0.4
 ```
 
-2. Integrate the call to `webcompiler` into your build pipeline
+#### 2. Integrate the call to `webcompiler` into your build pipeline
 ```
 webcompiler compilerconfig.json
 ```
@@ -111,12 +111,12 @@ This project is just starting. You can help in many different ways:
 
 - File bug reports
 
-If you find a bug with the tool itself, please file a bug. If the result of compilation is incorrect, please file a bug with the respective library (see [the list of libraries](#libraries)), and only file a bug report here, if the version used is outdated.
+    If you find a bug with the tool itself, please file a bug. If the result of compilation is incorrect, please file a bug with the respective library (see [the list of libraries](#libraries)), and only file a bug report here, if the version used is outdated.
 
 - Implement support for a language
 
-Please submit your pull request for the language that you're implementing. Please make sure that your code is tested.
+    Please submit your pull request for the language that you're implementing. Please make sure that your code is tested.
 
 - Ask for support of a specific language
 
-If you would like to see support of a specific language, but can't implement it yourself, please search the issues for the language and leave your +1 vote on the issue, or file a new issue with the name of the language.
+    If you would like to see support of a specific language, but can't implement it yourself, please search the issues for the language and leave your +1 vote on the issue, or file a new issue with the name of the language.
