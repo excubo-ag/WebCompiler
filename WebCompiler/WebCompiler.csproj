@@ -4,7 +4,6 @@
         <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>webcompiler</ToolCommandName>
-        <PackageOutputPath>./nupkg</PackageOutputPath>
         <Title>Web Compiler</Title>
         <PackageId>Excubo.WebCompiler</PackageId>
 
