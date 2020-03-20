@@ -112,7 +112,7 @@ namespace WebCompiler
                 // Compile if the file if it's referenced directly in compilerconfig.json
                 foreach (Config config in configs)
                 {
-                    string input = Path.Combine(folder, config.inputFile.Replace('/', Path.PathSeparator));
+                    string input = Path.Combine(folder, config.inputFile.Replace('/', Path.DirectorySeparatorChar));
 
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
                     {
@@ -171,7 +171,7 @@ namespace WebCompiler
 
                 foreach (Config config in configs)
                 {
-                    string input = Path.Combine(folder, config.inputFile.Replace('/', Path.PathSeparator));
+                    string input = Path.Combine(folder, config.inputFile.Replace('/', Path.DirectorySeparatorChar));
 
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
                         list.Add(config);

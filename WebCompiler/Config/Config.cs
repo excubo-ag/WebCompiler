@@ -56,7 +56,7 @@ namespace WebCompiler
         public FileInfo GetAbsoluteInputFile()
         {
             string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, inputFile.Replace('/', Path.PathSeparator)));
+            return new FileInfo(Path.Combine(folder, inputFile.Replace('/', Path.DirectorySeparatorChar)));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace WebCompiler
         public FileInfo GetAbsoluteOutputFile()
         {
             string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, outputFile.Replace('/', Path.PathSeparator)));
+            return new FileInfo(Path.Combine(folder, outputFile.Replace('/', Path.DirectorySeparatorChar)));
         }
 
         /// <summary>
