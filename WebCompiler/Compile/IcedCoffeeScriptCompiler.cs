@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
     internal class IcedCoffeeScriptCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex(":(?<line>[0-9]+):(?<column>[0-9]+).*error: (?<message>.+)", RegexOptions.Compiled);
-        private string _path;
-        private string _error = string.Empty;
-        private string _temp = Path.Combine(Path.GetTempPath(), ".iced-coffee-script");
+        private static readonly Regex _errorRx = new Regex(":(?<line>[0-9]+):(?<column>[0-9]+).*error: (?<message>.+)", RegexOptions.Compiled);
+        private readonly string _path;
+        private readonly string _error = string.Empty;
+        private readonly string _temp = Path.Combine(Path.GetTempPath(), ".iced-coffee-script");
 
         public IcedCoffeeScriptCompiler(string path)
         {
@@ -43,12 +41,11 @@ namespace WebCompiler
                 {
                     result.CompiledContent = File.ReadAllText(tempFile);
 
-                    var options = IcedCoffeeScriptOptions.FromConfig(config);
+                    IcedCoffeeScriptOptions options = IcedCoffeeScriptOptions.FromConfig(config);
 
-                    if (options.sourceMap || config.sourceMap)
+                    if ((options.sourceMap || config.sourceMap) && File.Exists(tempMapFile))
                     {
-                        if (File.Exists(tempMapFile))
-                            result.SourceMap = File.ReadAllText(tempMapFile);
+                        result.SourceMap = File.ReadAllText(tempMapFile);
                     }
                 }
 
@@ -60,7 +57,7 @@ namespace WebCompiler
                         Message = _error.Replace(baseFolder, string.Empty),
                     };
 
-                    var match = _errorRx.Match(_error);
+                    Match match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -124,16 +121,22 @@ namespace WebCompiler
         {
             string arguments = $" --compile --output \"{_temp}\"";
 
-            var options = IcedCoffeeScriptOptions.FromConfig(config);
+            IcedCoffeeScriptOptions options = IcedCoffeeScriptOptions.FromConfig(config);
 
             if (options.sourceMap || config.sourceMap)
+            {
                 arguments += " --map";
+            }
 
             if (options.bare)
+            {
                 arguments += " --bare";
+            }
 
             if (!string.IsNullOrEmpty(options.runtimeMode))
+            {
                 arguments += " --runtime " + options.runtimeMode;
+            }
 
             return arguments;
         }

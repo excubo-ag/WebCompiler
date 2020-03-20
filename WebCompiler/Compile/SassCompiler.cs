@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
-    class SassCompiler : ICompiler
+    internal class SassCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
-        private string _path;
+        private static readonly Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
+        private readonly string _path;
         private string _output = string.Empty;
-        private string _error = string.Empty;
+        private readonly string _error = string.Empty;
 
         public SassCompiler(string path)
         {
@@ -54,7 +52,7 @@ namespace WebCompiler
 
                 if (_error.Length > 0)
                 {
-                    var json = JsonSerializer.Deserialize<RawCompilerError>(_error);
+                    RawCompilerError json = JsonSerializer.Deserialize<RawCompilerError>(_error);
 
                     CompilerError ce = new CompilerError
                     {
@@ -87,14 +85,13 @@ namespace WebCompiler
         private void RunCompilerProcess(Config config, FileInfo info)
         {
             string arguments = ConstructArguments(config);
-            var lang_ver = LibSassHost.SassCompiler.LanguageVersion;
-            var inline_source_map = config.options.ContainsKey("sourceMap") && config.options["sourceMap"] is JsonElement je ? je.ValueKind == JsonValueKind.True : default;
-            var result = LibSassHost.SassCompiler.CompileFile(info.FullName, config.GetAbsoluteOutputFile().FullName, info.Name, new LibSassHost.CompilationOptions
+            // TODO see whether more arguments need to be passed to SassCompiler
+            bool inline_source_map = config.options.ContainsKey("sourceMap") && config.options["sourceMap"] is JsonElement je ? je.ValueKind == JsonValueKind.True : default;
+            LibSassHost.CompilationResult result = LibSassHost.SassCompiler.CompileFile(info.FullName, config.GetAbsoluteOutputFile().FullName, info.Name, new LibSassHost.CompilationOptions
             {
                 SourceMap = true,
                 InlineSourceMap = inline_source_map
             });
-            ;
             _output = result.CompiledContent;
             //ProcessStartInfo start = new ProcessStartInfo
             //{
@@ -145,27 +142,41 @@ namespace WebCompiler
             SassOptions options = SassOptions.FromConfig(config);
 
             if (options.sourceMap || config.sourceMap)
+            {
                 arguments += " --source-map-embed=true";
+            }
 
             arguments += " --precision=" + options.Precision;
 
             if (!string.IsNullOrEmpty(options.outputStyle))
+            {
                 arguments += " --output-style=" + options.outputStyle;
+            }
 
             if (!string.IsNullOrEmpty(options.indentType))
+            {
                 arguments += " --indent-type=" + options.indentType;
+            }
 
             if (options.indentWidth > -1)
+            {
                 arguments += " --indent-width=" + options.indentWidth;
+            }
 
             if (!string.IsNullOrEmpty(options.includePath))
+            {
                 arguments += " --include-path=" + options.includePath;
+            }
 
             if (!string.IsNullOrEmpty(options.sourceMapRoot))
+            {
                 arguments += " --source-map-root=" + options.sourceMapRoot;
+            }
 
             if (!string.IsNullOrEmpty(options.lineFeed))
+            {
                 arguments += " --linefeed=" + options.lineFeed;
+            }
 
             return arguments;
         }

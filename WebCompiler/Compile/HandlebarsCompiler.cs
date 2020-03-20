@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
-    class HandlebarsCompiler : ICompiler
+    internal class HandlebarsCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex("Error: (?<message>.+) on line (?<line>[0-9]+):", RegexOptions.Compiled);
+        private static readonly Regex _errorRx = new Regex("Error: (?<message>.+) on line (?<line>[0-9]+):", RegexOptions.Compiled);
         private string _mapPath;
-        private string _path;
+        private readonly string _path;
         private string _name = string.Empty;
         private string _extension = string.Empty;
-        private string _output = string.Empty;
-        private string _error = string.Empty;
+        private readonly string _output = string.Empty;
+        private readonly string _error = string.Empty;
         private bool _partial = false;
 
         public HandlebarsCompiler(string path)
@@ -36,13 +34,13 @@ namespace WebCompiler
                 OriginalContent = content,
             };
 
-            var extension = Path.GetExtension(inputFile);
+            string extension = Path.GetExtension(inputFile);
             if (!string.IsNullOrWhiteSpace(extension))
             {
                 _extension = extension.Substring(1);
             }
-            
-            var name = Path.GetFileNameWithoutExtension(inputFile);
+
+            string name = Path.GetFileNameWithoutExtension(inputFile);
             if (!string.IsNullOrWhiteSpace(name) && name.StartsWith("_"))
             {
                 _name = name.Substring(1);
@@ -50,7 +48,7 @@ namespace WebCompiler
 
                 // Temporarily Fix
                 // TODO: Remove after actual fix
-                var tempFilename = Path.Combine(Path.GetDirectoryName(inputFile), _name + ".handlebarstemp");
+                string tempFilename = Path.Combine(Path.GetDirectoryName(inputFile), _name + ".handlebarstemp");
                 info.CopyTo(tempFilename);
                 info = new FileInfo(tempFilename);
                 _extension = "handlebarstemp";
@@ -59,16 +57,15 @@ namespace WebCompiler
             _mapPath = Path.ChangeExtension(inputFile, ".js.map.tmp");
 
             try
-            {                
+            {
                 RunCompilerProcess(config, info);
 
                 result.CompiledContent = _output;
 
-                var options = HandlebarsOptions.FromConfig(config);
-                if (options.sourceMap || config.sourceMap)
+                HandlebarsOptions options = HandlebarsOptions.FromConfig(config);
+                if ((options.sourceMap || config.sourceMap) && File.Exists(_mapPath))
                 {
-                    if (File.Exists(_mapPath))
-                        result.SourceMap = File.ReadAllText(_mapPath);
+                    result.SourceMap = File.ReadAllText(_mapPath);
                 }
 
                 if (_error.Length > 0)
@@ -80,7 +77,7 @@ namespace WebCompiler
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    var match = _errorRx.Match(_error);
+                    Match match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -159,40 +156,62 @@ namespace WebCompiler
             HandlebarsOptions options = HandlebarsOptions.FromConfig(config);
 
             if (options.amd)
+            {
                 arguments += " --amd";
+            }
             else if (!string.IsNullOrEmpty(options.commonjs))
+            {
                 arguments += $" --commonjs \"{options.commonjs}\"";
+            }
 
-            foreach (var knownHelper in options.knownHelpers)
+            foreach (string knownHelper in options.knownHelpers)
             {
                 arguments += $" --known \"{knownHelper}\"";
             }
 
             if (options.knownHelpersOnly)
+            {
                 arguments += " --knownOnly";
+            }
 
             if (options.forcePartial || _partial)
+            {
                 arguments += " --partial";
+            }
 
             if (options.noBOM)
+            {
                 arguments += " --bom";
+            }
 
             if ((options.sourceMap || config.sourceMap) && !string.IsNullOrWhiteSpace(_mapPath))
+            {
                 arguments += $" --map \"{_mapPath}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.@namespace))
+            {
                 arguments += $" --namespace \"{options.@namespace}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.root))
+            {
                 arguments += $" --root \"{options.root}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.name))
+            {
                 arguments += $" --name \"{options.name}\"";
+            }
             else if (!string.IsNullOrEmpty(_name))
+            {
                 arguments += $" --name \"{_name}\"";
+            }
 
             if (!string.IsNullOrEmpty(_extension))
+            {
                 arguments += $" --extension \"{_extension}\"";
+            }
 
             return arguments;
         }

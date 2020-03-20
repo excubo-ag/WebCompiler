@@ -20,50 +20,65 @@ namespace WebCompiler
         {
             base.LoadSettings(config);
 
-            var name = GetValue(config, "name");
+            string name = GetValue(config, "name");
             if (name != null)
+            {
                 this.name = name;
+            }
 
-            var @namespace = GetValue(config, "namespace");
+            string @namespace = GetValue(config, "namespace");
             if (@namespace != null)
+            {
                 this.@namespace = @namespace;
+            }
 
-            var root = GetValue(config, "root");
+            string root = GetValue(config, "root");
             if (root != null)
+            {
                 this.root = root;
+            }
 
-            var commonjs = GetValue(config, "commonjs");
+            string commonjs = GetValue(config, "commonjs");
             if (commonjs != null)
+            {
                 this.commonjs = commonjs;
+            }
 
-            var amd = GetValue(config, "amd");
+            string amd = GetValue(config, "amd");
             if (amd != null)
+            {
                 this.amd = amd.ToLowerInvariant() == trueStr;
+            }
 
-            var forcePartial = GetValue(config, "forcePartial");
+            string forcePartial = GetValue(config, "forcePartial");
             if (forcePartial != null)
+            {
                 this.forcePartial = forcePartial.ToLowerInvariant() == trueStr;
+            }
 
-            var noBOM = GetValue(config, "noBOM");
+            string noBOM = GetValue(config, "noBOM");
             if (noBOM != null)
+            {
                 this.noBOM = noBOM.ToLowerInvariant() == trueStr;
+            }
 
-            var knownHelpersOnly = GetValue(config, "knownHelpersOnly");
+            string knownHelpersOnly = GetValue(config, "knownHelpersOnly");
             if (knownHelpersOnly != null)
+            {
                 this.knownHelpersOnly = knownHelpersOnly.ToLowerInvariant() == trueStr;
+            }
 
-            var knownHelpers = GetValue(config, "knownHelpers");
-            if (knownHelpers != null)            
+            string knownHelpers = GetValue(config, "knownHelpers");
+            if (knownHelpers != null)
+            {
                 this.knownHelpers = knownHelpers.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToArray();
+            }
         }
 
         /// <summary>
         /// The file name should match the compiler name
         /// </summary>
-        protected override string CompilerFileName
-        {
-            get { return "hbs"; }
-        }
+        protected override string CompilerFileName => "hbs";
 
         /// <summary>
         /// Template root. Base value that will be stripped from template names.

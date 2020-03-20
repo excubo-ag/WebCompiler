@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
-    class BabelCompiler : ICompiler
+    internal class BabelCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex(@".+\.jsx:\s(?<message>.+)\((?<line>[0-9]+):(?<column>[0-9]+)\)", RegexOptions.Compiled);
-        private string _path;
+        private static readonly Regex error_rx = new Regex(@".+\.jsx:\s(?<message>.+)\((?<line>[0-9]+):(?<column>[0-9]+)\)", RegexOptions.Compiled);
+        private readonly string _path;
         private string _output = string.Empty;
-        private string _error = string.Empty;
+        private readonly string _error = string.Empty;
 
         public BabelCompiler(string path)
         {
@@ -47,7 +45,7 @@ namespace WebCompiler
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    var match = _errorRx.Match(_error);
+                    Match match = error_rx.Match(_error);
 
                     if (match.Success)
                     {
@@ -109,13 +107,14 @@ namespace WebCompiler
 
         private static string ConstructArguments(Config config)
         {
-            //string relative = FileHelpers.MakeRelative(config.GetAbsoluteOutputFile().FullName, config.GetAbsoluteInputFile().FullName);
             string arguments = $"--presets react --out-file \"\"";
 
-            var options = BabelOptions.FromConfig(config);
+            BabelOptions options = BabelOptions.FromConfig(config);
 
             if (options.sourceMap || config.sourceMap)
+            {
                 arguments += " --source-maps inline";
+            }
 
             return arguments;
         }

@@ -56,7 +56,9 @@ namespace WebCompiler
         public void CreateDefaultsFile(string fileName)
         {
             if (File.Exists(fileName))
+            {
                 return;
+            }
 
             var defaults = new
             {
@@ -100,11 +102,14 @@ namespace WebCompiler
             FileInfo file = new FileInfo(fileName);
 
             if (!file.Exists)
+            {
                 return Enumerable.Empty<Config>();
+            }
 
             string content = File.ReadAllText(fileName);
-            var configs = JsonSerializer.Deserialize<List<Config>>(content, new JsonSerializerOptions { AllowTrailingCommas = true });
-            string folder = Path.GetDirectoryName(file.FullName);
+            List<Config> configs = JsonSerializer.Deserialize<List<Config>>(content, new JsonSerializerOptions { AllowTrailingCommas = true });
+
+            _ = Path.GetDirectoryName(file.FullName);
 
             foreach (Config config in configs)
             {

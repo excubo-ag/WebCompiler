@@ -18,54 +18,71 @@
         {
             base.LoadSettings(config);
 
-            var autoPrefix = GetValue(config, "autoPrefix");
+            string autoPrefix = GetValue(config, "autoPrefix");
             if (autoPrefix != null)
+            {
                 this.autoPrefix = autoPrefix;
+            }
 
-            var cssComb = GetValue(config, "cssComb");
+            string cssComb = GetValue(config, "cssComb");
             if (cssComb != null)
+            {
                 this.cssComb = cssComb;
+            }
 
-            var ieCompat = GetValue(config, "ieCompat");
+            string ieCompat = GetValue(config, "ieCompat");
             if (ieCompat != null)
+            {
                 this.ieCompat = ieCompat.ToLowerInvariant() == trueStr;
+            }
 
-            var math = GetValue(config, "math");
+            string math = GetValue(config, "math");
             if (math != null)
+            {
                 this.math = math;
+            }
 
-            var strictMath = GetValue(config, "strictMath");
+            string strictMath = GetValue(config, "strictMath");
             if (strictMath != null)
+            {
                 this.strictMath = strictMath.ToLowerInvariant() == trueStr;
+            }
 
-            var strictUnits = GetValue(config, "strictUnits");
+            string strictUnits = GetValue(config, "strictUnits");
             if (strictUnits != null)
+            {
                 this.strictUnits = strictUnits.ToLowerInvariant() == trueStr;
+            }
 
-            var rootPath = GetValue(config, "rootPath");
+            string rootPath = GetValue(config, "rootPath");
             if (rootPath != null)
+            {
                 this.rootPath = rootPath;
+            }
 
-            var relativeUrls = GetValue(config, "relativeUrls");
+            string relativeUrls = GetValue(config, "relativeUrls");
             if (relativeUrls != null)
+            {
                 this.relativeUrls = relativeUrls.ToLowerInvariant() == trueStr;
+            }
 
-            var sourceMapRoot = GetValue(config, "sourceMapRoot");
+            string sourceMapRoot = GetValue(config, "sourceMapRoot");
             if (sourceMapRoot != null)
+            {
                 this.sourceMapRoot = sourceMapRoot;
+            }
 
-            var sourceMapBasePath = GetValue(config, "sourceMapBasePath");
+            string sourceMapBasePath = GetValue(config, "sourceMapBasePath");
             if (sourceMapBasePath != null)
+            {
                 this.sourceMapBasePath = sourceMapBasePath;
+            }
         }
 
         /// <summary>
         /// The file name should match the compiler name
         /// </summary>
-        protected override string CompilerFileName
-        {
-            get { return "less"; }
-        }
+        protected override string CompilerFileName => "less";
 
         /// <summary>
         /// Autoprefixer will use the data based on current browser popularity and

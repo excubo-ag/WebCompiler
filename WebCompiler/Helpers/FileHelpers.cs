@@ -14,8 +14,8 @@ namespace WebCompiler
         /// </summary>
         public static string MakeRelative(string baseFile, string file)
         {
-            var base_segments = baseFile.Split(Path.DirectorySeparatorChar);
-            var file_segments = file.Split(Path.DirectorySeparatorChar);
+            string[] base_segments = baseFile.Split(Path.DirectorySeparatorChar);
+            string[] file_segments = file.Split(Path.DirectorySeparatorChar);
             int i = 0;
             for (; i < base_segments.Length && i < file_segments.Length; ++i)
             {
@@ -24,8 +24,8 @@ namespace WebCompiler
                     break;
                 }
             }
-            var relative_portion_base = string.Join(string.Empty, Enumerable.Repeat(".." + Path.DirectorySeparatorChar, base_segments.Length - i - 1));
-            var relative_portion_file = string.Join(string.Empty, file_segments.Skip(i));
+            string relative_portion_base = string.Join(string.Empty, Enumerable.Repeat(".." + Path.DirectorySeparatorChar, base_segments.Length - i - 1));
+            string relative_portion_file = string.Join(string.Empty, file_segments.Skip(i));
             return Uri.UnescapeDataString(relative_portion_base + relative_portion_file);
         }
 
@@ -37,7 +37,9 @@ namespace WebCompiler
             FileInfo file = new FileInfo(fileName);
 
             if (file.Exists && file.IsReadOnly)
+            {
                 file.IsReadOnly = false;
+            }
         }
 
         /// <summary>
@@ -54,7 +56,9 @@ namespace WebCompiler
         public static bool HasFileContentChanged(string fileName, string newContent)
         {
             if (!File.Exists(fileName))
+            {
                 return true;
+            }
 
             string oldContent = File.ReadAllText(fileName);
 

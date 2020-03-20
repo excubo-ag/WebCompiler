@@ -18,22 +18,23 @@
         {
             base.LoadSettings(config);
 
-            var bare = GetValue(config, "bare");
+            string bare = GetValue(config, "bare");
             if (bare != null)
+            {
                 this.bare = bare.ToLowerInvariant() == trueStr;
+            }
 
-            var runtimeMode = GetValue(config, "runtimeMode");
+            string runtimeMode = GetValue(config, "runtimeMode");
             if (runtimeMode != null)
+            {
                 this.runtimeMode = runtimeMode.ToLowerInvariant();
+            }
         }
 
         /// <summary>
         /// The file name should match the compiler name
         /// </summary>
-        protected override string CompilerFileName
-        {
-            get { return "coffeescript"; }
-        }
+        protected override string CompilerFileName => "coffeescript";
 
         /// <summary>
         /// Compile the JavaScript without the top-level function safety wrapper.

@@ -11,8 +11,8 @@ namespace WebCompiler
     /// </summary>
     public class ConfigFileProcessor
     {
-        private static List<string> _processing = new List<string>();
-        private static object _syncRoot = new object(); // Used for source file changes so they don't try to write to the same file at the same time.
+        private static readonly List<string> _processing = new List<string>();
+        private static readonly object _syncRoot = new object(); // Used for source file changes so they don't try to write to the same file at the same time.
 
         /// <summary>
         /// Parses a compiler config file and runs the configured compilers.
@@ -24,7 +24,9 @@ namespace WebCompiler
         public IEnumerable<CompilerResult> Process(string configFile, IEnumerable<Config> configs = null, bool force = false)
         {
             if (_processing.Contains(configFile))
+            {
                 return Enumerable.Empty<CompilerResult>();
+            }
 
             _processing.Add(configFile);
             List<CompilerResult> list = new List<CompilerResult>();
@@ -32,16 +34,18 @@ namespace WebCompiler
             try
             {
                 FileInfo info = new FileInfo(configFile);
-                configs = configs ?? ConfigHandler.GetConfigs(configFile);
+                configs ??= ConfigHandler.GetConfigs(configFile);
 
                 if (configs.Any())
+                {
                     OnConfigProcessed(configs.First(), 0, configs.Count());
+                }
 
                 foreach (Config config in configs)
                 {
                     if (force || config.CompilationRequired())
                     {
-                        var result = ProcessConfig(info.Directory.FullName, config);
+                        CompilerResult result = ProcessConfig(info.Directory.FullName, config);
                         list.Add(result);
                         OnConfigProcessed(config, list.Count, configs.Count());
                     }
@@ -50,7 +54,9 @@ namespace WebCompiler
             finally
             {
                 if (_processing.Contains(configFile))
+                {
                     _processing.Remove(configFile);
+                }
             }
 
             return list;
@@ -61,13 +67,13 @@ namespace WebCompiler
         /// </summary>
         public void DeleteOutputFiles(string configFile)
         {
-            var configs = ConfigHandler.GetConfigs(configFile);
-            foreach (var item in configs)
+            IEnumerable<Config> configs = ConfigHandler.GetConfigs(configFile);
+            foreach (Config item in configs)
             {
-                var outputFile = item.GetAbsoluteOutputFile().FullName;
-                var minFile = Path.ChangeExtension(outputFile, ".min" + Path.GetExtension(outputFile));
-                var mapFile = minFile + ".map";
-                var gzipFile = minFile + ".gz";
+                string outputFile = item.GetAbsoluteOutputFile().FullName;
+                string minFile = Path.ChangeExtension(outputFile, ".min" + Path.GetExtension(outputFile));
+                string mapFile = minFile + ".map";
+                string gzipFile = minFile + ".gz";
 
                 DeleteFile(outputFile);
                 DeleteFile(minFile);
@@ -76,7 +82,7 @@ namespace WebCompiler
             }
         }
 
-        static void DeleteFile(string fileName)
+        private static void DeleteFile(string fileName)
         {
             if (File.Exists(fileName))
             {
@@ -107,7 +113,7 @@ namespace WebCompiler
             {
                 string folder = Path.GetDirectoryName(configFile);
                 List<CompilerResult> list = new List<CompilerResult>();
-                var configs = ConfigHandler.GetConfigs(configFile);
+                IEnumerable<Config> configs = ConfigHandler.GetConfigs(configFile);
 
                 // Compile if the file if it's referenced directly in compilerconfig.json
                 foreach (Config config in configs)
@@ -122,7 +128,7 @@ namespace WebCompiler
                 }
 
                 //compile files that are dependent on the current file
-                var dependencies = DependencyService.GetDependencies(projectPath, sourceFile);
+                Dictionary<string, Dependencies> dependencies = DependencyService.GetDependencies(projectPath, sourceFile);
                 if (dependencies != null)
                 {
                     string key = sourceFile;
@@ -130,10 +136,12 @@ namespace WebCompiler
                     if (dependencies.ContainsKey(key))
                     {
                         //compile all files that have references to the compiled file
-                        foreach (var file in dependencies[key].DependentFiles.ToArray())
+                        foreach (string file in dependencies[key].DependentFiles.ToArray())
                         {
                             if (!compiledFiles.Contains(file))
+                            {
                                 list.AddRange(SourceFileChanged(configFile, file, projectPath, compiledFiles));
+                            }
                         }
                     }
                 }
@@ -149,7 +157,9 @@ namespace WebCompiler
                             string inputExtension = Path.GetExtension(config.inputFile);
 
                             if (inputExtension.Equals(sourceExtension, StringComparison.OrdinalIgnoreCase))
+                            {
                                 list.Add(ProcessConfig(folder, config));
+                            }
                         }
                     }
                 }
@@ -165,7 +175,7 @@ namespace WebCompiler
         {
             try
             {
-                var configs = ConfigHandler.GetConfigs(configFile);
+                IEnumerable<Config> configs = ConfigHandler.GetConfigs(configFile);
                 string folder = Path.GetDirectoryName(configFile);
                 List<Config> list = new List<Config>();
 
@@ -174,7 +184,9 @@ namespace WebCompiler
                     string input = Path.Combine(folder, config.inputFile.Replace('/', Path.DirectorySeparatorChar));
 
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
+                    {
                         list.Add(config);
+                    }
                 }
 
                 return list;
@@ -189,10 +201,12 @@ namespace WebCompiler
         {
             ICompiler compiler = CompilerService.GetCompiler(config);
 
-            var result = compiler.Compile(config);
+            CompilerResult result = compiler.Compile(config);
 
             if (result.Errors.Any(e => !e.IsWarning))
+            {
                 return result;
+            }
 
             if (Path.GetExtension(config.outputFile).Equals(".css", StringComparison.OrdinalIgnoreCase) && AdjustRelativePaths(config))
             {
@@ -211,18 +225,17 @@ namespace WebCompiler
                 string dir = outputFile.DirectoryName;
 
                 if (!Directory.Exists(dir))
+                {
                     Directory.CreateDirectory(dir);
+                }
 
                 File.WriteAllText(outputFile.FullName, config.Output, new UTF8Encoding(true));
             }
 
             OnAfterProcess(config, baseFolder, containsChanges);
 
-            //if (!config.Minify.ContainsKey("enabled") || config.Minify["enabled"].ToString().Equals("true", StringComparison.OrdinalIgnoreCase))
-            //{
             FileMinifier.MinifyFile(config);
-            //}
-
+            
             if (!string.IsNullOrEmpty(result.SourceMap))
             {
                 string absolute = config.GetAbsoluteOutputFile().FullName;
@@ -245,49 +258,36 @@ namespace WebCompiler
         private static bool AdjustRelativePaths(Config config)
         {
             if (!config.options.ContainsKey("relativeUrls"))
+            {
                 return true;
+            }
 
             return config.options["relativeUrls"].ToString() == "True";
         }
 
         private void OnBeforeProcess(Config config, string baseFolder, bool containsChanges)
         {
-            if (BeforeProcess != null)
-            {
-                BeforeProcess(this, new CompileFileEventArgs(config, baseFolder, containsChanges));
-            }
+            BeforeProcess?.Invoke(this, new CompileFileEventArgs(config, baseFolder, containsChanges));
         }
 
         private void OnConfigProcessed(Config config, int amountProcessed, int total)
         {
-            if (ConfigProcessed != null)
-            {
-                ConfigProcessed(this, new ConfigProcessedEventArgs(config, amountProcessed, total));
-            }
+            ConfigProcessed?.Invoke(this, new ConfigProcessedEventArgs(config, amountProcessed, total));
         }
 
         private void OnAfterProcess(Config config, string baseFolder, bool containsChanges)
         {
-            if (AfterProcess != null)
-            {
-                AfterProcess(this, new CompileFileEventArgs(config, baseFolder, containsChanges));
-            }
+            AfterProcess?.Invoke(this, new CompileFileEventArgs(config, baseFolder, containsChanges));
         }
 
         private void OnBeforeWritingSourceMap(string file, string mapFile, bool containsChanges)
         {
-            if (BeforeWritingSourceMap != null)
-            {
-                BeforeWritingSourceMap(this, new SourceMapEventArgs(file, mapFile, containsChanges));
-            }
+            BeforeWritingSourceMap?.Invoke(this, new SourceMapEventArgs(file, mapFile, containsChanges));
         }
 
         private void OnAfterWritingSourceMap(string file, string mapFile, bool containsChanges)
         {
-            if (AfterWritingSourceMap != null)
-            {
-                AfterWritingSourceMap(this, new SourceMapEventArgs(file, mapFile, containsChanges));
-            }
+            AfterWritingSourceMap?.Invoke(this, new SourceMapEventArgs(file, mapFile, containsChanges));
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace WebCompilerTest
         [TestMethod, TestCategory("Iced CoffeeScript")]
         public void CompileIcedCoffeeScript()
         {
-            var result = _processor.Process("../../../artifacts/icedcoffeeconfig.json");
+            _ = _processor.Process("../../../artifacts/icedcoffeeconfig.json");
             FileInfo js = new FileInfo("../../../artifacts/iced/test.js");
             FileInfo map = new FileInfo("../../../artifacts/iced/test.js.map");
             Assert.IsTrue(js.Exists);

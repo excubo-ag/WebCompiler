@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
-    class StylusCompiler : ICompiler
+    internal class StylusCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex(@"(?<severity>Error|Warning): (?<file>.+):(?<line>[0-9]+):(?<column>[0-9]+).+^(?=[^\s])(?<message>([^\r\n]+))", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.Singleline);
-        private string _path;
-        private string _output = string.Empty;
-        private string _error = string.Empty;
+        private static readonly Regex _errorRx = new Regex(@"(?<severity>Error|Warning): (?<file>.+):(?<line>[0-9]+):(?<column>[0-9]+).+^(?=[^\s])(?<message>([^\r\n]+))", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.Singleline);
+        private readonly string _path;
+        private readonly string _output = string.Empty;
+        private readonly string _error = string.Empty;
 
         public StylusCompiler(string path)
         {
@@ -47,7 +45,7 @@ namespace WebCompiler
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    var match = _errorRx.Match(_error);
+                    Match match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -110,10 +108,12 @@ namespace WebCompiler
         {
             string arguments = " --print";
 
-            var options = StylusOptions.FromConfig(config);
+            StylusOptions options = StylusOptions.FromConfig(config);
 
             if (options.sourceMap || config.sourceMap)
+            {
                 arguments += " --sourcemap-inline";
+            }
 
             return arguments;
         }

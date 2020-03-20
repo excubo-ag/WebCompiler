@@ -36,7 +36,7 @@ namespace WebCompilerTest.Minify
             FileMinifier.BeforeWritingMinFile += (object sender, MinifyFileEventArgs e) => { resultFile = new FileInfo(e.ResultFile).Name; };
 
             ConfigFileProcessor processor = new ConfigFileProcessor();
-            var results = processor.Process(configPath, configs, force:true);
+            _ = processor.Process(configPath, configs, force:true);
 
             Assert.AreEqual(outputFile, resultFile);
         }
@@ -60,7 +60,7 @@ namespace WebCompilerTest.Minify
             FileMinifier.BeforeWritingMinFile += (object sender, MinifyFileEventArgs e) => { resultFile = new FileInfo(e.ResultFile).Name; };
 
             ConfigFileProcessor processor = new ConfigFileProcessor();
-            var results = processor.Process(configPath, configs, force: true);
+            _ = processor.Process(configPath, configs, force: true);
 
             Assert.AreEqual(outputFile, resultFile);
         }

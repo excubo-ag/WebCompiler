@@ -67,15 +67,5 @@ namespace WebCompiler
 
             return compiler;
         }
-
-        /// <summary>
-        /// Fires when the compilers are about to be initialized.
-        /// </summary>
-        public static event EventHandler<EventArgs> Initializing;
-
-        /// <summary>
-        /// Fires when the compilers have been initialized.
-        /// </summary>
-        public static event EventHandler<EventArgs> Initialized;
     }
 }

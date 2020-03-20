@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace WebCompiler
 {
@@ -9,18 +8,10 @@ namespace WebCompiler
     /// </summary>
     public abstract class DependencyResolverBase
     {
-        private Dictionary<string, Dependencies> _dependencies;
-
         /// <summary>
         /// Stores all resolved dependencies
         /// </summary>
-        protected Dictionary<string, Dependencies> Dependencies
-        {
-            get
-            {
-                return _dependencies;
-            }
-        }
+        protected Dictionary<string, Dependencies> Dependencies { get; private set; }
 
         /// <summary>
         /// The search patterns to use to determine what files should be used to build the dependency tree
@@ -44,23 +35,23 @@ namespace WebCompiler
         /// <returns></returns>
         public Dictionary<string, Dependencies> GetDependencies(string projectRootPath)
         {
-            if (_dependencies == null)
+            if (Dependencies == null)
             {
-                _dependencies = new Dictionary<string, Dependencies>();
+                Dependencies = new Dictionary<string, Dependencies>();
 
                 List<string> files = new List<string>();
-                foreach (var pattern in this.SearchPatterns)
+                foreach (string pattern in SearchPatterns)
                 {
                     files.AddRange(Directory.GetFiles(projectRootPath, pattern, SearchOption.AllDirectories));
                 }
 
-                foreach (var path in files)
+                foreach (string path in files)
                 {
                     UpdateFileDependencies(path);
                 }
             }
 
-            return _dependencies;
+            return Dependencies;
         }
 
         /// <summary>

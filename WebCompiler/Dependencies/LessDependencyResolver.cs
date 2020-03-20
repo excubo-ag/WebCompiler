@@ -1,19 +1,10 @@
 ﻿namespace WebCompiler
 {
-    class LessDependencyResolver : SassDependencyResolver
+    internal class LessDependencyResolver : SassDependencyResolver
     {
-        public override string[] SearchPatterns
-        {
-            get { return new string[] { "*.less" }; }
-        }
+        public override string[] SearchPatterns => new string[] { "*.less" };
 
-        public override string FileExtension
-        {
-            get
-            {
-                return ".less";
-            }
-        }
+        public override string FileExtension => ".less";
 
     }
 }

@@ -24,11 +24,13 @@ namespace WebCompiler
 
             if (File.Exists(defaultFile))
             {
-                var json = JsonSerializer.Deserialize<CompilerDefaults>(File.ReadAllText(defaultFile));
-                var jsonOptions = json.compilers.ContainsKey(options.CompilerFileName) ? json.compilers[options.CompilerFileName] : default;
+                CompilerDefaults json = JsonSerializer.Deserialize<CompilerDefaults>(File.ReadAllText(defaultFile));
+                object jsonOptions = json.compilers.ContainsKey(options.CompilerFileName) ? json.compilers[options.CompilerFileName] : default;
 
                 if (jsonOptions != null)
+                {
                     options = JsonSerializer.Deserialize<T>(jsonOptions.ToString());
+                }
             }
 
             options.LoadSettings(config);
@@ -46,9 +48,11 @@ namespace WebCompiler
         /// </summary>
         protected virtual void LoadSettings(Config config)
         {
-            var sourceMap = GetValue(config, "sourceMap");
+            string sourceMap = GetValue(config, "sourceMap");
             if (sourceMap != null)
+            {
                 this.sourceMap = sourceMap.ToLowerInvariant() == "true";
+            }
         }
 
         /// <summary>
@@ -62,7 +66,9 @@ namespace WebCompiler
         protected string GetValue(Config config, string key)
         {
             if (config.options.ContainsKey(key))
+            {
                 return config.options[key].ToString();
+            }
 
             return null;
         }

@@ -5,7 +5,7 @@ namespace WebCompiler
     /// <summary>
     /// Takes care of all administration of dependencies
     /// </summary>
-    class DependencyService
+    internal class DependencyService
     {
         /// <summary>
         /// The different types of dependencies
@@ -20,7 +20,7 @@ namespace WebCompiler
         /// <summary>
         /// Contains all dependency resolvers for all different kinds of dependencies
         /// </summary>
-        private static Dictionary<DependencyType, DependencyResolverBase> _dependencies = new Dictionary<DependencyType, DependencyResolverBase>();
+        private static readonly Dictionary<DependencyType, DependencyResolverBase> _dependencies = new Dictionary<DependencyType, DependencyResolverBase>();
 
         /// <summary>
         /// Gets the dependency tree for the type of file of the given sourceFile
@@ -30,11 +30,13 @@ namespace WebCompiler
                                                                        string sourceFile)
         {
             if (projectRootPath == null)
+            {
                 return null;
+            }
 
-            var dependencyType = GetDependencyType(sourceFile);
+            DependencyType dependencyType = GetDependencyType(sourceFile);
 
-            if(!_dependencies.ContainsKey(dependencyType))
+            if (!_dependencies.ContainsKey(dependencyType))
             {
                 switch (dependencyType)
                 {
@@ -53,7 +55,9 @@ namespace WebCompiler
                 return _dependencies[dependencyType].GetDependencies(projectRootPath);
             }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>

@@ -9,7 +9,7 @@
 
         <Authors>Stefan Lörwald, Mads Kristensen</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.3</Version>
+        <Version>1.0.4</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="LibSassHost" Version="1.2.10" />

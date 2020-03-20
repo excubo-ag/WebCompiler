@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
-    class LessCompiler : ICompiler
+    internal class LessCompiler : ICompiler
     {
-        private static Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
+        private static readonly Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
         private readonly string _path;
         private string _output = string.Empty;
         private string _error = string.Empty;
@@ -48,7 +46,7 @@ namespace WebCompiler
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    var match = _errorRx.Match(_error);
+                    Match match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -79,7 +77,7 @@ namespace WebCompiler
         private void RunCompilerProcess(Config config, FileInfo info)
         {
             string arguments = ConstructArguments(config);
-            var result = NUglify.Uglify.Css(File.ReadAllText(info.FullName), new NUglify.Css.CssSettings { }, new NUglify.JavaScript.CodeSettings { });
+            NUglify.UglifyResult result = NUglify.Uglify.Css(File.ReadAllText(info.FullName), new NUglify.Css.CssSettings { }, new NUglify.JavaScript.CodeSettings { });
             if (result.HasErrors)
             {
                 _error = string.Join("\n", result.Errors.Select(e => e.Message));
@@ -119,36 +117,58 @@ namespace WebCompiler
             LessOptions options = LessOptions.FromConfig(config);
 
             if (options.sourceMap || config.sourceMap)
+            {
                 arguments += " --source-map-map-inline";
+            }
 
             if (options.math != null)
+            {
                 arguments += $" --math={options.math}";
+            }
             else if (options.strictMath)
+            {
                 arguments += " --math=strict-legacy";
+            }
 
             if (options.ieCompat)
+            {
                 arguments += " --ie-compat";
+            }
 
             if (options.strictUnits)
+            {
                 arguments += " --strict-units=on";
+            }
 
             if (options.relativeUrls)
+            {
                 arguments += " --rewrite-urls=all";
+            }
 
             if (!string.IsNullOrEmpty(options.rootPath))
+            {
                 arguments += $" --rootpath=\"{options.rootPath}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.autoPrefix))
+            {
                 arguments += $" --autoprefix=\"{options.autoPrefix}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.cssComb) && !options.cssComb.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
                 arguments += $" --csscomb=\"{options.cssComb}\"";
+            }
 
             if (!string.IsNullOrEmpty(options.sourceMapRoot))
+            {
                 arguments += " --source-map-rootpath=" + options.sourceMapRoot;
+            }
 
             if (!string.IsNullOrEmpty(options.sourceMapBasePath))
+            {
                 arguments += " --source-map-basepath=" + options.sourceMapBasePath;
+            }
 
             return arguments;
         }

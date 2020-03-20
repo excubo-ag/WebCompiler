@@ -35,9 +35,6 @@ namespace WebCompiler
         /// <summary>
         /// Checks if the compilation resulted in errors.
         /// </summary>
-        public bool HasErrors
-        {
-            get { return Errors.Count > 0; }
-        }
+        public bool HasErrors => Errors.Count > 0;
     }
 }

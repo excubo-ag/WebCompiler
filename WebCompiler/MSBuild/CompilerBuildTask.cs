@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.Build.Framework;
+﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using System;
+using System.IO;
 
 namespace WebCompiler
 {
@@ -31,21 +31,19 @@ namespace WebCompiler
             Log.LogMessage(MessageImportance.High, Environment.NewLine + "WebCompiler: Begin compiling " + configFile.Name);
 
             ConfigFileProcessor processor = new ConfigFileProcessor();
-            processor.BeforeProcess += (s, e) => { if (e.ContainsChanges) FileHelpers.RemoveReadonlyFlagFromFile(e.Config.GetAbsoluteOutputFile()); };
+            processor.BeforeProcess += (s, e) => { if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.Config.GetAbsoluteOutputFile()); } };
             processor.AfterProcess += Processor_AfterProcess;
             processor.BeforeWritingSourceMap += (s, e) => { FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); };
             processor.AfterWritingSourceMap += Processor_AfterWritingSourceMap;
 
-            FileMinifier.BeforeWritingMinFile += (s, e) => { if (e.ContainsChanges) FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); };
+            FileMinifier.BeforeWritingMinFile += (s, e) => { if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); } };
             FileMinifier.AfterWritingMinFile += FileMinifier_AfterWritingMinFile;
-            FileMinifier.BeforeWritingGzipFile += (s, e) => { if (e.ContainsChanges) FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); };
+            FileMinifier.BeforeWritingGzipFile += (s, e) => { if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); } };
             FileMinifier.AfterWritingGzipFile += FileMinifier_AfterWritingGzipFile;
-
-            CompilerService.Initializing += (s, e) => { Log.LogMessage(MessageImportance.High, "WebCompiler installing updated versions of the compilers..."); };
 
             try
             {
-                var results = processor.Process(configFile.FullName);
+                System.Collections.Generic.IEnumerable<CompilerResult> results = processor.Process(configFile.FullName);
                 bool isSuccessful = true;
 
                 foreach (CompilerResult result in results)
@@ -54,7 +52,7 @@ namespace WebCompiler
                     {
                         isSuccessful = false;
 
-                        foreach (var error in result.Errors)
+                        foreach (CompilerError error in result.Errors)
                         {
                             Log.LogError("WebCompiler", "0", "", error.FileName, error.LineNumber, error.ColumnNumber, error.LineNumber, error.ColumnNumber, error.Message, null);
                         }

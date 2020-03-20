@@ -21,22 +21,25 @@ namespace WebCompiler
             string defaultFile = config.FileName + ".defaults";
 
             if (!File.Exists(defaultFile))
+            {
                 return;
+            }
 
-
-            var min = JsonSerializer.Deserialize<MinifyOptionsJson>(File.ReadAllText(defaultFile));
+            MinifyOptionsJson min = JsonSerializer.Deserialize<MinifyOptionsJson>(File.ReadAllText(defaultFile));
             if (!min.minifiers.ContainsKey(minifierType))
             {
                 return;
             }
-            var options = min.minifiers[minifierType];
+            Dictionary<string, object> options = min.minifiers[minifierType];
 
             if (options != null)
             {
                 foreach (string key in options.Keys)
                 {
                     if (!config.minify.ContainsKey(key))
+                    {
                         config.minify[key] = options[key];
+                    }
                 }
             }
         }
@@ -47,10 +50,14 @@ namespace WebCompiler
         protected static string GetValue(Config config, string key, object defaultValue = null)
         {
             if (config.minify.ContainsKey(key))
+            {
                 return config.minify[key].ToString();
+            }
 
             if (defaultValue != null)
+            {
                 return defaultValue.ToString();
+            }
 
             return string.Empty;
         }

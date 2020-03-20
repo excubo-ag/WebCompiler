@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.Build.Framework;
+﻿using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using System;
+using System.IO;
 
 namespace WebCompiler
 {
@@ -20,7 +20,7 @@ namespace WebCompiler
         /// </summary>
         public override bool Execute()
         {
-            var configFile = new FileInfo(FileName);
+            FileInfo configFile = new FileInfo(FileName);
 
             if (!configFile.Exists)
             {
@@ -32,7 +32,7 @@ namespace WebCompiler
 
             try
             {
-                var processor = new ConfigFileProcessor();
+                ConfigFileProcessor processor = new ConfigFileProcessor();
                 processor.DeleteOutputFiles(configFile.FullName);
 
                 Log.LogMessage(MessageImportance.High, "WebCompiler: Done cleaning output of " + configFile.Name);

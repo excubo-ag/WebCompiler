@@ -77,18 +77,22 @@ namespace WebCompiler
             FileInfo output = GetAbsoluteOutputFile();
 
             if (!output.Exists)
+            {
                 return true;
+            }
 
             if (input.LastWriteTimeUtc > output.LastWriteTimeUtc)
+            {
                 return true;
+            }
 
             return HasDependenciesNewerThanOutput(input, output);
         }
 
         private bool HasDependenciesNewerThanOutput(FileInfo input, FileInfo output)
         {
-            var projectRoot = new FileInfo(FileName).DirectoryName;
-            var dependencies = DependencyService.GetDependencies(projectRoot, input.FullName);
+            string projectRoot = new FileInfo(FileName).DirectoryName;
+            Dictionary<string, Dependencies> dependencies = DependencyService.GetDependencies(projectRoot, input.FullName);
 
             if (dependencies != null)
             {
@@ -102,28 +106,40 @@ namespace WebCompiler
         private bool CheckForNewerDependenciesRecursively(string key, Dictionary<string, Dependencies> dependencies, FileInfo output, HashSet<string> checkedDependencies = null)
         {
             if (checkedDependencies == null)
+            {
                 checkedDependencies = new HashSet<string>();
+            }
 
             checkedDependencies.Add(key);
 
             if (!dependencies.ContainsKey(key))
+            {
                 return false;
+            }
 
-            foreach (var file in dependencies[key].DependentOn.ToArray())
+            foreach (string file in dependencies[key].DependentOn.ToArray())
             {
                 if (checkedDependencies.Contains(file))
+                {
                     continue;
+                }
 
-                var fileInfo = new FileInfo(file);
+                FileInfo fileInfo = new FileInfo(file);
 
                 if (!fileInfo.Exists)
+                {
                     continue;
+                }
 
                 if (fileInfo.LastWriteTimeUtc > output.LastWriteTimeUtc)
+                {
                     return true;
+                }
 
                 if (CheckForNewerDependenciesRecursively(file, dependencies, output, checkedDependencies))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -134,22 +150,26 @@ namespace WebCompiler
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
-            if (obj.GetType() != GetType()) return false;
-            if (obj == this) return true;
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            if (obj == this)
+            {
+                return true;
+            }
 
             Config other = (Config)obj;
 
             return GetHashCode() == other.GetHashCode();
         }
-
-        /// <summary>
-        /// Returns the hash code for this Config
-        /// </summary>
-        public override int GetHashCode()
-        {
-            return outputFile.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         /// <summary>For the JSON.NET serializer</summary>
         public bool ShouldSerializeIncludeInProject()
@@ -176,17 +196,34 @@ namespace WebCompiler
             IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second,
             IEqualityComparer<TValue> valueComparer)
         {
-            if (first == second) return true;
-            if ((first == null) || (second == null)) return false;
-            if (first.Count != second.Count) return false;
-
-            valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-
-            foreach (var kvp in first)
+            if (first == second)
             {
-                TValue secondValue;
-                if (!second.TryGetValue(kvp.Key, out secondValue)) return false;
-                if (!valueComparer.Equals(kvp.Value, secondValue)) return false;
+                return true;
+            }
+
+            if ((first == null) || (second == null))
+            {
+                return false;
+            }
+
+            if (first.Count != second.Count)
+            {
+                return false;
+            }
+
+            valueComparer ??= EqualityComparer<TValue>.Default;
+
+            foreach (KeyValuePair<TKey, TValue> kvp in first)
+            {
+                if (!second.TryGetValue(kvp.Key, out TValue secondValue))
+                {
+                    return false;
+                }
+
+                if (!valueComparer.Equals(kvp.Value, secondValue))
+                {
+                    return false;
+                }
             }
             return true;
         }

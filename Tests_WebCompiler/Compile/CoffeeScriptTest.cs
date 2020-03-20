@@ -27,7 +27,7 @@ namespace WebCompilerTest
         [TestMethod, TestCategory("CoffeeScript")]
         public void CompileCoffeeScript()
         {
-            var result = _processor.Process("../../../artifacts/coffeeconfig.json");
+            _ = _processor.Process("../../../artifacts/coffeeconfig.json");
             FileInfo js = new FileInfo("../../../artifacts/coffee/test.js");
             FileInfo min = new FileInfo("../../../artifacts/coffee/test.min.js");
             FileInfo map = new FileInfo("../../../artifacts/coffee/test.js.map");

@@ -20,9 +20,6 @@
         /// <summary>
         /// The file name should match the compiler name
         /// </summary>
-        protected override string CompilerFileName
-        {
-            get { return "stylus"; }
-        }
+        protected override string CompilerFileName => "stylus";
     }
 }

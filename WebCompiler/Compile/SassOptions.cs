@@ -18,46 +18,61 @@
         {
             base.LoadSettings(config);
 
-            var autoPrefix = GetValue(config, "autoPrefix");
+            string autoPrefix = GetValue(config, "autoPrefix");
             if (autoPrefix != null)
+            {
                 this.autoPrefix = autoPrefix;
+            }
 
             if (config.options.ContainsKey("outputStyle"))
+            {
                 outputStyle = config.options["outputStyle"].ToString();
+            }
 
             if (config.options.ContainsKey("indentType"))
+            {
                 indentType = config.options["indentType"].ToString();
+            }
 
-            if (int.TryParse(GetValue(config, "precision"), out var precision))
-                this.Precision = precision;
+            if (int.TryParse(GetValue(config, "precision"), out int precision))
+            {
+                Precision = precision;
+            }
 
-            if (int.TryParse(GetValue(config, "indentWidth"), out var indentWidth))
+            if (int.TryParse(GetValue(config, "indentWidth"), out int indentWidth))
+            {
                 this.indentWidth = indentWidth;
+            }
 
-            var relativeUrls = GetValue(config, "relativeUrls");
+            string relativeUrls = GetValue(config, "relativeUrls");
             if (relativeUrls != null)
+            {
                 this.relativeUrls = relativeUrls.ToLowerInvariant() == trueStr;
+            }
 
-            var includePath = GetValue(config, "includePath");
+            string includePath = GetValue(config, "includePath");
             if (includePath != null)
+            {
                 this.includePath = includePath;
+            }
 
-            var sourceMapRoot = GetValue(config, "sourceMapRoot");
+            string sourceMapRoot = GetValue(config, "sourceMapRoot");
             if (sourceMapRoot != null)
+            {
                 this.sourceMapRoot = sourceMapRoot;
+            }
 
-            var lineFeed = GetValue(config, "lineFeed");
+            string lineFeed = GetValue(config, "lineFeed");
             if (lineFeed != null)
+            {
                 this.lineFeed = lineFeed;
+            }
         }
 
         /// <summary>
         /// The file name should match the compiler name
         /// </summary>
-        protected override string CompilerFileName
-        {
-            get { return "sass"; }
-        }
+        protected override string CompilerFileName => "sass";
 
         /// <summary>
         /// Autoprefixer will use the data based on current browser popularity and

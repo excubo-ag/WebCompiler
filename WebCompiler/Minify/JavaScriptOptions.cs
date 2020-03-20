@@ -1,6 +1,6 @@
-﻿using System;
-using NUglify;
+﻿using NUglify;
 using NUglify.JavaScript;
+using System;
 
 namespace WebCompiler
 {
@@ -24,30 +24,45 @@ namespace WebCompiler
             settings.TermSemicolons = GetValue(config, "termSemicolons", true) == "True";
 
             if (GetValue(config, "renameLocals", true) == "False")
+            {
                 settings.LocalRenaming = LocalRenaming.KeepAll;
+            }
 
             string evalTreatment = GetValue(config, "evalTreatment", "ignore");
 
             if (evalTreatment.Equals("ignore", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.EvalTreatment = EvalTreatment.Ignore;
+            }
             else if (evalTreatment.Equals("makeAllSafe", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.EvalTreatment = EvalTreatment.MakeAllSafe;
+            }
             else if (evalTreatment.Equals("makeImmediateSafe", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.EvalTreatment = EvalTreatment.MakeImmediateSafe;
+            }
 
             string outputMode = GetValue(config, "outputMode", "singleLine");
 
             if (outputMode.Equals("multipleLines", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.OutputMode = OutputMode.MultipleLines;
+            }
             else if (outputMode.Equals("singleLine", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.OutputMode = OutputMode.SingleLine;
+            }
             else if (outputMode.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
                 settings.OutputMode = OutputMode.None;
+            }
 
             string indentSize = GetValue(config, "indentSize", 2);
-            int size;
-            if (int.TryParse(indentSize, out size))
+            if (int.TryParse(indentSize, out int size))
+            {
                 settings.IndentSize = size;
+            }
 
             return settings;
         }

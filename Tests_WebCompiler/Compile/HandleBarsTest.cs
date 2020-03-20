@@ -33,7 +33,7 @@ namespace WebCompilerTest
         [TestMethod, TestCategory("HandleBars")]
         public void CompileHandleBars()
         {
-            var result = _processor.Process("../../../artifacts/handlebarsconfig.json");
+            _ = _processor.Process("../../../artifacts/handlebarsconfig.json");
             FileInfo js = new FileInfo("../../../artifacts/handlebars/test.js");
             FileInfo min = new FileInfo("../../../artifacts/handlebars/test.min.js");
             FileInfo map = new FileInfo("../../../artifacts/handlebars/test.js.map");
@@ -47,7 +47,7 @@ namespace WebCompilerTest
         [TestMethod, TestCategory("HandleBars")]
         public void CompileHandleBarsPartial()
         {
-            var result = _processor.Process("../../../artifacts/handlebarsconfigPartial.json");
+            _ = _processor.Process("../../../artifacts/handlebarsconfigPartial.json");
             FileInfo js = new FileInfo("../../../artifacts/handlebars/_partial.js");
             FileInfo min = new FileInfo("../../../artifacts/handlebars/_partial.min.js");
             Assert.IsTrue(js.Exists, "Output file doesn't exist");

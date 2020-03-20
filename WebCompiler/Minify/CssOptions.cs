@@ -1,7 +1,5 @@
 ﻿using NUglify;
 using NUglify.Css;
-using System;
-using System.Text.Json;
 
 namespace WebCompiler
 {
@@ -25,38 +23,61 @@ namespace WebCompiler
             string cssComment = GetValue(config, "commentMode");
 
             if (cssComment == "hacks")
+            {
                 settings.CommentMode = CssComment.Hacks;
+            }
             else if (cssComment == "important")
+            {
                 settings.CommentMode = CssComment.Important;
+            }
             else if (cssComment == "none")
+            {
                 settings.CommentMode = CssComment.None;
+            }
             else if (cssComment == "all")
+            {
                 settings.CommentMode = CssComment.All;
+            }
 
             string colorNames = GetValue(config, "colorNames");
 
             if (colorNames == "hex")
+            {
                 settings.ColorNames = CssColor.Hex;
+            }
             else if (colorNames == "major")
+            {
                 settings.ColorNames = CssColor.Major;
+            }
             else if (colorNames == "noSwap")
+            {
                 settings.ColorNames = CssColor.NoSwap;
+            }
             else if (colorNames == "strict")
+            {
                 settings.ColorNames = CssColor.Strict;
+            }
 
             string outputMode = GetValue(config, "outputMode", "singleLine");
 
             if (outputMode == "multipleLines")
+            {
                 settings.OutputMode = OutputMode.MultipleLines;
+            }
             else if (outputMode == "singleLine")
+            {
                 settings.OutputMode = OutputMode.SingleLine;
+            }
             else if (outputMode == "none")
+            {
                 settings.OutputMode = OutputMode.None;
+            }
 
             string indentSize = GetValue(config, "indentSize", 2);
-            int size;
-            if (int.TryParse(indentSize, out size))
+            if (int.TryParse(indentSize, out int size))
+            {
                 settings.IndentSize = size;
+            }
 
             return settings;
         }
