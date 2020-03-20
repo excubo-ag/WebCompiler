@@ -1,128 +1,59 @@
 ## Web Compiler
 
-A Visual Studio extension that compiles LESS, Sass Stylus, JSX, ES6 and CoffeeScript
-files.
+A dotnet global tool that compiles Scss files (other languages on the road map, see [contributing](#Contributing).
 
-[![Build status](https://ci.appveyor.com/api/projects/status/kyk8vpst641r2n0r?svg=true)](https://ci.appveyor.com/project/madskristensen/webcompiler)
-
-Download the extension at the
-[VS Gallery](https://visualstudiogallery.msdn.microsoft.com/3b329021-cd7a-4a01-86fc-714c2d05bb6c)
-or get the
-[nightly build](http://vsixgallery.com/extension/148ffa77-d70a-407f-892b-9ee542346862/)
-
-See the
-[changelog](https://github.com/madskristensen/WebCompiler/blob/master/CHANGELOG.md)
-for changes and roadmap.
+This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules has been removed, to facilitate a pure dotnet core implementation.
+As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
 
 ### Features
 
-- Compilation of LESS, Scss, Stylus, JSX, ES6 and (Iced)CoffeeScript files
-- Saving a source file triggers re-compilation automatically
+- Compilation of Scss files
 - Specify compiler options for each individual file
-- Error List integration
-- MSBuild support for CI scenarios
+- Detailed error messages
+- `dotnet` core build pipeline support cross-platform
 - Minify the compiled output
 - Minification options for each language is customizable
-- Shows a watermark when opening a generated file
-- Shortcut to compile all specified files in solution
-- Task Runner Explorer integration
-- Command line interface
-- Integrates with [Web Analyzer](https://visualstudiogallery.msdn.microsoft.com/6edc26d4-47d8-4987-82ee-7c820d79be1d)
+
+### Roadmap
+
+1. language support 
+
+Due to the removal of node as a dependency (as opposed to [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler)), support for languages other than Scss is not yet available.
+Please get in touch if you want to [contribute](#Contributing) to any of the following languages, or if you want to add yet another language.
+
+- LESS
+- Stylus
+- JSX
+- ES6
+- (Iced)CoffeeScript
+
+2. wildcard or recursive file config support
+
+Currently, the `compilerconfig.json` file only supports individual files.
+
+3. auto-generate `compilerconfig.json`
+
+This tool should facilitate the generation of configuration files. This will probably be a call like `webcompiler --configure`.
 
 ### Getting started
 
-Right-click any `.less`, `.scss`, `.styl`, `.jsx`, `.es6` or `.coffee` file in Solution Explorer to
-setup compilation.
+1. Install the tool as dotnet global tool
+```
+dotnet tool install Excubo.WebCompiler --version 1.0.4
+```
 
-![Compile file](art/contextmenu-compile.png)
+2. Integrate the call to `webcompiler` into your build pipeline
+```
+webcompiler compilerconfig.json
+```
 
-A file called `compilerconfig.json` is created in the root of the
-project. This file lets you modify the behavior of the compiler.
+### Configuration
 
-Right-clicking the `compilerconfig.json` file lets you easily
-run all the configured compilers.
-
-![Recompile](art/contextmenu-recompile.png)
-
-### Compile on save
-
-Any time a `.less`, `.scss`, `.styl`, `.jsx`, `.es6` or `.coffee` file is modified within
-Visual Studio, the compiler runs automatically to produce the compiled output file.
-
-The same is true when saving the `compilerconfig.json` file where
-all configured files will be compiled.
-
-### Compile on build / CI support
-
-In ASP.NET MVC and WebForms projects you can enable compilation as part
-of the build step. Simply right-click the `compilerconfig.json` file to
-enable it.
-
-![Compile on build](art/contextmenu-compileonbuild.png)
-
-Clicking the menu item will prompt you with information about what will
-happen if you click the OK button.
-
-![Compile on build prompt](art/prompt-compileonsave.png)
-
-A NuGet package will be installed into the `packages` folder without adding
-any files to the project itself. The NuGet package contains an MSBuild
-task that will run the exact same compilers on the `compilerconfig.json`
-file in the root of the project.
-
-### Compile all
-
-You can run the compiler on all `compilerconfig.json` files
-in the solution by using the keyboard shortcut `Shift+Alt+Y`
-or by using the button on the top level Build menu.
-
-![Compile all](art/build-menu.png)
-
-### Task Runner Explorer
-
-Get a quick overview of the files you've specified or execute a
-compilation directly in Task Runner Explorer.
-
-![Task Runner Explorer](art/task-runner-explorer.png)
-
-You can even set bindings so that compilation happens automatically
-during certain Visual Studio events, such as *BeforeBuild* and
-*Project Open*.
-
-![Task Runner bindings](art/task-runner-bindings.png)
-
-### Error list
-
-When a compiler error occurs, the error list in Visual Studio
-will show the error and its exact location in the source file.
-
-![Error List](art/errorlist.png)
-
-### Source maps
-
-Source maps are supported for `.scss` files only for now, but the
-plan is to have source map support for all languages. Web Compiler differs from it's predecesor, Web Essentials, in that it inlines a base64 encoded version of the map in the generated .css file rather than producing a separate .map file. 
-
-### compilerconfig.json
-
-The extension adds a `compilerconfig.json` file at the root of the
-project which is used to configure all compilation.
+You need a compilerconfig.json file at the root of the project, which is used to configure all compilation.
 
 Here's an example of what that file looks like:
-
 ```json
 [
-  {
-    "outputFile": "output/site.css",
-    "inputFile": "input/site.less",
-    "minify": {
-        "enabled": true
-    },
-    "includeInProject": true,
-    "options":{
-        "sourceMap": false
-    }
-  },
   {
     "outputFile": "output/scss.css",
     "inputFile": "input/scss.scss",
@@ -136,4 +67,56 @@ Here's an example of what that file looks like:
   }
 ]
 ```
-Default values for `compilerconfig.json` can be found in the `compilerconfig.json.defaults` file in the same location. 
+
+Default values for compilerconfig.json should be placed in `compilerconfig.json.defaults` file in the same folder.
+
+Here's an example of a `compilerconfig.json.defaults` file.
+```json
+{
+  "compilers": {
+    "sass": {
+      "autoPrefix": "",
+      "includePath": "",
+      "indentType": "space",
+      "indentWidth": 2,
+      "outputStyle": "nested",
+      "Precision": 5,
+      "relativeUrls": true,
+      "sourceMapRoot": "",
+      "lineFeed": "",
+      "sourceMap": false
+    }
+  },
+  "minifiers": {
+    "css": {
+      "enabled": true,
+      "termSemicolons": true,
+      "gzip": true
+    },
+    "javascript": {
+      "enabled": true,
+      "termSemicolons": true,
+      "gzip": false
+    }
+  }
+}
+```
+### Error list
+
+When a compiler error occurs, the tool exits with code `1` and displays the error to the console.
+
+### Contributing
+
+This project is just starting. You can help in many different ways:
+
+- File bug reports
+
+If you find a bug with the tool itself, please file a bug. If the result of compilation is incorrect, please file a bug with the respective library (see [the list of libraries](#libraries)), and only file a bug report here, if the version used is outdated.
+
+- Implement support for a language
+
+Please submit your pull request for the language that you're implementing. Please make sure that your code is tested.
+
+- Ask for support of a specific language
+
+If you would like to see support of a specific language, but can't implement it yourself, please search the issues for the language and leave your +1 vote on the issue, or file a new issue with the name of the language.
