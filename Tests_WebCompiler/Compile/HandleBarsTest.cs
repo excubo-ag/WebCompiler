@@ -5,7 +5,7 @@ using WebCompiler;
 
 namespace WebCompilerTest
 {
-    [TestClass]
+    //[TestClass]
     public class HandleBarsTest
     {
         private ConfigFileProcessor _processor;

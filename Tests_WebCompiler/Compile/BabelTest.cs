@@ -5,7 +5,7 @@ using WebCompiler;
 
 namespace WebCompilerTest
 {
-    [TestClass]
+    //[TestClass]
     public class BabelTest
     {
         private ConfigFileProcessor _processor;

@@ -5,7 +5,7 @@ using WebCompiler;
 
 namespace WebCompilerTest
 {
-    [TestClass]
+    //[TestClass]
     public class IcedCoffeeScriptTest
     {
         private ConfigFileProcessor _processor;

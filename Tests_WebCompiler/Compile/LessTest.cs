@@ -6,7 +6,7 @@ using WebCompiler;
 
 namespace WebCompilerTest
 {
-    [TestClass]
+    //[TestClass]
     public class LessTest
     {
         private ConfigFileProcessor _processor;

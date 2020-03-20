@@ -3,7 +3,7 @@ using WebCompiler;
 
 namespace WebCompilerTest
 {
-    [TestClass]
+    //[TestClass]
     public class CompileServiceTest
     {
         [TestMethod, TestCategory("CompileService")]
