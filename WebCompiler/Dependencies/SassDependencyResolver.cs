@@ -105,7 +105,7 @@ namespace WebCompiler
             {
                 try
                 {
-                    string value = name.Replace("\"", "").Replace("/", "\\").Trim();
+                    string value = name.Replace("\"", "").Replace('/', Path.PathSeparator).Trim();
                     list.Add(new FileInfo(Path.Combine(info.DirectoryName, value)));
                 }
                 catch (Exception ex)
