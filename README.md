@@ -120,3 +120,12 @@ This project is just starting. You can help in many different ways:
 - Ask for support of a specific language
 
     If you would like to see support of a specific language, but can't implement it yourself, please search the issues for the language and leave your +1 vote on the issue, or file a new issue with the name of the language.
+
+### Libraries
+
+`Excubo.WebCompiler` depends on nuget packages for the compilation tasks:
+
+| Language | Library |
+|----------|---------|
+| Sass     | [LibSassHost](https://github.com/Taritsyn/LibSassHost) |
+| CSS/JS   | [NUglify](https://github.com/xoofx/NUglify) | 
