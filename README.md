@@ -2,13 +2,13 @@
 
 `Excubo.WebCompiler` is a dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
 
-This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules has been removed, to facilitate a pure dotnet core implementation.
+This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules have been removed, to facilitate a pure dotnet core implementation.
 As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
 
 ### Features
 
 - Compilation of Scss files
-- Specify compiler options for each individual file
+- Dedicated compiler options for each individual file
 - Detailed error messages
 - `dotnet` core build pipeline support cross-platform
 - Minify the compiled output
