@@ -34,8 +34,8 @@ namespace WebCompilerTest.Config
             _config = new WebCompiler.Config
             {
                 FileName = configFileInfo.FullName,
-                InputFile = _inputFileInfo.FullName,
-                OutputFile = _outputFileInfo.FullName
+                inputFile = _inputFileInfo.FullName,
+                outputFile = _outputFileInfo.FullName
             };
 
             // Create dummy output file, only last write time is checked

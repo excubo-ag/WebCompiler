@@ -112,7 +112,7 @@ namespace WebCompiler
                 // Compile if the file if it's referenced directly in compilerconfig.json
                 foreach (Config config in configs)
                 {
-                    string input = Path.Combine(folder, config.InputFile.Replace("/", "\\"));
+                    string input = Path.Combine(folder, config.inputFile.Replace("/", "\\"));
 
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
                     {
@@ -146,7 +146,7 @@ namespace WebCompiler
 
                         foreach (Config config in configs)
                         {
-                            string inputExtension = Path.GetExtension(config.InputFile);
+                            string inputExtension = Path.GetExtension(config.inputFile);
 
                             if (inputExtension.Equals(sourceExtension, StringComparison.OrdinalIgnoreCase))
                                 list.Add(ProcessConfig(folder, config));
@@ -171,7 +171,7 @@ namespace WebCompiler
 
                 foreach (Config config in configs)
                 {
-                    string input = Path.Combine(folder, config.InputFile.Replace("/", "\\"));
+                    string input = Path.Combine(folder, config.inputFile.Replace("/", "\\"));
 
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
                         list.Add(config);
@@ -194,7 +194,7 @@ namespace WebCompiler
             if (result.Errors.Any(e => !e.IsWarning))
                 return result;
 
-            if (Path.GetExtension(config.OutputFile).Equals(".css", StringComparison.OrdinalIgnoreCase) && AdjustRelativePaths(config))
+            if (Path.GetExtension(config.outputFile).Equals(".css", StringComparison.OrdinalIgnoreCase) && AdjustRelativePaths(config))
             {
                 result.CompiledContent = CssRelativePath.Adjust(result.CompiledContent, config);
             }
@@ -244,10 +244,10 @@ namespace WebCompiler
 
         private static bool AdjustRelativePaths(Config config)
         {
-            if (!config.Options.ContainsKey("relativeUrls"))
+            if (!config.options.ContainsKey("relativeUrls"))
                 return true;
 
-            return config.Options["relativeUrls"].ToString() == "True";
+            return config.options["relativeUrls"].ToString() == "True";
         }
 
         private void OnBeforeProcess(Config config, string baseFolder, bool containsChanges)

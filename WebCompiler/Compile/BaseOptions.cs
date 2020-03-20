@@ -1,9 +1,13 @@
-﻿using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace WebCompiler
 {
+    public class CompilerDefaults
+    {
+        public Dictionary<string, object> compilers { get; set; }
+    }
     /// <summary>
     /// Base class containing methods to all extensions options
     /// </summary>
@@ -20,11 +24,11 @@ namespace WebCompiler
 
             if (File.Exists(defaultFile))
             {
-                JObject json = JObject.Parse(File.ReadAllText(defaultFile));
-                var jsonOptions = json["compilers"][options.CompilerFileName];
+                var json = JsonSerializer.Deserialize<CompilerDefaults>(File.ReadAllText(defaultFile));
+                var jsonOptions = json.compilers.ContainsKey(options.CompilerFileName) ? json.compilers[options.CompilerFileName] : default;
 
                 if (jsonOptions != null)
-                    options = JsonConvert.DeserializeObject<T>(jsonOptions.ToString());
+                    options = JsonSerializer.Deserialize<T>(jsonOptions.ToString());
             }
 
             options.LoadSettings(config);
@@ -44,22 +48,21 @@ namespace WebCompiler
         {
             var sourceMap = GetValue(config, "sourceMap");
             if (sourceMap != null)
-                SourceMap = sourceMap.ToLowerInvariant() == "true";
+                this.sourceMap = sourceMap.ToLowerInvariant() == "true";
         }
 
         /// <summary>
         /// Generate Source Map v3
         /// </summary>
-        [JsonProperty("sourceMap")]
-        public bool SourceMap { get; set; }
+        public bool sourceMap { get; set; }
 
         /// <summary>
         /// Gets a value from a string keyed dictionary
         /// </summary>
         protected string GetValue(Config config, string key)
         {
-            if (config.Options.ContainsKey(key))
-                return config.Options[key].ToString();
+            if (config.options.ContainsKey(key))
+                return config.options[key].ToString();
 
             return null;
         }

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace WebCompiler
 {
@@ -20,39 +20,33 @@ namespace WebCompiler
         /// <summary>
         /// The relative file path to the output file.
         /// </summary>
-        [JsonProperty("outputFile")]
-        public string OutputFile { get; set; }
+        public string outputFile { get; set; }
 
         /// <summary>
         /// The relative file path to the input file.
         /// </summary>
-        [JsonProperty("inputFile")]
-        public string InputFile { get; set; }
+        public string inputFile { get; set; }
 
         /// <summary>
         /// Settings for the minification.
         /// </summary>
-        [JsonProperty("minify")]
-        public Dictionary<string, object> Minify { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, object> minify { get; set; } = new Dictionary<string, object>();
 
         /// <summary>
         /// If true it makes Visual Studio include the output file in the project.
         /// </summary>
         [DefaultValue(true)]
-        [JsonProperty("includeInProject")]
-        public bool IncludeInProject { get; set; } = true;
+        public bool includeInProject { get; set; } = true;
 
         /// <summary>
         /// If true a source map file is generated for the file types that support it.
         /// </summary>
-        [JsonProperty("sourceMap")]
-        public bool SourceMap { get; set; }
+        public bool sourceMap { get; set; }
 
         /// <summary>
         /// Options specific to each compiler. Based on the inputFile property.
         /// </summary>
-        [JsonProperty("options")]
-        public Dictionary<string, object> Options { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, object> options { get; set; } = new Dictionary<string, object>();
 
         internal string Output { get; set; }
 
@@ -62,7 +56,7 @@ namespace WebCompiler
         public FileInfo GetAbsoluteInputFile()
         {
             string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, InputFile.Replace("/", "\\")));
+            return new FileInfo(Path.Combine(folder, inputFile.Replace("/", "\\")));
         }
 
         /// <summary>
@@ -71,7 +65,7 @@ namespace WebCompiler
         public FileInfo GetAbsoluteOutputFile()
         {
             string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, OutputFile.Replace("/", "\\")));
+            return new FileInfo(Path.Combine(folder, outputFile.Replace("/", "\\")));
         }
 
         /// <summary>
@@ -154,28 +148,28 @@ namespace WebCompiler
         /// </summary>
         public override int GetHashCode()
         {
-            return OutputFile.GetHashCode();
+            return outputFile.GetHashCode();
         }
 
         /// <summary>For the JSON.NET serializer</summary>
         public bool ShouldSerializeIncludeInProject()
         {
             Config config = new Config();
-            return IncludeInProject != config.IncludeInProject;
+            return includeInProject != config.includeInProject;
         }
 
         /// <summary>For the JSON.NET serializer</summary>
         public bool ShouldSerializeMinify()
         {
             Config config = new Config();
-            return !DictionaryEqual(Minify, config.Minify, null);
+            return !DictionaryEqual(minify, config.minify, null);
         }
 
         /// <summary>For the JSON.NET serializer</summary>
         public bool ShouldSerializeOptions()
         {
             Config config = new Config();
-            return !DictionaryEqual(Options, config.Options, null);
+            return !DictionaryEqual(options, config.options, null);
         }
 
         private static bool DictionaryEqual<TKey, TValue>(

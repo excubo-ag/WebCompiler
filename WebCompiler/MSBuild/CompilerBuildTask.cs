@@ -78,7 +78,7 @@ namespace WebCompiler
 
         private void Processor_AfterProcess(object sender, CompileFileEventArgs e)
         {
-            Log.LogMessage(MessageImportance.High, "\tCompiled " + e.Config.OutputFile);
+            Log.LogMessage(MessageImportance.High, "\tCompiled " + e.Config.outputFile);
         }
 
         private void Processor_AfterWritingSourceMap(object sender, SourceMapEventArgs e)

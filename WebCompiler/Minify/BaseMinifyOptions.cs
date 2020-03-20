@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace WebCompiler
 {
+    public class MinifyOptionsJson
+    {
+        public Dictionary<string, Dictionary<string, object>> minifiers { get; set; }
+    }
     /// <summary>
     /// Base class for minification options
     /// </summary>
@@ -20,20 +23,20 @@ namespace WebCompiler
             if (!File.Exists(defaultFile))
                 return;
 
-            Dictionary<string, object> options = new Dictionary<string, object>();
 
-            JObject json = JObject.Parse(File.ReadAllText(defaultFile));
-            var jsonOptions = json["minifiers"]?[minifierType];
-
-            if (jsonOptions != null)
-                options = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonOptions.ToString());
+            var min = JsonSerializer.Deserialize<MinifyOptionsJson>(File.ReadAllText(defaultFile));
+            if (!min.minifiers.ContainsKey(minifierType))
+            {
+                return;
+            }
+            var options = min.minifiers[minifierType];
 
             if (options != null)
             {
                 foreach (string key in options.Keys)
                 {
-                    if (!config.Minify.ContainsKey(key))
-                        config.Minify[key] = options[key];
+                    if (!config.minify.ContainsKey(key))
+                        config.minify[key] = options[key];
                 }
             }
         }
@@ -43,8 +46,8 @@ namespace WebCompiler
         /// </summary>
         protected static string GetValue(Config config, string key, object defaultValue = null)
         {
-            if (config.Minify.ContainsKey(key))
-                return config.Minify[key].ToString();
+            if (config.minify.ContainsKey(key))
+                return config.minify[key].ToString();
 
             if (defaultValue != null)
                 return defaultValue.ToString();

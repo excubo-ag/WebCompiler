@@ -34,7 +34,7 @@ namespace WebCompiler
             string content = File.ReadAllText(file);
             var settings = JavaScriptOptions.GetSettings(config);
 
-            if (config.Minify.ContainsKey("enabled") && config.Minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
+            if (config.minify.ContainsKey("enabled") && config.minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
                 return null;
 
 
@@ -67,7 +67,7 @@ namespace WebCompiler
             string content = File.ReadAllText(file);
             var settings = CssOptions.GetSettings(config);
 
-            if (config.Minify.ContainsKey("enabled") && config.Minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
+            if (config.minify.ContainsKey("enabled") && config.minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
                 return null;
 
 
@@ -108,7 +108,7 @@ namespace WebCompiler
 
         private static void GzipFile(Config config, string sourceFile, bool containsChanges)
         {
-            if (!config.Minify.ContainsKey("gzip") || !config.Minify["gzip"].ToString().Equals("true", StringComparison.OrdinalIgnoreCase))
+            if (!config.minify.ContainsKey("gzip") || !config.minify["gzip"].ToString().Equals("true", StringComparison.OrdinalIgnoreCase))
                 return;
 
             var gzipFile = sourceFile + ".gz";

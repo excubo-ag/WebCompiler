@@ -21,7 +21,7 @@ namespace WebCompiler
         public CompilerResult Compile(Config config)
         {
             string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.InputFile);
+            string inputFile = Path.Combine(baseFolder, config.inputFile);
 
             FileInfo info = new FileInfo(inputFile);
             string content = File.ReadAllText(info.FullName);
@@ -79,31 +79,31 @@ namespace WebCompiler
         {
             string arguments = ConstructArguments(config);
 
-            ProcessStartInfo start = new ProcessStartInfo
-            {
-                WorkingDirectory = info.Directory.FullName,
-                UseShellExecute = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\stylus.cmd")}\" {arguments} \"{info.FullName}\"\"",
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            };
+            //ProcessStartInfo start = new ProcessStartInfo
+            //{
+            //    WorkingDirectory = info.Directory.FullName,
+            //    UseShellExecute = false,
+            //    WindowStyle = ProcessWindowStyle.Hidden,
+            //    CreateNoWindow = true,
+            //    FileName = "cmd.exe",
+            //    Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\stylus.cmd")}\" {arguments} \"{info.FullName}\"\"",
+            //    StandardOutputEncoding = Encoding.UTF8,
+            //    StandardErrorEncoding = Encoding.UTF8,
+            //    RedirectStandardOutput = true,
+            //    RedirectStandardError = true,
+            //};
 
-            start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
+            //start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
 
-            using (Process p = Process.Start(start))
-            {
-                var stdout = p.StandardOutput.ReadToEndAsync();
-                var stderr = p.StandardError.ReadToEndAsync();
-                p.WaitForExit();
+            //using (Process p = Process.Start(start))
+            //{
+            //    var stdout = p.StandardOutput.ReadToEndAsync();
+            //    var stderr = p.StandardError.ReadToEndAsync();
+            //    p.WaitForExit();
 
-                _output = stdout.Result.Trim();
-                _error = stderr.Result.Trim();
-            }
+            //    _output = stdout.Result.Trim();
+            //    _error = stderr.Result.Trim();
+            //}
         }
 
         private static string ConstructArguments(Config config)
@@ -112,7 +112,7 @@ namespace WebCompiler
 
             var options = StylusOptions.FromConfig(config);
 
-            if (options.SourceMap || config.SourceMap)
+            if (options.sourceMap || config.sourceMap)
                 arguments += " --sourcemap-inline";
 
             return arguments;

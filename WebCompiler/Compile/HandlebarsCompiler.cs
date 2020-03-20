@@ -25,7 +25,7 @@ namespace WebCompiler
         public CompilerResult Compile(Config config)
         {
             string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.InputFile);
+            string inputFile = Path.Combine(baseFolder, config.inputFile);
 
             FileInfo info = new FileInfo(inputFile);
             string content = File.ReadAllText(info.FullName);
@@ -65,7 +65,7 @@ namespace WebCompiler
                 result.CompiledContent = _output;
 
                 var options = HandlebarsOptions.FromConfig(config);
-                if (options.SourceMap || config.SourceMap)
+                if (options.sourceMap || config.sourceMap)
                 {
                     if (File.Exists(_mapPath))
                         result.SourceMap = File.ReadAllText(_mapPath);
@@ -125,31 +125,31 @@ namespace WebCompiler
         {
             string arguments = ConstructArguments(config);
 
-            ProcessStartInfo start = new ProcessStartInfo
-            {
-                WorkingDirectory = info.Directory.FullName,
-                UseShellExecute = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\handlebars.cmd")}\" \"{info.FullName}\" {arguments}\"",
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            };
+            //ProcessStartInfo start = new ProcessStartInfo
+            //{
+            //    WorkingDirectory = info.Directory.FullName,
+            //    UseShellExecute = false,
+            //    WindowStyle = ProcessWindowStyle.Hidden,
+            //    CreateNoWindow = true,
+            //    FileName = "cmd.exe",
+            //    Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\handlebars.cmd")}\" \"{info.FullName}\" {arguments}\"",
+            //    StandardOutputEncoding = Encoding.UTF8,
+            //    StandardErrorEncoding = Encoding.UTF8,
+            //    RedirectStandardOutput = true,
+            //    RedirectStandardError = true,
+            //};
 
-            start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
+            //start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
 
-            using (Process p = Process.Start(start))
-            {
-                var stdout = p.StandardOutput.ReadToEndAsync();
-                var stderr = p.StandardError.ReadToEndAsync();
-                p.WaitForExit();
+            //using (Process p = Process.Start(start))
+            //{
+            //    var stdout = p.StandardOutput.ReadToEndAsync();
+            //    var stderr = p.StandardError.ReadToEndAsync();
+            //    p.WaitForExit();
 
-                _output = stdout.Result.Trim();
-                _error = stderr.Result.Trim();
-            }
+            //    _output = stdout.Result.Trim();
+            //    _error = stderr.Result.Trim();
+            //}
         }
 
         private string ConstructArguments(Config config)
@@ -158,36 +158,36 @@ namespace WebCompiler
 
             HandlebarsOptions options = HandlebarsOptions.FromConfig(config);
 
-            if (options.AMD)
+            if (options.amd)
                 arguments += " --amd";
-            else if (!string.IsNullOrEmpty(options.CommonJS))
-                arguments += $" --commonjs \"{options.CommonJS}\"";
+            else if (!string.IsNullOrEmpty(options.commonjs))
+                arguments += $" --commonjs \"{options.commonjs}\"";
 
-            foreach (var knownHelper in options.KnownHelpers)
+            foreach (var knownHelper in options.knownHelpers)
             {
                 arguments += $" --known \"{knownHelper}\"";
             }
 
-            if (options.KnownHelpersOnly)
+            if (options.knownHelpersOnly)
                 arguments += " --knownOnly";
 
-            if (options.ForcePartial || _partial)
+            if (options.forcePartial || _partial)
                 arguments += " --partial";
 
-            if (options.NoBOM)
+            if (options.noBOM)
                 arguments += " --bom";
 
-            if ((options.SourceMap || config.SourceMap) && !string.IsNullOrWhiteSpace(_mapPath))
+            if ((options.sourceMap || config.sourceMap) && !string.IsNullOrWhiteSpace(_mapPath))
                 arguments += $" --map \"{_mapPath}\"";
 
-            if (!string.IsNullOrEmpty(options.TemplateNameSpace))
-                arguments += $" --namespace \"{options.TemplateNameSpace}\"";
+            if (!string.IsNullOrEmpty(options.@namespace))
+                arguments += $" --namespace \"{options.@namespace}\"";
 
-            if (!string.IsNullOrEmpty(options.Root))
-                arguments += $" --root \"{options.Root}\"";
+            if (!string.IsNullOrEmpty(options.root))
+                arguments += $" --root \"{options.root}\"";
 
-            if (!string.IsNullOrEmpty(options.Name))
-                arguments += $" --name \"{options.Name}\"";
+            if (!string.IsNullOrEmpty(options.name))
+                arguments += $" --name \"{options.name}\"";
             else if (!string.IsNullOrEmpty(_name))
                 arguments += $" --name \"{_name}\"";
 

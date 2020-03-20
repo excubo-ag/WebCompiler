@@ -12,7 +12,7 @@ namespace WebCompilerTest
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
             var result =  LessOptions.FromConfig(configs.First());
-            Assert.AreEqual(true, result.RelativeUrls);
+            Assert.AreEqual(true, result.relativeUrls);
         }
 
         [TestMethod, TestCategory("LessOptions")]
@@ -20,7 +20,7 @@ namespace WebCompilerTest
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
             var result = LessOptions.FromConfig(configs.First());
-            Assert.AreEqual("./", result.RootPath);
+            Assert.AreEqual("./", result.rootPath);
         }
 
         [TestMethod, TestCategory("LessOptions")]
@@ -28,7 +28,7 @@ namespace WebCompilerTest
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
             var result = LessOptions.FromConfig(configs.First());
-            Assert.AreEqual("strict", result.Math);
+            Assert.AreEqual("strict", result.math);
         }
     }
 }

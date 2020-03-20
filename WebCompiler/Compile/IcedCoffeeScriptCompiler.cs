@@ -21,7 +21,7 @@ namespace WebCompiler
         public CompilerResult Compile(Config config)
         {
             string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.InputFile);
+            string inputFile = Path.Combine(baseFolder, config.inputFile);
 
             FileInfo info = new FileInfo(inputFile);
             string content = File.ReadAllText(info.FullName);
@@ -45,7 +45,7 @@ namespace WebCompiler
 
                     var options = IcedCoffeeScriptOptions.FromConfig(config);
 
-                    if (options.SourceMap || config.SourceMap)
+                    if (options.sourceMap || config.sourceMap)
                     {
                         if (File.Exists(tempMapFile))
                             result.SourceMap = File.ReadAllText(tempMapFile);
@@ -97,27 +97,27 @@ namespace WebCompiler
         {
             string arguments = ConstructArguments(config);
 
-            ProcessStartInfo start = new ProcessStartInfo
-            {
-                WorkingDirectory = info.Directory.FullName,
-                UseShellExecute = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\iced.cmd")}\" {arguments} \"{info.FullName}\"\"",
-                StandardErrorEncoding = Encoding.UTF8,
-                RedirectStandardError = true,
-            };
+            //ProcessStartInfo start = new ProcessStartInfo
+            //{
+            //    WorkingDirectory = info.Directory.FullName,
+            //    UseShellExecute = false,
+            //    WindowStyle = ProcessWindowStyle.Hidden,
+            //    CreateNoWindow = true,
+            //    FileName = "cmd.exe",
+            //    Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\iced.cmd")}\" {arguments} \"{info.FullName}\"\"",
+            //    StandardErrorEncoding = Encoding.UTF8,
+            //    RedirectStandardError = true,
+            //};
 
-            start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
+            //start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
 
-            using (Process p = Process.Start(start))
-            {
-                var stderr = p.StandardError.ReadToEndAsync();
-                p.WaitForExit();
+            //using (Process p = Process.Start(start))
+            //{
+            //    var stderr = p.StandardError.ReadToEndAsync();
+            //    p.WaitForExit();
 
-                _error = stderr.Result;
-            }
+            //    _error = stderr.Result;
+            //}
         }
 
         private string ConstructArguments(Config config)
@@ -126,14 +126,14 @@ namespace WebCompiler
 
             var options = IcedCoffeeScriptOptions.FromConfig(config);
 
-            if (options.SourceMap || config.SourceMap)
+            if (options.sourceMap || config.sourceMap)
                 arguments += " --map";
 
-            if (options.Bare)
+            if (options.bare)
                 arguments += " --bare";
 
-            if (!string.IsNullOrEmpty(options.RuntimeMode))
-                arguments += " --runtime " + options.RuntimeMode;
+            if (!string.IsNullOrEmpty(options.runtimeMode))
+                arguments += " --runtime " + options.runtimeMode;
 
             return arguments;
         }

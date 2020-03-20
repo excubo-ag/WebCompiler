@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebCompiler
 {
@@ -24,13 +24,13 @@ namespace WebCompiler
             configs.Add(config);
             config.FileName = fileName;
 
-            JsonSerializerSettings settings = new JsonSerializerSettings()
+            JsonSerializerOptions settings = new JsonSerializerOptions()
             {
-                Formatting = Formatting.Indented,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
+                IgnoreNullValues = true,
+                WriteIndented = true
             };
 
-            string content = JsonConvert.SerializeObject(configs, settings);
+            string content = JsonSerializer.Serialize(configs, settings);
             File.WriteAllText(fileName, content, new UTF8Encoding(true));
         }
 
@@ -45,7 +45,7 @@ namespace WebCompiler
             if (configs.Contains(configToRemove))
             {
                 newConfigs.AddRange(configs.Where(b => !b.Equals(configToRemove)));
-                string content = JsonConvert.SerializeObject(newConfigs, Formatting.Indented);
+                string content = JsonSerializer.Serialize(newConfigs, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(configToRemove.FileName, content);
             }
         }
@@ -86,7 +86,7 @@ namespace WebCompiler
                 }
             };
 
-            string json = JsonConvert.SerializeObject(defaults, Formatting.Indented);
+            string json = JsonSerializer.Serialize(defaults, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fileName, json);
         }
 
@@ -103,7 +103,7 @@ namespace WebCompiler
                 return Enumerable.Empty<Config>();
 
             string content = File.ReadAllText(fileName);
-            var configs = JsonConvert.DeserializeObject<IEnumerable<Config>>(content);
+            var configs = JsonSerializer.Deserialize<List<Config>>(content, new JsonSerializerOptions { AllowTrailingCommas = true });
             string folder = Path.GetDirectoryName(file.FullName);
 
             foreach (Config config in configs)

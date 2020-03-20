@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace WebCompiler
+﻿namespace WebCompiler
 {
     /// <summary>
     /// Give all options for the LESS compiler

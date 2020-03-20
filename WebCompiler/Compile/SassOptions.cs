@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace WebCompiler
+﻿namespace WebCompiler
 {
     /// <summary>
     /// Give all options for the Sass compiler
@@ -22,37 +20,35 @@ namespace WebCompiler
 
             var autoPrefix = GetValue(config, "autoPrefix");
             if (autoPrefix != null)
-                AutoPrefix = autoPrefix;
+                this.autoPrefix = autoPrefix;
 
-            if (config.Options.ContainsKey("outputStyle"))
-                OutputStyle = config.Options["outputStyle"].ToString();
+            if (config.options.ContainsKey("outputStyle"))
+                outputStyle = config.options["outputStyle"].ToString();
 
-            if (config.Options.ContainsKey("indentType"))
-                IndentType = config.Options["indentType"].ToString();
+            if (config.options.ContainsKey("indentType"))
+                indentType = config.options["indentType"].ToString();
 
-            int precision = 5;
-            if (int.TryParse(GetValue(config, "precision"), out precision))
-                Precision = precision;
+            if (int.TryParse(GetValue(config, "precision"), out var precision))
+                this.Precision = precision;
 
-            int indentWidth = -1;
-            if (int.TryParse(GetValue(config, "indentWidth"), out indentWidth))
-                IndentWidth = indentWidth;
+            if (int.TryParse(GetValue(config, "indentWidth"), out var indentWidth))
+                this.indentWidth = indentWidth;
 
             var relativeUrls = GetValue(config, "relativeUrls");
             if (relativeUrls != null)
-                RelativeUrls = relativeUrls.ToLowerInvariant() == trueStr;
+                this.relativeUrls = relativeUrls.ToLowerInvariant() == trueStr;
 
             var includePath = GetValue(config, "includePath");
             if (includePath != null)
-                IncludePath = includePath;
+                this.includePath = includePath;
 
             var sourceMapRoot = GetValue(config, "sourceMapRoot");
             if (sourceMapRoot != null)
-                SourceMapRoot = sourceMapRoot;
+                this.sourceMapRoot = sourceMapRoot;
 
             var lineFeed = GetValue(config, "lineFeed");
             if (lineFeed != null)
-                LineFeed = lineFeed;
+                this.lineFeed = lineFeed;
         }
 
         /// <summary>
@@ -67,32 +63,27 @@ namespace WebCompiler
         /// Autoprefixer will use the data based on current browser popularity and
         /// property support to apply prefixes for you.
         /// </summary>
-        [JsonProperty("autoPrefix")]
-        public string AutoPrefix { get; set; } = "";
+        public string autoPrefix { get; set; } = "";
 
         /// <summary>
         /// Path to look for imported files
         /// </summary>
-        [JsonProperty("includePath")]
-        public string IncludePath { get; set; } = string.Empty;
+        public string includePath { get; set; } = string.Empty;
 
         /// <summary>
         /// Indent type for output CSS.
         /// </summary>
-        [JsonProperty("indentType")]
-        public string IndentType { get; set; } = "space";
+        public string indentType { get; set; } = "space";
 
         /// <summary>
         /// Number of spaces or tabs (maximum value: 10)
         /// </summary>
-        [JsonProperty("indentWidth")]
-        public int IndentWidth { get; set; } = 2;
+        public int indentWidth { get; set; } = 2;
 
         /// <summary>
         /// Type of output style
         /// </summary>
-        [JsonProperty("outputStyle")]
-        public string OutputStyle { get; set; } = "nested";
+        public string outputStyle { get; set; } = "nested";
 
 
         /// <summary>
@@ -104,20 +95,17 @@ namespace WebCompiler
         /// This option allows you to re-write URL's in imported files so that the URL is always
         /// relative to the base imported file.
         /// </summary>
-        [JsonProperty("relativeUrls")]
-        public bool RelativeUrls { get; set; } = true;
+        public bool relativeUrls { get; set; } = true;
 
         /// <summary>
         /// Base path, will be emitted in source-map as is
         /// </summary>
-        [JsonProperty("sourceMapRoot")]
-        public string SourceMapRoot { get; set; } = string.Empty;
+        public string sourceMapRoot { get; set; } = string.Empty;
 
         /// <summary>
         /// Linefeed style (cr | crlf | lf | lfcr)
         /// </summary>
-        [JsonProperty("lineFeed")]
-        public string LineFeed { get; set; } = string.Empty;
+        public string lineFeed { get; set; } = string.Empty;
 
 
     }

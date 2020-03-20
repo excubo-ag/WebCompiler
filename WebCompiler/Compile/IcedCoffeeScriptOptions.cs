@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace WebCompiler
+﻿namespace WebCompiler
 {
     /// <summary>
     /// Give all options for the CoffeeScript compiler
@@ -22,11 +20,11 @@ namespace WebCompiler
 
             var bare = GetValue(config, "bare");
             if (bare != null)
-                Bare = bare.ToLowerInvariant() == trueStr;
+                this.bare = bare.ToLowerInvariant() == trueStr;
 
             var runtimeMode = GetValue(config, "runtimeMode");
             if (runtimeMode != null)
-                RuntimeMode = runtimeMode.ToLowerInvariant();
+                this.runtimeMode = runtimeMode.ToLowerInvariant();
         }
 
         /// <summary>
@@ -40,13 +38,11 @@ namespace WebCompiler
         /// <summary>
         /// Compile the JavaScript without the top-level function safety wrapper.
         /// </summary>
-        [JsonProperty("bare")]
-        public bool Bare { get; set; } = false;
+        public bool bare { get; set; } = false;
 
         /// <summary>
         /// Specify how the Iced runtime is included in the output JavaScript file.
         /// </summary>
-        [JsonProperty("runtimeMode")]
-        public string RuntimeMode { get; set; } = "node";
+        public string runtimeMode { get; set; } = "node";
     }
 }

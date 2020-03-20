@@ -53,7 +53,7 @@ namespace WebCompilerTest.Minify
         {
             var configPath = Path.Combine(processingConfigFile, "outputfilemin.json");
             var configs = ConfigHandler.GetConfigs(configPath);
-            var outputFile = configs.First().OutputFile;
+            var outputFile = configs.First().outputFile;
 
             // Capture the name of the resulting (minified) file.
             string resultFile = string.Empty;

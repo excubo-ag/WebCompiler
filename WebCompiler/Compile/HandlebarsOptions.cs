@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Linq;
+﻿using System.Linq;
 
 namespace WebCompiler
 {
@@ -23,39 +22,39 @@ namespace WebCompiler
 
             var name = GetValue(config, "name");
             if (name != null)
-                Name = name;
+                this.name = name;
 
             var @namespace = GetValue(config, "namespace");
             if (@namespace != null)
-                TemplateNameSpace = @namespace;
+                this.@namespace = @namespace;
 
             var root = GetValue(config, "root");
             if (root != null)
-                Root = root;
+                this.root = root;
 
             var commonjs = GetValue(config, "commonjs");
             if (commonjs != null)
-                CommonJS = commonjs;
+                this.commonjs = commonjs;
 
             var amd = GetValue(config, "amd");
             if (amd != null)
-                AMD = amd.ToLowerInvariant() == trueStr;
+                this.amd = amd.ToLowerInvariant() == trueStr;
 
             var forcePartial = GetValue(config, "forcePartial");
             if (forcePartial != null)
-                ForcePartial = forcePartial.ToLowerInvariant() == trueStr;
+                this.forcePartial = forcePartial.ToLowerInvariant() == trueStr;
 
             var noBOM = GetValue(config, "noBOM");
             if (noBOM != null)
-                NoBOM = noBOM.ToLowerInvariant() == trueStr;
+                this.noBOM = noBOM.ToLowerInvariant() == trueStr;
 
             var knownHelpersOnly = GetValue(config, "knownHelpersOnly");
             if (knownHelpersOnly != null)
-                KnownHelpersOnly = knownHelpersOnly.ToLowerInvariant() == trueStr;
+                this.knownHelpersOnly = knownHelpersOnly.ToLowerInvariant() == trueStr;
 
             var knownHelpers = GetValue(config, "knownHelpers");
             if (knownHelpers != null)            
-                KnownHelpers = knownHelpers.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToArray();
+                this.knownHelpers = knownHelpers.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim()).ToArray();
         }
 
         /// <summary>
@@ -69,56 +68,47 @@ namespace WebCompiler
         /// <summary>
         /// Template root. Base value that will be stripped from template names.
         /// </summary>
-        [JsonProperty("root")]
-        public string Root { get; set; } = "";
+        public string root { get; set; } = "";
 
         /// <summary>
         /// Removes the BOM (Byte Order Mark) from the beginning of the templates.
         /// </summary>
-        [JsonProperty("noBOM")]
-        public bool NoBOM { get; set; } = false;
+        public bool noBOM { get; set; } = false;
 
         /// <summary>
         /// Name of passed string templates.
         /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; } = "";
+        public string name { get; set; } = "";
 
         /// <summary>
         /// Template namespace 
         /// </summary>
-        [JsonProperty("namespace")]
-        public string TemplateNameSpace { get; set; } = "";
+        public string @namespace { get; set; } = "";
 
         /// <summary>
         /// Compile with known helpers only
         /// </summary>
-        [JsonProperty("knownHelpersOnly")]
-        public bool KnownHelpersOnly { get; set; } = false;
+        public bool knownHelpersOnly { get; set; } = false;
 
 
         /// <summary>
         /// Forcing a partial template compilation
         /// </summary>
-        [JsonProperty("forcePartial")]
-        public bool ForcePartial { get; set; } = false;
+        public bool forcePartial { get; set; } = false;
 
         /// <summary>
         /// List of known helpers for a more optimized output
         /// </summary>
-        [JsonProperty("knownHelpers")]
-        public string[] KnownHelpers { get; set; } = new string[0];
+        public string[] knownHelpers { get; set; } = new string[0];
 
         /// <summary>
         /// Path to the Handlebars module to export CommonJS style
         /// </summary>
-        [JsonProperty("commonjs")]
-        public string CommonJS { get; set; } = "";
+        public string commonjs { get; set; } = "";
 
         /// <summary>
         /// Exports amd style (require.js), this option has priority to commonjs.
         /// </summary>
-        [JsonProperty("amd")]
-        public bool AMD { get; set; } = false;
+        public bool amd { get; set; } = false;
     }
 }

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebCompiler", "WebCompiler\WebCompiler.csproj", "{B714B5B9-27C4-443C-9517-FE5C5EF46EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests_WebCompiler", "Tests_WebCompiler\Tests_WebCompiler.csproj", "{E5BAB3D9-6B08-4221-91F8-09EBF8F7C7D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests_WebCompiler", "Tests_WebCompiler\Tests_WebCompiler.csproj", "{E5BAB3D9-6B08-4221-91F8-09EBF8F7C7D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

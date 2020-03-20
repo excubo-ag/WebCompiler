@@ -33,13 +33,13 @@ namespace WebCompilerTest.Config
         {
             var newConfig = new WebCompiler.Config();
             const string newInputFileName = "newInputFile";
-            newConfig.InputFile = newInputFileName;
+            newConfig.inputFile = newInputFileName;
 
             _handler.AddConfig(processingConfigFile, newConfig);
 
             var configs = ConfigHandler.GetConfigs(processingConfigFile);
             Assert.AreEqual(2, configs.Count());
-            Assert.AreEqual(newInputFileName, configs.ElementAt(1).InputFile);
+            Assert.AreEqual(newInputFileName, configs.ElementAt(1).inputFile);
         }
 
         [TestMethod, TestCategory("Config")]

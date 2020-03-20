@@ -75,7 +75,7 @@ namespace WebCompilerTest
         public void CompileLessWithOptions()
         {
             var result = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
-            Assert.IsTrue(result.First().Options.Count == 2);
+            Assert.IsTrue(result.First().options.Count == 2);
         }
 
         [TestMethod, TestCategory("LESS")]
