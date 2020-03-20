@@ -92,7 +92,7 @@ namespace WebCompiler
 
             if (dependencies != null)
             {
-                string key = input.FullName.ToLowerInvariant();
+                string key = input.FullName;
                 return CheckForNewerDependenciesRecursively(key, dependencies, output);
             }
 

@@ -117,7 +117,7 @@ namespace WebCompiler
                     if (input.Equals(sourceFile, StringComparison.OrdinalIgnoreCase))
                     {
                         list.Add(ProcessConfig(folder, config));
-                        compiledFiles.Add(input.ToLowerInvariant());
+                        compiledFiles.Add(input);
                     }
                 }
 
@@ -125,14 +125,14 @@ namespace WebCompiler
                 var dependencies = DependencyService.GetDependencies(projectPath, sourceFile);
                 if (dependencies != null)
                 {
-                    string key = sourceFile.ToLowerInvariant();
+                    string key = sourceFile;
 
                     if (dependencies.ContainsKey(key))
                     {
                         //compile all files that have references to the compiled file
                         foreach (var file in dependencies[key].DependentFiles.ToArray())
                         {
-                            if (!compiledFiles.Contains(file.ToLowerInvariant()))
+                            if (!compiledFiles.Contains(file))
                                 list.AddRange(SourceFileChanged(configFile, file, projectPath, compiledFiles));
                         }
                     }

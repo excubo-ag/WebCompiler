@@ -14,12 +14,8 @@ namespace WebCompiler
         /// </summary>
         public static string MakeRelative(string baseFile, string file)
         {
-            Console.WriteLine($"MakeRelative({baseFile}, {file})");
-            Uri baseUri = new Uri(baseFile, UriKind.RelativeOrAbsolute);
-            Uri fileUri = new Uri(file, UriKind.RelativeOrAbsolute);
-            Console.WriteLine($"Modified: {baseUri}, {fileUri}");
-            var base_segments = baseUri.Segments;
-            var file_segments = fileUri.Segments;
+            var base_segments = baseFile.Split(Path.DirectorySeparatorChar);
+            var file_segments = file.Split(Path.DirectorySeparatorChar);
             int i = 0;
             for (; i < base_segments.Length && i < file_segments.Length; ++i)
             {

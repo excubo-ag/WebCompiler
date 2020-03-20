@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUglify;
@@ -148,7 +149,7 @@ namespace WebCompilerTest.Minify
         }
 
         [TestMethod, TestCategory("CssOptions")]
-        public void IndendSize()
+        public void IndentSize()
         {
             var configFile = Path.Combine(processingConfigFile, "indentsize.json");
             var configs = ConfigHandler.GetConfigs(configFile);
