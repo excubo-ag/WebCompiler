@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -11,39 +11,39 @@ namespace WebCompilerTest
         public void OutputStyleNested()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/options/scss/scssconfignested.json");
-            var result =  WebCompiler.SassOptions.FromConfig(configs.ElementAt(0));
-            Assert.AreEqual("nested", result.outputStyle);
+            var result = configs.First().Compilers.Sass;
+            Assert.AreEqual("nested", result.OutputStyle);
         }
 
         [TestMethod, TestCategory("SCSSOptions")]
         public void OutputStyleExpanded()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/options/scss/scssconfigexpanded.json");
-            var result = WebCompiler.SassOptions.FromConfig(configs.ElementAt(0));
-            Assert.AreEqual("expanded", result.outputStyle);
+            var result = configs.First().Compilers.Sass;
+            Assert.AreEqual("expanded", result.OutputStyle);
         }
 
         [TestMethod, TestCategory("SCSSOptions")]
         public void OutputStyleCompact()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/options/scss/scssconfigcompact.json");
-            var result = WebCompiler.SassOptions.FromConfig(configs.ElementAt(0));
-            Assert.AreEqual("compact", result.outputStyle);
+            var result = configs.First().Compilers.Sass;
+            Assert.AreEqual("compact", result.OutputStyle);
         }
 
         [TestMethod, TestCategory("SCSSOptions")]
         public void OutputStyleCompressed()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/options/scss/scssconfigcompressed.json");
-            var result = WebCompiler.SassOptions.FromConfig(configs.ElementAt(0));
-            Assert.AreEqual("compressed", result.outputStyle);
+            var result = configs.First().Compilers.Sass;
+            Assert.AreEqual("compressed", result.OutputStyle);
         }
 
         [TestMethod, TestCategory("SCSSOptions")]
         public void Precision()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/options/scss/scssconfigprecision.json");
-            var result = WebCompiler.SassOptions.FromConfig(configs.ElementAt(0));
+            var result = configs.First().Compilers.Sass;
             Assert.AreEqual(3, result.Precision);
         }
     }

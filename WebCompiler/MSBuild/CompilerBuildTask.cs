@@ -20,7 +20,7 @@ namespace WebCompiler
         /// </summary>
         public override bool Execute()
         {
-            FileInfo configFile = new FileInfo(FileName);
+            var configFile = new FileInfo(FileName);
 
             if (!configFile.Exists)
             {
@@ -30,7 +30,7 @@ namespace WebCompiler
 
             Log.LogMessage(MessageImportance.High, Environment.NewLine + "WebCompiler: Begin compiling " + configFile.Name);
 
-            ConfigFileProcessor processor = new ConfigFileProcessor();
+            var processor = new ConfigFileProcessor();
             processor.BeforeProcess += (s, e) => { if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.Config.GetAbsoluteOutputFile()); } };
             processor.AfterProcess += Processor_AfterProcess;
             processor.BeforeWritingSourceMap += (s, e) => { FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); };
@@ -43,16 +43,16 @@ namespace WebCompiler
 
             try
             {
-                System.Collections.Generic.IEnumerable<CompilerResult> results = processor.Process(configFile.FullName);
-                bool isSuccessful = true;
+                var results = processor.Process(configFile.FullName);
+                var isSuccessful = true;
 
-                foreach (CompilerResult result in results)
+                foreach (var result in results)
                 {
                     if (result.HasErrors)
                     {
                         isSuccessful = false;
 
-                        foreach (CompilerError error in result.Errors)
+                        foreach (var error in result.Errors)
                         {
                             Log.LogError("WebCompiler", "0", "", error.FileName, error.LineNumber, error.ColumnNumber, error.LineNumber, error.ColumnNumber, error.Message, null);
                         }
@@ -69,22 +69,22 @@ namespace WebCompiler
             }
         }
 
-        private void FileMinifier_AfterWritingGzipFile(object sender, MinifyFileEventArgs e)
+        private void FileMinifier_AfterWritingGzipFile(object? sender, MinifyFileEventArgs? e)
         {
             Log.LogMessage(MessageImportance.High, "\tGzipped  " + FileHelpers.MakeRelative(FileName, e.ResultFile));
         }
 
-        private void Processor_AfterProcess(object sender, CompileFileEventArgs e)
+        private void Processor_AfterProcess(object? sender, CompileFileEventArgs? e)
         {
-            Log.LogMessage(MessageImportance.High, "\tCompiled " + e.Config.outputFile);
+            Log.LogMessage(MessageImportance.High, "\tCompiled " + e.Config.OutputFile);
         }
 
-        private void Processor_AfterWritingSourceMap(object sender, SourceMapEventArgs e)
+        private void Processor_AfterWritingSourceMap(object? sender, SourceMapEventArgs? e)
         {
             Log.LogMessage(MessageImportance.High, "\tSourceMap " + FileHelpers.MakeRelative(FileName, e.ResultFile));
         }
 
-        private void FileMinifier_AfterWritingMinFile(object sender, MinifyFileEventArgs e)
+        private void FileMinifier_AfterWritingMinFile(object? sender, MinifyFileEventArgs? e)
         {
             Log.LogMessage(MessageImportance.High, "\tMinified " + FileHelpers.MakeRelative(FileName, e.ResultFile));
         }

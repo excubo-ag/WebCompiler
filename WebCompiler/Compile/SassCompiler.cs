@@ -26,13 +26,13 @@ namespace WebCompiler
 
         public CompilerResult Compile(Config config)
         {
-            string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.inputFile);
+            var baseFolder = Path.GetDirectoryName(config.FileName);
+            var inputFile = Path.Combine(baseFolder, config.InputFile);
 
-            FileInfo info = new FileInfo(inputFile);
-            string content = File.ReadAllText(info.FullName);
+            var info = new FileInfo(inputFile);
+            var content = File.ReadAllText(info.FullName);
 
-            CompilerResult result = new CompilerResult
+            var result = new CompilerResult
             {
                 FileName = info.FullName,
                 OriginalContent = content,
@@ -42,7 +42,7 @@ namespace WebCompiler
             {
                 RunCompilerProcess(config, info);
 
-                int sourceMapIndex = _output.LastIndexOf("*/");
+                var sourceMapIndex = _output.LastIndexOf("*/");
                 if (sourceMapIndex > -1 && _output.Contains("sourceMappingURL=data:"))
                 {
                     _output = _output.Substring(0, sourceMapIndex + 2);
@@ -52,9 +52,9 @@ namespace WebCompiler
 
                 if (_error.Length > 0)
                 {
-                    RawCompilerError json = JsonSerializer.Deserialize<RawCompilerError>(_error);
+                    var json = JsonSerializer.Deserialize<RawCompilerError>(_error);
 
-                    CompilerError ce = new CompilerError
+                    var ce = new CompilerError
                     {
                         FileName = info.FullName,
                         Message = json.message,
@@ -68,7 +68,7 @@ namespace WebCompiler
             }
             catch (Exception ex)
             {
-                CompilerError error = new CompilerError
+                var error = new CompilerError
                 {
                     FileName = info.FullName,
                     Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
@@ -84,10 +84,10 @@ namespace WebCompiler
 
         private void RunCompilerProcess(Config config, FileInfo info)
         {
-            string arguments = ConstructArguments(config);
+            var arguments = ConstructArguments(config);
             // TODO see whether more arguments need to be passed to SassCompiler
-            bool inline_source_map = config.options.ContainsKey("sourceMap") && config.options["sourceMap"] is JsonElement je ? je.ValueKind == JsonValueKind.True : default;
-            LibSassHost.CompilationResult result = LibSassHost.SassCompiler.CompileFile(info.FullName, config.GetAbsoluteOutputFile().FullName, info.Name, new LibSassHost.CompilationOptions
+            var inline_source_map = config.Compilers.Sass.SourceMap;
+            var result = LibSassHost.SassCompiler.CompileFile(info.FullName, config.GetAbsoluteOutputFile().FullName, info.Name, new LibSassHost.CompilationOptions
             {
                 SourceMap = true,
                 InlineSourceMap = inline_source_map
@@ -137,46 +137,43 @@ namespace WebCompiler
 
         private static string ConstructArguments(Config config)
         {
-            string arguments = "";
+            var arguments = "";
 
-            SassOptions options = SassOptions.FromConfig(config);
+            var options = config.Compilers.Sass;
 
-            if (options.sourceMap || config.sourceMap)
+            if (options.SourceMap || config.SourceMap)
             {
                 arguments += " --source-map-embed=true";
             }
 
             arguments += " --precision=" + options.Precision;
 
-            if (!string.IsNullOrEmpty(options.outputStyle))
+            if (!string.IsNullOrEmpty(options.OutputStyle))
             {
-                arguments += " --output-style=" + options.outputStyle;
+                arguments += " --output-style=" + options.OutputStyle;
             }
 
-            if (!string.IsNullOrEmpty(options.indentType))
+            if (options.IndentType != "space")
             {
-                arguments += " --indent-type=" + options.indentType;
+                arguments += " --indent-type=" + options.IndentType.ToLowerInvariant();
             }
 
-            if (options.indentWidth > -1)
+            if (options.IndentWidth > -1)
             {
-                arguments += " --indent-width=" + options.indentWidth;
+                arguments += " --indent-width=" + options.IndentWidth;
             }
 
-            if (!string.IsNullOrEmpty(options.includePath))
+            if (!string.IsNullOrEmpty(options.IncludePath))
             {
-                arguments += " --include-path=" + options.includePath;
+                arguments += " --include-path=" + options.IncludePath;
             }
 
-            if (!string.IsNullOrEmpty(options.sourceMapRoot))
+            if (!string.IsNullOrEmpty(options.SourceMapRoot))
             {
-                arguments += " --source-map-root=" + options.sourceMapRoot;
+                arguments += " --source-map-root=" + options.SourceMapRoot;
             }
 
-            if (!string.IsNullOrEmpty(options.lineFeed))
-            {
-                arguments += " --linefeed=" + options.lineFeed;
-            }
+            arguments += " --linefeed=" + options.LineFeed.ToString();
 
             return arguments;
         }

@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace WebCompiler
 {
-    internal class Program
+    internal static class Program
     {
         private static int Main(params string[] args)
         {
-            string configPath = args[0];
-            string file = args.Length > 1 ? args[1] : null;
-            IEnumerable<Config> configs = GetConfigs(configPath, file);
+            var configPath = args[0];
+            var file = args.Length > 1 ? args[1] : null;
+            var configs = GetConfigs(configPath, file);
 
             if (configs == null)
             {
@@ -19,15 +19,15 @@ namespace WebCompiler
                 return 0;
             }
 
-            ConfigFileProcessor processor = new ConfigFileProcessor();
+            var processor = new ConfigFileProcessor();
             EventHookups(processor);
 
-            IEnumerable<CompilerResult> results = processor.Process(configPath, configs);
-            IEnumerable<CompilerResult> errorResults = results.Where(r => r.HasErrors);
+            var results = processor.Process(configPath, configs);
+            var errorResults = results.Where(r => r.HasErrors);
 
-            foreach (CompilerResult result in errorResults)
+            foreach (var result in errorResults)
             {
-                foreach (CompilerError error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     Console.Write("\x1B[31m" + error.Message);
                 }
@@ -40,7 +40,7 @@ namespace WebCompiler
         {
             // For console colors, see http://stackoverflow.com/questions/23975735/what-is-this-u001b9-syntax-of-choosing-what-color-text-appears-on-console
 
-            processor.BeforeProcess += (s, e) => { Console.WriteLine($"Processing \x1B[36m{e.Config.inputFile}"); if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.Config.GetAbsoluteOutputFile()); } };
+            processor.BeforeProcess += (s, e) => { Console.WriteLine($"Processing \x1B[36m{e.Config.InputFile}"); if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.Config.GetAbsoluteOutputFile()); } };
             processor.AfterProcess += (s, e) => { Console.WriteLine($"  \x1B[32mCompiled"); };
             processor.BeforeWritingSourceMap += (s, e) => { if (e.ContainsChanges) { FileHelpers.RemoveReadonlyFlagFromFile(e.ResultFile); } };
             processor.AfterWritingSourceMap += (s, e) => { Console.WriteLine($"  \x1B[32mSourcemap"); };
@@ -52,9 +52,9 @@ namespace WebCompiler
             FileMinifier.AfterWritingGzipFile += (s, e) => { Console.WriteLine($"  \x1B[32mGZipped"); };
         }
 
-        private static IEnumerable<Config> GetConfigs(string configPath, string file)
+        private static IEnumerable<Config>? GetConfigs(string configPath, string? file)
         {
-            IEnumerable<Config> configs = ConfigHandler.GetConfigs(configPath);
+            var configs = ConfigHandler.GetConfigs(configPath);
 
             if (configs == null || !configs.Any())
             {
@@ -65,11 +65,11 @@ namespace WebCompiler
             {
                 if (file.StartsWith("*"))
                 {
-                    configs = configs.Where(c => Path.GetExtension(c.inputFile).Equals(file.Substring(1), StringComparison.OrdinalIgnoreCase));
+                    configs = configs.Where(c => Path.GetExtension(c.InputFile).Equals(file.Substring(1), StringComparison.OrdinalIgnoreCase));
                 }
                 else
                 {
-                    configs = configs.Where(c => c.inputFile.Equals(file, StringComparison.OrdinalIgnoreCase));
+                    configs = configs.Where(c => c.InputFile.Equals(file, StringComparison.OrdinalIgnoreCase));
                 }
             }
 

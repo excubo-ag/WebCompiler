@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -42,12 +42,12 @@ namespace WebCompilerTest
 
             Assert.IsTrue(File.ReadAllText("../../../artifacts/less/test.min.css").Contains("important comment"), "Default options");
 
-            string sourceMap = ScssTest.DecodeSourceMap(result.ElementAt(1).CompiledContent);
+            var sourceMap = ScssTest.DecodeSourceMap(result.ElementAt(1).CompiledContent);
             Assert.IsTrue(sourceMap.Contains("\"relative.less\""), "Source map paths");
 
-            string compiled = result.First().CompiledContent;
-            int top = compiled.IndexOf("top");
-            int pos = compiled.IndexOf("position");
+            var compiled = result.First().CompiledContent;
+            var top = compiled.IndexOf("top");
+            var pos = compiled.IndexOf("position");
             Assert.IsTrue(pos < top, "CSS Comb ordering");
         }
 
@@ -75,7 +75,7 @@ namespace WebCompilerTest
         public void CompileLessWithOptions()
         {
             var result = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
-            Assert.IsTrue(result.First().options.Count == 2);
+            Assert.IsTrue(result.First().Compilers.Less != null);
         }
 
         [TestMethod, TestCategory("LESS")]

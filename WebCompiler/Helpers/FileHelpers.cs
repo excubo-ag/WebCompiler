@@ -14,9 +14,9 @@ namespace WebCompiler
         /// </summary>
         public static string MakeRelative(string baseFile, string file)
         {
-            string[] base_segments = baseFile.Split(Path.DirectorySeparatorChar);
-            string[] file_segments = file.Split(Path.DirectorySeparatorChar);
-            int i = 0;
+            var base_segments = baseFile.Split(Path.DirectorySeparatorChar);
+            var file_segments = file.Split(Path.DirectorySeparatorChar);
+            var i = 0;
             for (; i < base_segments.Length && i < file_segments.Length; ++i)
             {
                 if (base_segments[i] != file_segments[i])
@@ -24,8 +24,8 @@ namespace WebCompiler
                     break;
                 }
             }
-            string relative_portion_base = string.Join(string.Empty, Enumerable.Repeat(".." + Path.DirectorySeparatorChar, base_segments.Length - i - 1));
-            string relative_portion_file = string.Join(string.Empty, file_segments.Skip(i));
+            var relative_portion_base = string.Join(string.Empty, Enumerable.Repeat(".." + Path.DirectorySeparatorChar, base_segments.Length - i - 1));
+            var relative_portion_file = string.Join(string.Empty, file_segments.Skip(i));
             return Uri.UnescapeDataString(relative_portion_base + relative_portion_file);
         }
 
@@ -34,7 +34,7 @@ namespace WebCompiler
         /// </summary>
         public static void RemoveReadonlyFlagFromFile(string fileName)
         {
-            FileInfo file = new FileInfo(fileName);
+            var file = new FileInfo(fileName);
 
             if (file.Exists && file.IsReadOnly)
             {
@@ -60,7 +60,7 @@ namespace WebCompiler
                 return true;
             }
 
-            string oldContent = File.ReadAllText(fileName);
+            var oldContent = File.ReadAllText(fileName);
 
             return oldContent != newContent;
         }

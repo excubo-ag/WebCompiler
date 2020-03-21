@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -11,24 +11,24 @@ namespace WebCompilerTest
         public void RelativeUrls()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
-            var result =  LessOptions.FromConfig(configs.First());
-            Assert.AreEqual(true, result.relativeUrls);
+            var result = configs.First().Compilers.Less;
+            Assert.AreEqual(true, result.RelativeUrls);
         }
 
         [TestMethod, TestCategory("LessOptions")]
         public void RootPath()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
-            var result = LessOptions.FromConfig(configs.First());
-            Assert.AreEqual("./", result.rootPath);
+            var result = configs.First().Compilers.Less;
+            Assert.AreEqual("./", result.RootPath);
         }
 
         [TestMethod, TestCategory("LessOptions")]
         public void StrictMath()
         {
             var configs = ConfigHandler.GetConfigs("../../../artifacts/lessconfig.json");
-            var result = LessOptions.FromConfig(configs.First());
-            Assert.AreEqual("strict", result.math);
+            var result = configs.First().Compilers.Less;
+            Assert.AreEqual("strict", result.Math);
         }
     }
 }

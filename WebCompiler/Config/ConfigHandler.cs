@@ -18,19 +18,19 @@ namespace WebCompiler
         /// <param name="config">The compiler config object to add to the configration file.</param>
         public void AddConfig(string fileName, Config config)
         {
-            IEnumerable<Config> existing = GetConfigs(fileName);
-            List<Config> configs = new List<Config>();
+            var existing = GetConfigs(fileName);
+            var configs = new List<Config>();
             configs.AddRange(existing);
             configs.Add(config);
             config.FileName = fileName;
 
-            JsonSerializerOptions settings = new JsonSerializerOptions()
+            var settings = new JsonSerializerOptions()
             {
                 IgnoreNullValues = true,
                 WriteIndented = true
             };
 
-            string content = JsonSerializer.Serialize(configs, settings);
+            var content = JsonSerializer.Serialize(configs, settings);
             File.WriteAllText(fileName, content, new UTF8Encoding(true));
         }
 
@@ -39,13 +39,13 @@ namespace WebCompiler
         /// </summary>
         public void RemoveConfig(Config configToRemove)
         {
-            IEnumerable<Config> configs = GetConfigs(configToRemove.FileName);
-            List<Config> newConfigs = new List<Config>();
+            var configs = GetConfigs(configToRemove.FileName);
+            var newConfigs = new List<Config>();
 
             if (configs.Contains(configToRemove))
             {
                 newConfigs.AddRange(configs.Where(b => !b.Equals(configToRemove)));
-                string content = JsonSerializer.Serialize(newConfigs, new JsonSerializerOptions { WriteIndented = true });
+                var content = JsonSerializer.Serialize(newConfigs, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(configToRemove.FileName, content);
             }
         }
@@ -64,12 +64,12 @@ namespace WebCompiler
             {
                 compilers = new
                 {
-                    less = new LessOptions(),
-                    sass = new SassOptions(),
-                    stylus = new StylusOptions(),
-                    babel = new BabelOptions(),
-                    coffeescript = new IcedCoffeeScriptOptions(),
-                    handlebars = new HandlebarsOptions(),
+                    less = new LessSettings(),
+                    sass = new SassSettings(),
+                    stylus = new StylusSettings(),
+                    babel = new BabelSettings(),
+                    coffeescript = new IcedCoffeeScriptSettings(),
+                    handlebars = new HandlebarsSettings(),
                 },
                 minifiers = new
                 {
@@ -88,7 +88,7 @@ namespace WebCompiler
                 }
             };
 
-            string json = JsonSerializer.Serialize(defaults, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(defaults, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fileName, json);
         }
 
@@ -99,20 +99,31 @@ namespace WebCompiler
         /// <returns>A list of Config objects.</returns>
         public static IEnumerable<Config> GetConfigs(string fileName)
         {
-            FileInfo file = new FileInfo(fileName);
+            var file = new FileInfo(fileName);
 
             if (!file.Exists)
             {
                 return Enumerable.Empty<Config>();
             }
 
-            string content = File.ReadAllText(fileName);
-            List<Config> configs = JsonSerializer.Deserialize<List<Config>>(content, new JsonSerializerOptions { AllowTrailingCommas = true });
+            var content = File.ReadAllText(fileName);
+            var options = new JsonSerializerOptions { AllowTrailingCommas = true, PropertyNameCaseInsensitive = true, IgnoreNullValues = true, IgnoreReadOnlyProperties = true };
+            options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            var configs = JsonSerializer.Deserialize<List<Config>>(content, options);
 
             _ = Path.GetDirectoryName(file.FullName);
 
-            foreach (Config config in configs)
+            var defaults = File.Exists(fileName + ".defaults") ? JsonSerializer.Deserialize<Config>(File.ReadAllText(fileName + ".defaults"), options) : default;
+
+            foreach (var config in configs)
             {
+                if (defaults != null)
+                {
+                    config.Compilers = defaults.Compilers;
+                    config.Minifiers = defaults.Minifiers;
+                }
+                config.ApplyMinify();
+                config.ApplyOptions();
                 config.FileName = fileName;
             }
 

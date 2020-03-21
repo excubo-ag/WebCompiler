@@ -1,7 +1,7 @@
 ﻿[
   {
-    "outputFile": "less/test.css",
-    "inputFile": "less/test.less",
+    "outputFile": "less/test.js",
+    "inputFile": "less/test.js",
     "minify": {
       "evalTreatment": "ignore"
     },

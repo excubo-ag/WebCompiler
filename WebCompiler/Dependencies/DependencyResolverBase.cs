@@ -39,13 +39,13 @@ namespace WebCompiler
             {
                 Dependencies = new Dictionary<string, Dependencies>();
 
-                List<string> files = new List<string>();
-                foreach (string pattern in SearchPatterns)
+                var files = new List<string>();
+                foreach (var pattern in SearchPatterns)
                 {
                     files.AddRange(Directory.GetFiles(projectRootPath, pattern, SearchOption.AllDirectories));
                 }
 
-                foreach (string path in files)
+                foreach (var path in files)
                 {
                     UpdateFileDependencies(path);
                 }

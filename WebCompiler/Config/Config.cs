@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -20,43 +19,103 @@ namespace WebCompiler
         /// <summary>
         /// The relative file path to the output file.
         /// </summary>
-        public string outputFile { get; set; }
+        public string OutputFile { get; set; }
 
         /// <summary>
         /// The relative file path to the input file.
         /// </summary>
-        public string inputFile { get; set; }
+        public string InputFile { get; set; }
 
         /// <summary>
         /// Settings for the minification.
         /// </summary>
-        public Dictionary<string, object> minify { get; set; } = new Dictionary<string, object>();
-
-        /// <summary>
-        /// If true it makes Visual Studio include the output file in the project.
-        /// </summary>
-        [DefaultValue(true)]
-        public bool includeInProject { get; set; } = true;
+        public MinificationSettings Minifiers { get; set; } = new MinificationSettings();
 
         /// <summary>
         /// If true a source map file is generated for the file types that support it.
         /// </summary>
-        public bool sourceMap { get; set; }
+        public bool SourceMap { get; set; }
 
         /// <summary>
         /// Options specific to each compiler. Based on the inputFile property.
         /// </summary>
-        public Dictionary<string, object> options { get; set; } = new Dictionary<string, object>();
+        public CompilerSettingsCollection Compilers { get; set; } = new CompilerSettingsCollection();
 
+        public Dictionary<string, object> Minify { get; set; }
+        public Dictionary<string, object> Options { get; set; }
+        public void ApplyMinify()
+        {
+            if (Minify == null || !Minify.Any())
+            {
+                return;
+            }
+            Minify = Minify.ToDictionary(kv => kv.Key.ToLowerInvariant(), kv => kv.Value);
+            switch (Path.GetExtension(InputFile).ToUpperInvariant())
+            {
+                case ".LESS":
+                case ".SCSS":
+                case ".SASS":
+                case ".STYL":
+                case ".STYLUS":
+                    Minifiers.Css.ChangeSettings(Minify);
+                    break;
+                case ".HANDLEBARS":
+                case ".HBS":
+                case ".COFFEE":
+                case ".ICED":
+                case ".JS":
+                case ".JSX":
+                case ".ES6":
+                    Minifiers.Javascript.ChangeSettings(Minify);
+                    break;
+            }
+
+        }
+        public void ApplyOptions()
+        {
+            if (Options == null || !Options.Any())
+            {
+                return;
+            }
+            Options = Options.ToDictionary(kv => kv.Key.ToLowerInvariant(), kv => kv.Value);
+            switch (Path.GetExtension(InputFile).ToUpperInvariant())
+            {
+                case ".LESS":
+                    Compilers.Less.ChangeSettings(Options);
+                    break;
+                case ".HANDLEBARS":
+                case ".HBS":
+                    Compilers.Handlebars.ChangeSettings(Options);
+                    break;
+                case ".SCSS":
+                case ".SASS":
+                    Compilers.Sass.ChangeSettings(Options);
+                    break;
+                case ".STYL":
+                case ".STYLUS":
+                    Compilers.Stylus.ChangeSettings(Options);
+                    break;
+                case ".COFFEE":
+                case ".ICED":
+                    Compilers.IcedCoffeeScript.ChangeSettings(Options);
+                    break;
+                case ".JS":
+                case ".JSX":
+                case ".ES6":
+                    Compilers.Babel.ChangeSettings(Options);
+                    break;
+            }
+        }
         internal string Output { get; set; }
+        public bool RelativeUrls { get; set; }
 
         /// <summary>
         /// Converts the relative input file to an absolute file path.
         /// </summary>
         public FileInfo GetAbsoluteInputFile()
         {
-            string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, inputFile.Replace('/', Path.DirectorySeparatorChar)));
+            var folder = new FileInfo(FileName).DirectoryName;
+            return new FileInfo(Path.Combine(folder, InputFile.Replace('/', Path.DirectorySeparatorChar)));
         }
 
         /// <summary>
@@ -64,8 +123,8 @@ namespace WebCompiler
         /// </summary>
         public FileInfo GetAbsoluteOutputFile()
         {
-            string folder = new FileInfo(FileName).DirectoryName;
-            return new FileInfo(Path.Combine(folder, outputFile.Replace('/', Path.DirectorySeparatorChar)));
+            var folder = new FileInfo(FileName).DirectoryName;
+            return new FileInfo(Path.Combine(folder, OutputFile.Replace('/', Path.DirectorySeparatorChar)));
         }
 
         /// <summary>
@@ -73,8 +132,8 @@ namespace WebCompiler
         /// </summary>
         public bool CompilationRequired()
         {
-            FileInfo input = GetAbsoluteInputFile();
-            FileInfo output = GetAbsoluteOutputFile();
+            var input = GetAbsoluteInputFile();
+            var output = GetAbsoluteOutputFile();
 
             if (!output.Exists)
             {
@@ -91,19 +150,19 @@ namespace WebCompiler
 
         private bool HasDependenciesNewerThanOutput(FileInfo input, FileInfo output)
         {
-            string projectRoot = new FileInfo(FileName).DirectoryName;
-            Dictionary<string, Dependencies> dependencies = DependencyService.GetDependencies(projectRoot, input.FullName);
+            var projectRoot = new FileInfo(FileName).DirectoryName;
+            var dependencies = DependencyService.GetDependencies(projectRoot, input.FullName);
 
             if (dependencies != null)
             {
-                string key = input.FullName;
+                var key = input.FullName;
                 return CheckForNewerDependenciesRecursively(key, dependencies, output);
             }
 
             return false;
         }
 
-        private bool CheckForNewerDependenciesRecursively(string key, Dictionary<string, Dependencies> dependencies, FileInfo output, HashSet<string> checkedDependencies = null)
+        private bool CheckForNewerDependenciesRecursively(string key, Dictionary<string, Dependencies> dependencies, FileInfo output, HashSet<string>? checkedDependencies = null)
         {
             if (checkedDependencies == null)
             {
@@ -117,14 +176,14 @@ namespace WebCompiler
                 return false;
             }
 
-            foreach (string file in dependencies[key].DependentOn.ToArray())
+            foreach (var file in dependencies[key].DependentOn.ToArray())
             {
                 if (checkedDependencies.Contains(file))
                 {
                     continue;
                 }
 
-                FileInfo fileInfo = new FileInfo(file);
+                var fileInfo = new FileInfo(file);
 
                 if (!fileInfo.Exists)
                 {
@@ -143,89 +202,6 @@ namespace WebCompiler
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Determines if the object is equals to the other object.
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            if (obj == this)
-            {
-                return true;
-            }
-
-            Config other = (Config)obj;
-
-            return GetHashCode() == other.GetHashCode();
-        }
-        public override int GetHashCode() => base.GetHashCode();
-
-        /// <summary>For the JSON.NET serializer</summary>
-        public bool ShouldSerializeIncludeInProject()
-        {
-            Config config = new Config();
-            return includeInProject != config.includeInProject;
-        }
-
-        /// <summary>For the JSON.NET serializer</summary>
-        public bool ShouldSerializeMinify()
-        {
-            Config config = new Config();
-            return !DictionaryEqual(minify, config.minify, null);
-        }
-
-        /// <summary>For the JSON.NET serializer</summary>
-        public bool ShouldSerializeOptions()
-        {
-            Config config = new Config();
-            return !DictionaryEqual(options, config.options, null);
-        }
-
-        private static bool DictionaryEqual<TKey, TValue>(
-            IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second,
-            IEqualityComparer<TValue> valueComparer)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if ((first == null) || (second == null))
-            {
-                return false;
-            }
-
-            if (first.Count != second.Count)
-            {
-                return false;
-            }
-
-            valueComparer ??= EqualityComparer<TValue>.Default;
-
-            foreach (KeyValuePair<TKey, TValue> kvp in first)
-            {
-                if (!second.TryGetValue(kvp.Key, out TValue secondValue))
-                {
-                    return false;
-                }
-
-                if (!valueComparer.Equals(kvp.Value, secondValue))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }

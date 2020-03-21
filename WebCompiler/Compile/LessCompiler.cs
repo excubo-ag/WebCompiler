@@ -19,13 +19,13 @@ namespace WebCompiler
 
         public CompilerResult Compile(Config config)
         {
-            string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.inputFile);
+            var baseFolder = Path.GetDirectoryName(config.FileName);
+            var inputFile = Path.Combine(baseFolder, config.InputFile);
 
-            FileInfo info = new FileInfo(inputFile);
-            string content = File.ReadAllText(info.FullName);
+            var info = new FileInfo(inputFile);
+            var content = File.ReadAllText(info.FullName);
 
-            CompilerResult result = new CompilerResult
+            var result = new CompilerResult
             {
                 FileName = info.FullName,
                 OriginalContent = content,
@@ -39,14 +39,14 @@ namespace WebCompiler
 
                 if (_error.Length > 0)
                 {
-                    CompilerError ce = new CompilerError
+                    var ce = new CompilerError
                     {
                         FileName = info.FullName,
                         Message = _error.Replace(baseFolder, string.Empty),
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    Match match = _errorRx.Match(_error);
+                    var match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -60,7 +60,7 @@ namespace WebCompiler
             }
             catch (Exception ex)
             {
-                CompilerError error = new CompilerError
+                var error = new CompilerError
                 {
                     FileName = info.FullName,
                     Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
@@ -76,8 +76,8 @@ namespace WebCompiler
 
         private void RunCompilerProcess(Config config, FileInfo info)
         {
-            string arguments = ConstructArguments(config);
-            NUglify.UglifyResult result = NUglify.Uglify.Css(File.ReadAllText(info.FullName), new NUglify.Css.CssSettings { }, new NUglify.JavaScript.CodeSettings { });
+            var arguments = ConstructArguments(config);
+            var result = NUglify.Uglify.Css(File.ReadAllText(info.FullName), new NUglify.Css.CssSettings { }, new NUglify.JavaScript.CodeSettings { });
             if (result.HasErrors)
             {
                 _error = string.Join("\n", result.Errors.Select(e => e.Message));
@@ -112,62 +112,57 @@ namespace WebCompiler
 
         private static string ConstructArguments(Config config)
         {
-            string arguments = " --no-color --js";
+            var arguments = " --no-color --js";
 
-            LessOptions options = LessOptions.FromConfig(config);
+            var options = config.Compilers.Less;
 
-            if (options.sourceMap || config.sourceMap)
+            if (options.SourceMap || config.SourceMap)
             {
                 arguments += " --source-map-map-inline";
             }
 
-            if (options.math != null)
+            if (options.Math != null)
             {
-                arguments += $" --math={options.math}";
+                arguments += $" --math={options.Math}";
             }
-            else if (options.strictMath)
+            else if (options.StrictMath)
             {
                 arguments += " --math=strict-legacy";
             }
 
-            if (options.ieCompat)
+            if (options.IeCompat)
             {
                 arguments += " --ie-compat";
             }
 
-            if (options.strictUnits)
+            if (options.StrictUnits)
             {
                 arguments += " --strict-units=on";
             }
 
-            if (options.relativeUrls)
+            if (options.RelativeUrls)
             {
                 arguments += " --rewrite-urls=all";
             }
 
-            if (!string.IsNullOrEmpty(options.rootPath))
+            if (!string.IsNullOrEmpty(options.RootPath))
             {
-                arguments += $" --rootpath=\"{options.rootPath}\"";
+                arguments += $" --rootpath=\"{options.RootPath}\"";
             }
 
-            if (!string.IsNullOrEmpty(options.autoPrefix))
+            if (!string.IsNullOrEmpty(options.CssComb) && !options.CssComb.Equals("none", StringComparison.OrdinalIgnoreCase))
             {
-                arguments += $" --autoprefix=\"{options.autoPrefix}\"";
+                arguments += $" --csscomb=\"{options.CssComb}\"";
             }
 
-            if (!string.IsNullOrEmpty(options.cssComb) && !options.cssComb.Equals("none", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(options.SourceMapRoot))
             {
-                arguments += $" --csscomb=\"{options.cssComb}\"";
+                arguments += " --source-map-rootpath=" + options.SourceMapRoot;
             }
 
-            if (!string.IsNullOrEmpty(options.sourceMapRoot))
+            if (!string.IsNullOrEmpty(options.SourceMapBasePath))
             {
-                arguments += " --source-map-rootpath=" + options.sourceMapRoot;
-            }
-
-            if (!string.IsNullOrEmpty(options.sourceMapBasePath))
-            {
-                arguments += " --source-map-basepath=" + options.sourceMapBasePath;
+                arguments += " --source-map-basepath=" + options.SourceMapBasePath;
             }
 
             return arguments;

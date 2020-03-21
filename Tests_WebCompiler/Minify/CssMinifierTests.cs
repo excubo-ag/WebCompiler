@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest.Minify
@@ -32,11 +31,11 @@ namespace WebCompilerTest.Minify
             var outputFile = "site.min.css";
 
             // Capture the name of the resulting (minified) file.
-            string resultFile = string.Empty;
+            var resultFile = string.Empty;
             FileMinifier.BeforeWritingMinFile += (object sender, MinifyFileEventArgs e) => { resultFile = new FileInfo(e.ResultFile).Name; };
 
-            ConfigFileProcessor processor = new ConfigFileProcessor();
-            var results = processor.Process(configPath, configs, force:true);
+            var processor = new ConfigFileProcessor();
+            var results = processor.Process(configPath, configs, force: true);
 
             Assert.AreEqual(outputFile, resultFile);
         }
@@ -53,13 +52,13 @@ namespace WebCompilerTest.Minify
         {
             var configPath = Path.Combine(processingConfigFile, "outputfilemin.json");
             var configs = ConfigHandler.GetConfigs(configPath);
-            var outputFile = configs.First().outputFile;
+            var outputFile = configs.First().OutputFile;
 
             // Capture the name of the resulting (minified) file.
-            string resultFile = string.Empty;
+            var resultFile = string.Empty;
             FileMinifier.BeforeWritingMinFile += (object sender, MinifyFileEventArgs e) => { resultFile = new FileInfo(e.ResultFile).Name; };
 
-            ConfigFileProcessor processor = new ConfigFileProcessor();
+            var processor = new ConfigFileProcessor();
             var results = processor.Process(configPath, configs, force: true);
 
             Assert.AreEqual(outputFile, resultFile);

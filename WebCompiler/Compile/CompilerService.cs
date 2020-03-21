@@ -22,50 +22,30 @@ namespace WebCompiler
         /// <returns>True if the file type can be compiled.</returns>
         public static bool IsSupported(string inputFile)
         {
-            string ext = Path.GetExtension(inputFile).ToUpperInvariant();
+            var ext = Path.GetExtension(inputFile).ToUpperInvariant();
 
             return AllowedExtensions.Contains(ext);
         }
 
         internal static ICompiler GetCompiler(Config config)
         {
-            string ext = Path.GetExtension(config.inputFile).ToUpperInvariant();
-            ICompiler compiler = null;
-
-            switch (ext)
+            var ext = Path.GetExtension(config.InputFile).ToUpperInvariant();
+            return ext switch
             {
-                case ".LESS":
-                    compiler = new LessCompiler(_path);
-                    break;
-
-                case ".HANDLEBARS":
-                case ".HBS":
-                    compiler = new HandlebarsCompiler(_path);
-                    break;
-
-                case ".SCSS":
-                case ".SASS":
-                    compiler = new SassCompiler(_path);
-                    break;
-
-                case ".STYL":
-                case ".STYLUS":
-                    compiler = new StylusCompiler(_path);
-                    break;
-
-                case ".COFFEE":
-                case ".ICED":
-                    compiler = new IcedCoffeeScriptCompiler(_path);
-                    break;
-
-                case ".JS":
-                case ".JSX":
-                case ".ES6":
-                    compiler = new BabelCompiler(_path);
-                    break;
-            }
-
-            return compiler;
+                ".LESS" => new LessCompiler(_path),
+                ".HANDLEBARS" => new HandlebarsCompiler(_path),
+                ".HBS" => new HandlebarsCompiler(_path),
+                ".SCSS" => new SassCompiler(_path),
+                ".SASS" => new SassCompiler(_path),
+                ".STYL" => new StylusCompiler(_path),
+                ".STYLUS" => new StylusCompiler(_path),
+                ".COFFEE" => new IcedCoffeeScriptCompiler(_path),
+                ".ICED" => new IcedCoffeeScriptCompiler(_path),
+                ".JS" => new BabelCompiler(_path),
+                ".JSX" => new BabelCompiler(_path),
+                ".ES6" => new BabelCompiler(_path),
+                _ => throw new NotSupportedException($"No compiler found for file type {ext}")
+            };
         }
     }
 }

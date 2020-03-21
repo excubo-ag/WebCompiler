@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -38,7 +38,7 @@ namespace WebCompilerTest
             Assert.IsTrue(result.ElementAt(1).CompiledContent.Contains("url(foo.png)"));
             //Assert.IsTrue(result.ElementAt(1).CompiledContent.Contains("-webkit-animation"), "AutoPrefix");
 
-            string sourceMap = DecodeSourceMap(first.CompiledContent);
+            var sourceMap = DecodeSourceMap(first.CompiledContent);
             Assert.IsTrue(sourceMap.Contains("scss/test.scss"), "Source map paths");
         }
 
@@ -53,7 +53,7 @@ namespace WebCompilerTest
         [TestMethod, TestCategory("SCSS")]
         public void AssociateExtensionSourceFileChangedTest()
         {
-            var result = _processor.SourceFileChanged(new FileInfo("../../../artifacts/scssconfig.json").FullName,new FileInfo( "../../../artifacts/scss/_variables.scss").FullName, new DirectoryInfo("../../../artifacts/").FullName);
+            var result = _processor.SourceFileChanged(new FileInfo("../../../artifacts/scssconfig.json").FullName, new FileInfo("../../../artifacts/scss/_variables.scss").FullName, new DirectoryInfo("../../../artifacts/").FullName);
             Assert.AreEqual(1, result.Count<CompilerResult>());
             Assert.IsTrue(File.Exists("../../../artifacts/scss/test.css"));
         }
@@ -82,12 +82,12 @@ namespace WebCompilerTest
 
         public static string DecodeSourceMap(string content)
         {
-            Match match = Regex.Match(content, @"sourceMappingURL=data:application/json;.*base64,");
+            var match = Regex.Match(content, @"sourceMappingURL=data:application/json;.*base64,");
             if (match.Success)
             {
-                int start = match.Index + match.Length;
-                string map = content.Substring(start).Trim('*', '/');
-                byte[] data = Convert.FromBase64String(map);
+                var start = match.Index + match.Length;
+                var map = content.Substring(start).Trim('*', '/');
+                var data = Convert.FromBase64String(map);
                 return Encoding.UTF8.GetString(data);
             }
 

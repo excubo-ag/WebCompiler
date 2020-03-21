@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
@@ -10,26 +11,26 @@ namespace WebCompiler
 
         public static string Adjust(string content, Config config)
         {
-            string cssFileContents = content;
-            string absoluteOutputPath = config.GetAbsoluteOutputFile().FullName;
+            var cssFileContents = content;
+            var absoluteOutputPath = config.GetAbsoluteOutputFile().FullName;
 
             // apply the RegEx to the file (to change relative paths)
-            MatchCollection matches = _rxUrl.Matches(cssFileContents);
+            var matches = _rxUrl.Matches(cssFileContents);
 
             // Ignore the file if no match
             if (matches.Count > 0)
             {
-                string cssDirectoryPath = config.GetAbsoluteInputFile().DirectoryName;
+                var cssDirectoryPath = config.GetAbsoluteInputFile().DirectoryName;
 
                 if (!Directory.Exists(cssDirectoryPath))
                 {
                     return cssFileContents;
                 }
 
-                foreach (Match match in matches)
+                foreach (var match in matches.Where(m => m != null))
                 {
-                    string quoteDelimiter = match.Groups[1].Value; //url('') vs url("")
-                    string relativePathToCss = match.Groups[2].Value;
+                    var quoteDelimiter = match.Groups[1].Value; //url('') vs url("")
+                    var relativePathToCss = match.Groups[2].Value;
 
                     // Ignore root relative references
                     if (relativePathToCss.StartsWith("/", StringComparison.Ordinal))
@@ -38,25 +39,25 @@ namespace WebCompiler
                     }
 
                     //prevent query string from causing error
-                    string[] pathAndQuery = relativePathToCss.Split(new[] { '?' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    string pathOnly = pathAndQuery[0];
-                    string queryOnly = pathAndQuery.Length == 2 ? pathAndQuery[1] : string.Empty;
+                    var pathAndQuery = relativePathToCss.Split(new[] { '?' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    var pathOnly = pathAndQuery[0];
+                    var queryOnly = pathAndQuery.Length == 2 ? pathAndQuery[1] : string.Empty;
 
-                    string absolutePath = GetAbsolutePath(cssDirectoryPath, pathOnly);
+                    var absolutePath = GetAbsolutePath(cssDirectoryPath, pathOnly);
 
                     if (string.IsNullOrEmpty(absoluteOutputPath) || string.IsNullOrEmpty(absolutePath))
                     {
                         continue;
                     }
 
-                    string serverRelativeUrl = FileHelpers.MakeRelative(absoluteOutputPath, absolutePath);
+                    var serverRelativeUrl = FileHelpers.MakeRelative(absoluteOutputPath, absolutePath);
 
                     if (!string.IsNullOrEmpty(queryOnly))
                     {
                         serverRelativeUrl += "?" + queryOnly;
                     }
 
-                    string replace = string.Format("url({0}{1}{0})", quoteDelimiter, serverRelativeUrl);
+                    var replace = string.Format("url({0}{1}{0})", quoteDelimiter, serverRelativeUrl);
 
                     cssFileContents = cssFileContents.Replace(match.Groups[0].Value, replace);
                 }
@@ -65,11 +66,11 @@ namespace WebCompiler
             return cssFileContents;
         }
 
-        private static string GetAbsolutePath(string cssFilePath, string pathOnly)
+        private static string? GetAbsolutePath(string cssFilePath, string pathOnly)
         {
-            char[] invalids = Path.GetInvalidPathChars();
+            var invalids = Path.GetInvalidPathChars();
 
-            foreach (char invalid in invalids)
+            foreach (var invalid in invalids)
             {
                 if (pathOnly.IndexOf(invalid) > -1)
                 {

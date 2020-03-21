@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUglify;
 using NUglify.Css;
+using System.IO;
+using System.Linq;
 using WebCompiler;
 
 namespace WebCompilerTest.Minify
@@ -18,7 +17,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "csscommenthacksuppercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssComment.Hacks, cfg.CommentMode);
         }
 
@@ -27,7 +26,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "csscommenthacks.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssComment.Hacks, cfg.CommentMode);
         }
 
@@ -36,7 +35,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "csscommentimportant.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssComment.Important, cfg.CommentMode);
         }
 
@@ -45,7 +44,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "csscommentnone.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssComment.None, cfg.CommentMode);
         }
 
@@ -54,7 +53,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "csscommentall.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssComment.All, cfg.CommentMode);
         }
 
@@ -63,7 +62,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "colornamesmajoruppercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssColor.Major, cfg.ColorNames);
         }
 
@@ -72,7 +71,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "colornameshex.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssColor.Hex, cfg.ColorNames);
         }
 
@@ -81,7 +80,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "colornamesmajor.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssColor.Major, cfg.ColorNames);
         }
 
@@ -90,7 +89,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "colornamesnoswap.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssColor.NoSwap, cfg.ColorNames);
         }
 
@@ -99,7 +98,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "colornamesstrict.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(CssColor.Strict, cfg.ColorNames);
         }
 
@@ -108,7 +107,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelinesuppercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -117,7 +116,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelineslowercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -126,7 +125,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelines.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -135,7 +134,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodenone.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(OutputMode.None, cfg.OutputMode);
         }
 
@@ -144,7 +143,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodesingleline.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(OutputMode.SingleLine, cfg.OutputMode);
         }
 
@@ -153,7 +152,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "indentsize.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = CssOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Css.ToCssSettings();
             Assert.AreEqual(8, cfg.IndentSize);
         }
     }

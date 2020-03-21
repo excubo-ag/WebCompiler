@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WebCompiler
@@ -20,7 +21,7 @@ namespace WebCompiler
         {
             if (Dependencies != null)
             {
-                FileInfo info = new FileInfo(path);
+                var info = new FileInfo(path);
                 path = info.FullName;
 
                 if (!Dependencies.ContainsKey(path))
@@ -31,31 +32,31 @@ namespace WebCompiler
                 //remove the dependencies registration of this file
                 Dependencies[path].DependentOn = new HashSet<string>();
                 //remove the dependentfile registration of this file for all other files
-                foreach (string dependenciesPath in Dependencies.Keys)
+                foreach (var dependenciesPath in Dependencies.Keys)
                 {
-                    string lowerDependenciesPath = dependenciesPath;
+                    var lowerDependenciesPath = dependenciesPath;
                     if (Dependencies[lowerDependenciesPath].DependentFiles.Contains(path))
                     {
                         Dependencies[lowerDependenciesPath].DependentFiles.Remove(path);
                     }
                 }
 
-                string content = File.ReadAllText(info.FullName);
+                var content = File.ReadAllText(info.FullName);
 
                 //match both <@import "myFile.scss";> and <@import url("myFile.scss");> syntax
-                MatchCollection matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
-                foreach (Match match in matches)
+                var matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
+                foreach (var match in matches.Where(m => m != null))
                 {
-                    IEnumerable<FileInfo> importedfiles = GetFileInfos(info, match);
+                    var importedfiles = GetFileInfos(info, match);
 
-                    foreach (FileInfo importedfile in importedfiles)
+                    foreach (var importedfile in importedfiles)
                     {
                         if (importedfile == null)
                         {
                             continue;
                         }
 
-                        FileInfo theFile = importedfile;
+                        var theFile = importedfile;
 
                         //if the file doesn't end with the correct extension, an import statement without extension is probably used, to re-add the extension (#175)
                         if (string.Compare(importedfile.Extension, FileExtension, StringComparison.OrdinalIgnoreCase) != 0)
@@ -63,14 +64,14 @@ namespace WebCompiler
                             theFile = new FileInfo(importedfile.FullName + FileExtension);
                         }
 
-                        string dependencyFilePath = theFile.FullName;
+                        var dependencyFilePath = theFile.FullName;
 
                         if (!File.Exists(dependencyFilePath))
                         {
                             // Trim leading underscore to support Sass partials
-                            string dir = Path.GetDirectoryName(dependencyFilePath);
-                            string fileName = Path.GetFileName(dependencyFilePath);
-                            string cleanPath = Path.Combine(dir, "_" + fileName);
+                            var dir = Path.GetDirectoryName(dependencyFilePath);
+                            var fileName = Path.GetFileName(dependencyFilePath);
+                            var cleanPath = Path.Combine(dir, "_" + fileName);
 
                             if (!File.Exists(cleanPath))
                             {
@@ -101,14 +102,14 @@ namespace WebCompiler
 
         private static IEnumerable<FileInfo> GetFileInfos(FileInfo info, System.Text.RegularExpressions.Match match)
         {
-            string url = match.Groups["url"].Value.Replace("'", "\"").Replace("(", "").Replace(")", "").Replace(";", "").Trim();
-            List<FileInfo> list = new List<FileInfo>();
+            var url = match.Groups["url"].Value.Replace("'", "\"").Replace("(", "").Replace(")", "").Replace(";", "").Trim();
+            var list = new List<FileInfo>();
 
-            foreach (string name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 try
                 {
-                    string value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
+                    var value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
                     list.Add(new FileInfo(Path.Combine(info.DirectoryName, value)));
                 }
                 catch (Exception ex)

@@ -25,7 +25,9 @@ namespace WebCompilerTest.Config
         public void Cleanup()
         {
             if (File.Exists(processingConfigFile))
+            {
                 File.Delete(processingConfigFile);
+            }
         }
 
         [TestMethod, TestCategory("Config")]
@@ -33,13 +35,13 @@ namespace WebCompilerTest.Config
         {
             var newConfig = new WebCompiler.Config();
             const string newInputFileName = "newInputFile";
-            newConfig.inputFile = newInputFileName;
+            newConfig.InputFile = newInputFileName;
 
             _handler.AddConfig(processingConfigFile, newConfig);
 
             var configs = ConfigHandler.GetConfigs(processingConfigFile);
             Assert.AreEqual(2, configs.Count());
-            Assert.AreEqual(newInputFileName, configs.ElementAt(1).inputFile);
+            Assert.AreEqual(newInputFileName, configs.ElementAt(1).InputFile);
         }
 
         [TestMethod, TestCategory("Config")]

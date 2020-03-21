@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -34,9 +34,9 @@ namespace WebCompilerTest
         public void CompileHandleBars()
         {
             _ = _processor.Process("../../../artifacts/handlebarsconfig.json");
-            FileInfo js = new FileInfo("../../../artifacts/handlebars/test.js");
-            FileInfo min = new FileInfo("../../../artifacts/handlebars/test.min.js");
-            FileInfo map = new FileInfo("../../../artifacts/handlebars/test.js.map");
+            var js = new FileInfo("../../../artifacts/handlebars/test.js");
+            var min = new FileInfo("../../../artifacts/handlebars/test.min.js");
+            var map = new FileInfo("../../../artifacts/handlebars/test.js.map");
             Assert.IsTrue(js.Exists, "Output file doesn't exist");
             Assert.IsFalse(min.Exists, "Min file exists");
             Assert.IsTrue(map.Exists, "Map file doesn't exist");
@@ -48,8 +48,8 @@ namespace WebCompilerTest
         public void CompileHandleBarsPartial()
         {
             _ = _processor.Process("../../../artifacts/handlebarsconfigPartial.json");
-            FileInfo js = new FileInfo("../../../artifacts/handlebars/_partial.js");
-            FileInfo min = new FileInfo("../../../artifacts/handlebars/_partial.min.js");
+            var js = new FileInfo("../../../artifacts/handlebars/_partial.js");
+            var min = new FileInfo("../../../artifacts/handlebars/_partial.min.js");
             Assert.IsTrue(js.Exists, "Output file doesn't exist");
             Assert.IsTrue(min.Exists, "Min file doesn't exists");
             Assert.IsTrue(js.Length > 5);

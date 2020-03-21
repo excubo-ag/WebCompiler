@@ -12,10 +12,10 @@ namespace WebCompiler
     /// </summary>
     public class FileMinifier
     {
-        internal static MinificationResult MinifyFile(Config config)
+        internal static MinificationResult? MinifyFile(Config config)
         {
-            FileInfo file = config.GetAbsoluteOutputFile();
-            string extension = file.Extension.ToUpperInvariant();
+            var file = config.GetAbsoluteOutputFile();
+            var extension = file.Extension.ToUpperInvariant();
 
             return extension switch
             {
@@ -25,22 +25,22 @@ namespace WebCompiler
             };
         }
 
-        private static MinificationResult MinifyJavaScript(Config config, string file)
+        private static MinificationResult? MinifyJavaScript(Config config, string file)
         {
-            string content = File.ReadAllText(file);
-            NUglify.JavaScript.CodeSettings settings = JavaScriptOptions.GetSettings(config);
+            var content = File.ReadAllText(file);
+            var settings = config.Minifiers.Javascript.ToCodeSettings();
 
-            if (config.minify.ContainsKey("enabled") && config.minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
+            if (!config.Minifiers.Enabled)
             {
                 return null;
             }
 
-            string minFile = GetMinFileName(file);
+            var minFile = GetMinFileName(file);
 
-            UglifyResult minifiedJs = Uglify.Js(content, settings);
-            string result = minifiedJs.Code;
+            var minifiedJs = Uglify.Js(content, settings);
+            var result = minifiedJs.Code;
 
-            bool containsChanges = FileHelpers.HasFileContentChanged(minFile, result);
+            var containsChanges = FileHelpers.HasFileContentChanged(minFile, result);
 
             if (!string.IsNullOrEmpty(result))
             {
@@ -59,12 +59,13 @@ namespace WebCompiler
             return new MinificationResult(result, null);
         }
 
-        private static MinificationResult MinifyCss(Config config, string file)
+        private static MinificationResult? MinifyCss(Config config, string file)
         {
-            string content = File.ReadAllText(file);
-            NUglify.Css.CssSettings settings = CssOptions.GetSettings(config);
+            var content = File.ReadAllText(file);
 
-            if (config.minify.ContainsKey("enabled") && config.minify["enabled"].ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
+            var settings = config.Minifiers.Css.ToCssSettings();
+
+            if (!config.Minifiers.Enabled)
             {
                 return null;
             }
@@ -72,11 +73,11 @@ namespace WebCompiler
 
             // Remove control characters which AjaxMin can't handle
             content = Regex.Replace(content, @"[\u0000-\u0009\u000B-\u000C\u000E-\u001F]", string.Empty);
-            UglifyResult minifiedCss = Uglify.Css(content, settings);
+            var minifiedCss = Uglify.Css(content, settings);
 
-            string result = minifiedCss.Code;
-            string minFile = GetMinFileName(file);
-            bool containsChanges = FileHelpers.HasFileContentChanged(minFile, result);
+            var result = minifiedCss.Code;
+            var minFile = GetMinFileName(file);
+            var containsChanges = FileHelpers.HasFileContentChanged(minFile, result);
 
             OnBeforeWritingMinFile(file, minFile, containsChanges);
 
@@ -94,9 +95,9 @@ namespace WebCompiler
 
         private static string GetMinFileName(string file)
         {
-            string ext = Path.GetExtension(file);
+            var ext = Path.GetExtension(file);
 
-            string fileName = file.Substring(0, file.LastIndexOf(ext));
+            var fileName = file.Substring(0, file.LastIndexOf(ext));
             if (!fileName.EndsWith(".min"))
             {
                 fileName += ".min";
@@ -107,20 +108,20 @@ namespace WebCompiler
 
         private static void GzipFile(Config config, string sourceFile, bool containsChanges)
         {
-            if (!config.minify.ContainsKey("gzip") || !config.minify["gzip"].ToString().Equals("true", StringComparison.OrdinalIgnoreCase))
+            if (!config.Minifiers.GZip)
             {
                 return;
             }
 
-            string gzipFile = sourceFile + ".gz";
+            var gzipFile = sourceFile + ".gz";
 
             OnBeforeWritingGzipFile(sourceFile, gzipFile, containsChanges);
 
             if (containsChanges)
             {
-                using FileStream sourceStream = File.OpenRead(sourceFile);
-                using FileStream targetStream = File.OpenWrite(gzipFile);
-                using GZipStream gzipStream = new GZipStream(targetStream, CompressionMode.Compress);
+                using var sourceStream = File.OpenRead(sourceFile);
+                using var targetStream = File.OpenWrite(gzipFile);
+                using var gzipStream = new GZipStream(targetStream, CompressionMode.Compress);
                 sourceStream.CopyTo(gzipStream);
             }
 

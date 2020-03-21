@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -28,9 +28,9 @@ namespace WebCompilerTest
         public void CompileCoffeeScript()
         {
             _ = _processor.Process("../../../artifacts/coffeeconfig.json");
-            FileInfo js = new FileInfo("../../../artifacts/coffee/test.js");
-            FileInfo min = new FileInfo("../../../artifacts/coffee/test.min.js");
-            FileInfo map = new FileInfo("../../../artifacts/coffee/test.js.map");
+            var js = new FileInfo("../../../artifacts/coffee/test.js");
+            var min = new FileInfo("../../../artifacts/coffee/test.min.js");
+            var map = new FileInfo("../../../artifacts/coffee/test.js.map");
             Assert.IsTrue(js.Exists, "Output file doesn't exist");
             Assert.IsFalse(min.Exists, "Min file exists");
             Assert.IsTrue(map.Exists, "Map file doesn't exist");

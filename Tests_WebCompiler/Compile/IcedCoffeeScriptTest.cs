@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -28,8 +28,8 @@ namespace WebCompilerTest
         public void CompileIcedCoffeeScript()
         {
             _ = _processor.Process("../../../artifacts/icedcoffeeconfig.json");
-            FileInfo js = new FileInfo("../../../artifacts/iced/test.js");
-            FileInfo map = new FileInfo("../../../artifacts/iced/test.js.map");
+            var js = new FileInfo("../../../artifacts/iced/test.js");
+            var map = new FileInfo("../../../artifacts/iced/test.js.map");
             Assert.IsTrue(js.Exists);
             Assert.IsTrue(map.Exists);
             Assert.IsTrue(js.Length > 5);

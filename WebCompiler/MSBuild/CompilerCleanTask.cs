@@ -20,7 +20,7 @@ namespace WebCompiler
         /// </summary>
         public override bool Execute()
         {
-            FileInfo configFile = new FileInfo(FileName);
+            var configFile = new FileInfo(FileName);
 
             if (!configFile.Exists)
             {
@@ -32,7 +32,7 @@ namespace WebCompiler
 
             try
             {
-                ConfigFileProcessor processor = new ConfigFileProcessor();
+                var processor = new ConfigFileProcessor();
                 processor.DeleteOutputFiles(configFile.FullName);
 
                 Log.LogMessage(MessageImportance.High, "WebCompiler: Done cleaning output of " + configFile.Name);

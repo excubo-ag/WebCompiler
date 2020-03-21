@@ -1,7 +1,7 @@
 ﻿[
   {
-    "outputFile": "less/test.css",
-    "inputFile": "less/test.less",
+    "outputFile": "site.min.js",
+    "inputFile": "minify.js",
     "minify": {
       "outputMode": "singleLine"
     },

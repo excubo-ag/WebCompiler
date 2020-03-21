@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace WebCompilerTest.Config
 {
@@ -34,8 +34,8 @@ namespace WebCompilerTest.Config
             _config = new WebCompiler.Config
             {
                 FileName = configFileInfo.FullName,
-                inputFile = _inputFileInfo.FullName,
-                outputFile = _outputFileInfo.FullName
+                InputFile = _inputFileInfo.FullName,
+                OutputFile = _outputFileInfo.FullName
             };
 
             // Create dummy output file, only last write time is checked
@@ -61,7 +61,9 @@ namespace WebCompilerTest.Config
         public void Cleanup()
         {
             if (File.Exists(outputFile))
+            {
                 File.Delete(outputFile);
+            }
 
             foreach (var entry in _originalLastWriteTimes)
             {

@@ -18,20 +18,20 @@ namespace WebCompiler
 
         public CompilerResult Compile(Config config)
         {
-            string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.inputFile);
+            var baseFolder = Path.GetDirectoryName(config.FileName);
+            var inputFile = Path.Combine(baseFolder, config.InputFile);
 
-            FileInfo info = new FileInfo(inputFile);
-            string content = File.ReadAllText(info.FullName);
+            var info = new FileInfo(inputFile);
+            var content = File.ReadAllText(info.FullName);
 
-            CompilerResult result = new CompilerResult
+            var result = new CompilerResult
             {
                 FileName = info.FullName,
                 OriginalContent = content,
             };
 
-            string tempFile = Path.ChangeExtension(Path.Combine(_temp, info.Name), ".js");
-            string tempMapFile = tempFile + ".map";
+            var tempFile = Path.ChangeExtension(Path.Combine(_temp, info.Name), ".js");
+            var tempMapFile = tempFile + ".map";
 
             try
             {
@@ -41,9 +41,9 @@ namespace WebCompiler
                 {
                     result.CompiledContent = File.ReadAllText(tempFile);
 
-                    IcedCoffeeScriptOptions options = IcedCoffeeScriptOptions.FromConfig(config);
+                    var options = config.Compilers.IcedCoffeeScript;
 
-                    if ((options.sourceMap || config.sourceMap) && File.Exists(tempMapFile))
+                    if ((options.SourceMap || config.SourceMap) && File.Exists(tempMapFile))
                     {
                         result.SourceMap = File.ReadAllText(tempMapFile);
                     }
@@ -51,13 +51,13 @@ namespace WebCompiler
 
                 if (_error.Length > 0)
                 {
-                    CompilerError ce = new CompilerError
+                    var ce = new CompilerError
                     {
                         FileName = info.FullName,
                         Message = _error.Replace(baseFolder, string.Empty),
                     };
 
-                    Match match = _errorRx.Match(_error);
+                    var match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -71,7 +71,7 @@ namespace WebCompiler
             }
             catch (Exception ex)
             {
-                CompilerError error = new CompilerError
+                var error = new CompilerError
                 {
                     FileName = info.FullName,
                     Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
@@ -92,7 +92,7 @@ namespace WebCompiler
 
         private void RunCompilerProcess(Config config, FileInfo info)
         {
-            string arguments = ConstructArguments(config);
+            var arguments = ConstructArguments(config);
 
             //ProcessStartInfo start = new ProcessStartInfo
             //{
@@ -119,23 +119,23 @@ namespace WebCompiler
 
         private string ConstructArguments(Config config)
         {
-            string arguments = $" --compile --output \"{_temp}\"";
+            var arguments = $" --compile --output \"{_temp}\"";
 
-            IcedCoffeeScriptOptions options = IcedCoffeeScriptOptions.FromConfig(config);
+            var options = config.Compilers.IcedCoffeeScript;
 
-            if (options.sourceMap || config.sourceMap)
+            if (options.SourceMap || config.SourceMap)
             {
                 arguments += " --map";
             }
 
-            if (options.bare)
+            if (options.Bare)
             {
                 arguments += " --bare";
             }
 
-            if (!string.IsNullOrEmpty(options.runtimeMode))
+            if (!string.IsNullOrEmpty(options.RuntimeMode))
             {
-                arguments += " --runtime " + options.runtimeMode;
+                arguments += " --runtime " + options.RuntimeMode;
             }
 
             return arguments;

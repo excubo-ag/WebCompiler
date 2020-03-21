@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebCompiler;
 
 namespace WebCompilerTest
@@ -29,7 +29,7 @@ namespace WebCompilerTest
             var result = _processor.Process("../../../artifacts/stylusconfig.json");
             Assert.IsTrue(File.Exists("../../../artifacts/stylus/output.css"), "output doesn't exist");
 
-            string sourceMap = ScssTest.DecodeSourceMap(result.First().CompiledContent);
+            var sourceMap = ScssTest.DecodeSourceMap(result.First().CompiledContent);
             Assert.IsTrue(sourceMap.Contains("\"vendor.styl\""), "Source map paths");
         }
 

@@ -18,13 +18,13 @@ namespace WebCompiler
 
         public CompilerResult Compile(Config config)
         {
-            string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.inputFile);
+            var baseFolder = Path.GetDirectoryName(config.FileName);
+            var inputFile = Path.Combine(baseFolder, config.InputFile);
 
-            FileInfo info = new FileInfo(inputFile);
-            string content = File.ReadAllText(info.FullName);
+            var info = new FileInfo(inputFile);
+            var content = File.ReadAllText(info.FullName);
 
-            CompilerResult result = new CompilerResult
+            var result = new CompilerResult
             {
                 FileName = info.FullName,
                 OriginalContent = content,
@@ -38,14 +38,14 @@ namespace WebCompiler
 
                 if (_error.Length > 0)
                 {
-                    CompilerError ce = new CompilerError
+                    var ce = new CompilerError
                     {
                         FileName = info.FullName,
                         Message = _error.Replace(baseFolder, string.Empty),
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    Match match = error_rx.Match(_error);
+                    var match = error_rx.Match(_error);
 
                     if (match.Success)
                     {
@@ -59,7 +59,7 @@ namespace WebCompiler
             }
             catch (Exception ex)
             {
-                CompilerError error = new CompilerError
+                var error = new CompilerError
                 {
                     FileName = info.FullName,
                     Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
@@ -75,7 +75,7 @@ namespace WebCompiler
 
         private void RunCompilerProcess(Config config, FileInfo info)
         {
-            string arguments = ConstructArguments(config);
+            var arguments = ConstructArguments(config);
             _output = File.ReadAllText(info.FullName);
 
             ////ProcessStartInfo start = new ProcessStartInfo
@@ -107,11 +107,11 @@ namespace WebCompiler
 
         private static string ConstructArguments(Config config)
         {
-            string arguments = $"--presets react --out-file \"\"";
+            var arguments = $"--presets react --out-file \"\"";
 
-            BabelOptions options = BabelOptions.FromConfig(config);
+            var options = config.Compilers.Babel;
 
-            if (options.sourceMap || config.sourceMap)
+            if (options.SourceMap || config.SourceMap)
             {
                 arguments += " --source-maps inline";
             }

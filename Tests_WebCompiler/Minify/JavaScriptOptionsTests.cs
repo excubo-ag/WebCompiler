@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUglify;
 using NUglify.JavaScript;
+using System.IO;
+using System.Linq;
 using WebCompiler;
 
 namespace WebCompilerTest.Minify
@@ -13,38 +13,38 @@ namespace WebCompilerTest.Minify
         private const string processingConfigFile = "../../../Minify/artifacts/javascript/";
 
         [TestMethod, TestCategory("JavaScriptOptions")]
-        public void EvanTreatmentInUpperCaseShouldWork()
+        public void EvalTreatmentInUpperCaseShouldWork()
         {
-            var configFile = Path.Combine(processingConfigFile, "evantreatmentmakeallsafeuppercase.json");
+            var configFile = Path.Combine(processingConfigFile, "evaltreatmentmakeallsafeuppercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(EvalTreatment.MakeAllSafe, cfg.EvalTreatment);
         }
 
         [TestMethod, TestCategory("JavaScriptOptions")]
-        public void EvanTreatmentIgnore()
+        public void EvalTreatmentIgnore()
         {
-            var configFile = Path.Combine(processingConfigFile, "evantreatmentignore.json");
+            var configFile = Path.Combine(processingConfigFile, "evaltreatmentignore.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(EvalTreatment.Ignore, cfg.EvalTreatment);
         }
 
         [TestMethod, TestCategory("JavaScriptOptions")]
-        public void EvanTreatmentMakeAllSafe()
+        public void EvalTreatmentMakeAllSafe()
         {
-            var configFile = Path.Combine(processingConfigFile, "evantreatmentmakeallsafe.json");
+            var configFile = Path.Combine(processingConfigFile, "evaltreatmentmakeallsafe.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(EvalTreatment.MakeAllSafe, cfg.EvalTreatment);
         }
 
         [TestMethod, TestCategory("JavaScriptOptions")]
-        public void EvanTreatmentMakeImmediateSafee()
+        public void EvalTreatmentMakeImmediateSafee()
         {
-            var configFile = Path.Combine(processingConfigFile, "evantreatmentmakeimmediatesafe.json");
+            var configFile = Path.Combine(processingConfigFile, "evaltreatmentmakeimmediatesafe.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(EvalTreatment.MakeImmediateSafe, cfg.EvalTreatment);
         }
 
@@ -53,7 +53,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelinesuppercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -62,7 +62,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelineslowercase.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -71,7 +71,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodemultiplelines.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(OutputMode.MultipleLines, cfg.OutputMode);
         }
 
@@ -80,7 +80,7 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodenone.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(OutputMode.None, cfg.OutputMode);
         }
 
@@ -89,16 +89,16 @@ namespace WebCompilerTest.Minify
         {
             var configFile = Path.Combine(processingConfigFile, "outputmodesingleline.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(OutputMode.SingleLine, cfg.OutputMode);
         }
 
         [TestMethod, TestCategory("JavaScriptOptions")]
-        public void IndendSize()
+        public void IndentSize()
         {
             var configFile = Path.Combine(processingConfigFile, "indentsize.json");
             var configs = ConfigHandler.GetConfigs(configFile);
-            var cfg = JavaScriptOptions.GetSettings(configs.ElementAt(0));
+            var cfg = configs.First().Minifiers.Javascript.ToCodeSettings();
             Assert.AreEqual(8, cfg.IndentSize);
         }
     }

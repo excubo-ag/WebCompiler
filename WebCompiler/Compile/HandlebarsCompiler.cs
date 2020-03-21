@@ -22,25 +22,25 @@ namespace WebCompiler
 
         public CompilerResult Compile(Config config)
         {
-            string baseFolder = Path.GetDirectoryName(config.FileName);
-            string inputFile = Path.Combine(baseFolder, config.inputFile);
+            var baseFolder = Path.GetDirectoryName(config.FileName);
+            var inputFile = Path.Combine(baseFolder, config.InputFile);
 
-            FileInfo info = new FileInfo(inputFile);
-            string content = File.ReadAllText(info.FullName);
+            var info = new FileInfo(inputFile);
+            var content = File.ReadAllText(info.FullName);
 
-            CompilerResult result = new CompilerResult
+            var result = new CompilerResult
             {
                 FileName = info.FullName,
                 OriginalContent = content,
             };
 
-            string extension = Path.GetExtension(inputFile);
+            var extension = Path.GetExtension(inputFile);
             if (!string.IsNullOrWhiteSpace(extension))
             {
                 _extension = extension.Substring(1);
             }
 
-            string name = Path.GetFileNameWithoutExtension(inputFile);
+            var name = Path.GetFileNameWithoutExtension(inputFile);
             if (!string.IsNullOrWhiteSpace(name) && name.StartsWith("_"))
             {
                 _name = name.Substring(1);
@@ -48,7 +48,7 @@ namespace WebCompiler
 
                 // Temporarily Fix
                 // TODO: Remove after actual fix
-                string tempFilename = Path.Combine(Path.GetDirectoryName(inputFile), _name + ".handlebarstemp");
+                var tempFilename = Path.Combine(Path.GetDirectoryName(inputFile), _name + ".handlebarstemp");
                 info.CopyTo(tempFilename);
                 info = new FileInfo(tempFilename);
                 _extension = "handlebarstemp";
@@ -62,22 +62,23 @@ namespace WebCompiler
 
                 result.CompiledContent = _output;
 
-                HandlebarsOptions options = HandlebarsOptions.FromConfig(config);
-                if ((options.sourceMap || config.sourceMap) && File.Exists(_mapPath))
+                var options = config.Compilers.Handlebars;
+
+                if ((options.SourceMap || config.SourceMap) && File.Exists(_mapPath))
                 {
                     result.SourceMap = File.ReadAllText(_mapPath);
                 }
 
                 if (_error.Length > 0)
                 {
-                    CompilerError ce = new CompilerError
+                    var ce = new CompilerError
                     {
                         FileName = inputFile,
                         Message = _error.Replace(baseFolder, string.Empty),
                         IsWarning = !string.IsNullOrEmpty(_output)
                     };
 
-                    Match match = _errorRx.Match(_error);
+                    var match = _errorRx.Match(_error);
 
                     if (match.Success)
                     {
@@ -91,7 +92,7 @@ namespace WebCompiler
             }
             catch (Exception ex)
             {
-                CompilerError error = new CompilerError
+                var error = new CompilerError
                 {
                     FileName = inputFile,
                     Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
@@ -120,7 +121,7 @@ namespace WebCompiler
 
         private void RunCompilerProcess(Config config, FileInfo info)
         {
-            string arguments = ConstructArguments(config);
+            var arguments = ConstructArguments(config);
 
             //ProcessStartInfo start = new ProcessStartInfo
             //{
@@ -151,57 +152,57 @@ namespace WebCompiler
 
         private string ConstructArguments(Config config)
         {
-            string arguments = "";
+            var arguments = "";
 
-            HandlebarsOptions options = HandlebarsOptions.FromConfig(config);
+            var options = config.Compilers.Handlebars;
 
-            if (options.amd)
+            if (options.AMD)
             {
                 arguments += " --amd";
             }
-            else if (!string.IsNullOrEmpty(options.commonjs))
+            else if (!string.IsNullOrEmpty(options.CommonJs))
             {
-                arguments += $" --commonjs \"{options.commonjs}\"";
+                arguments += $" --commonjs \"{options.CommonJs}\"";
             }
 
-            foreach (string knownHelper in options.knownHelpers)
+            foreach (var knownHelper in options.KnownHelpers)
             {
                 arguments += $" --known \"{knownHelper}\"";
             }
 
-            if (options.knownHelpersOnly)
+            if (options.KnownHelpersOnly)
             {
                 arguments += " --knownOnly";
             }
 
-            if (options.forcePartial || _partial)
+            if (options.ForcePartial || _partial)
             {
                 arguments += " --partial";
             }
 
-            if (options.noBOM)
+            if (options.NoBOM)
             {
                 arguments += " --bom";
             }
 
-            if ((options.sourceMap || config.sourceMap) && !string.IsNullOrWhiteSpace(_mapPath))
+            if ((options.SourceMap || config.SourceMap) && !string.IsNullOrWhiteSpace(_mapPath))
             {
                 arguments += $" --map \"{_mapPath}\"";
             }
 
-            if (!string.IsNullOrEmpty(options.@namespace))
+            if (!string.IsNullOrEmpty(options.Namespace))
             {
-                arguments += $" --namespace \"{options.@namespace}\"";
+                arguments += $" --namespace \"{options.Namespace}\"";
             }
 
-            if (!string.IsNullOrEmpty(options.root))
+            if (!string.IsNullOrEmpty(options.Root))
             {
-                arguments += $" --root \"{options.root}\"";
+                arguments += $" --root \"{options.Root}\"";
             }
 
-            if (!string.IsNullOrEmpty(options.name))
+            if (!string.IsNullOrEmpty(options.Name))
             {
-                arguments += $" --name \"{options.name}\"";
+                arguments += $" --name \"{options.Name}\"";
             }
             else if (!string.IsNullOrEmpty(_name))
             {
