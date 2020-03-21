@@ -7,14 +7,8 @@ namespace WebCompiler
     internal class BabelCompiler : ICompiler
     {
         private static readonly Regex error_rx = new Regex(@".+\.jsx:\s(?<message>.+)\((?<line>[0-9]+):(?<column>[0-9]+)\)", RegexOptions.Compiled);
-        private readonly string _path;
         private string _output = string.Empty;
         private readonly string _error = string.Empty;
-
-        public BabelCompiler(string path)
-        {
-            _path = path;
-        }
 
         public CompilerResult Compile(Config config)
         {

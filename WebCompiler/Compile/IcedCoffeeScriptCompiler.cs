@@ -7,14 +7,8 @@ namespace WebCompiler
     internal class IcedCoffeeScriptCompiler : ICompiler
     {
         private static readonly Regex _errorRx = new Regex(":(?<line>[0-9]+):(?<column>[0-9]+).*error: (?<message>.+)", RegexOptions.Compiled);
-        private readonly string _path;
         private readonly string _error = string.Empty;
         private readonly string _temp = Path.Combine(Path.GetTempPath(), ".iced-coffee-script");
-
-        public IcedCoffeeScriptCompiler(string path)
-        {
-            _path = path;
-        }
 
         public CompilerResult Compile(Config config)
         {

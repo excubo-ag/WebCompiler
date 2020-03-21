@@ -1,21 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace WebCompiler
 {
     internal class SassCompiler : ICompiler
     {
-        private static readonly Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
-        private readonly string _path;
         private string _output = string.Empty;
         private readonly string _error = string.Empty;
-
-        public SassCompiler(string path)
-        {
-            _path = path;
-        }
 
         public class RawCompilerError
         {

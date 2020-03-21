@@ -8,17 +8,11 @@ namespace WebCompiler
     {
         private static readonly Regex _errorRx = new Regex("Error: (?<message>.+) on line (?<line>[0-9]+):", RegexOptions.Compiled);
         private string _mapPath;
-        private readonly string _path;
         private string _name = string.Empty;
         private string _extension = string.Empty;
         private readonly string _output = string.Empty;
         private readonly string _error = string.Empty;
         private bool _partial = false;
-
-        public HandlebarsCompiler(string path)
-        {
-            _path = path;
-        }
 
         public CompilerResult Compile(Config config)
         {

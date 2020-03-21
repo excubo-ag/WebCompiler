@@ -8,14 +8,8 @@ namespace WebCompiler
     internal class LessCompiler : ICompiler
     {
         private static readonly Regex _errorRx = new Regex("(?<message>.+) on line (?<line>[0-9]+), column (?<column>[0-9]+)", RegexOptions.Compiled);
-        private readonly string _path;
         private string _output = string.Empty;
         private string _error = string.Empty;
-
-        public LessCompiler(string path)
-        {
-            _path = path;
-        }
 
         public CompilerResult Compile(Config config)
         {

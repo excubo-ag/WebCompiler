@@ -7,14 +7,8 @@ namespace WebCompiler
     internal class StylusCompiler : ICompiler
     {
         private static readonly Regex _errorRx = new Regex(@"(?<severity>Error|Warning): (?<file>.+):(?<line>[0-9]+):(?<column>[0-9]+).+^(?=[^\s])(?<message>([^\r\n]+))", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.Singleline);
-        private readonly string _path;
         private readonly string _output = string.Empty;
         private readonly string _error = string.Empty;
-
-        public StylusCompiler(string path)
-        {
-            _path = path;
-        }
 
         public CompilerResult Compile(Config config)
         {

@@ -9,9 +9,6 @@ namespace WebCompiler
     /// </summary>
     public static class CompilerService
     {
-        internal const string Version = "1.4.167";
-        private static readonly string _path = Path.Combine(Path.GetTempPath(), "WebCompiler" + Version);
-
         /// <summary>A list of allowed file extensions.</summary>
         public static readonly string[] AllowedExtensions = new[] { ".LESS", ".SCSS", ".SASS", ".STYL", ".COFFEE", ".ICED", ".JS", ".JSX", ".ES6", ".HBS", ".HANDLEBARS" };
 
@@ -32,18 +29,18 @@ namespace WebCompiler
             var ext = Path.GetExtension(config.InputFile).ToUpperInvariant();
             return ext switch
             {
-                ".LESS" => new LessCompiler(_path),
-                ".HANDLEBARS" => new HandlebarsCompiler(_path),
-                ".HBS" => new HandlebarsCompiler(_path),
-                ".SCSS" => new SassCompiler(_path),
-                ".SASS" => new SassCompiler(_path),
-                ".STYL" => new StylusCompiler(_path),
-                ".STYLUS" => new StylusCompiler(_path),
-                ".COFFEE" => new IcedCoffeeScriptCompiler(_path),
-                ".ICED" => new IcedCoffeeScriptCompiler(_path),
-                ".JS" => new BabelCompiler(_path),
-                ".JSX" => new BabelCompiler(_path),
-                ".ES6" => new BabelCompiler(_path),
+                ".LESS" => new LessCompiler(),
+                ".HANDLEBARS" => new HandlebarsCompiler(),
+                ".HBS" => new HandlebarsCompiler(),
+                ".SCSS" => new SassCompiler(),
+                ".SASS" => new SassCompiler(),
+                ".STYL" => new StylusCompiler(),
+                ".STYLUS" => new StylusCompiler(),
+                ".COFFEE" => new IcedCoffeeScriptCompiler(),
+                ".ICED" => new IcedCoffeeScriptCompiler(),
+                ".JS" => new BabelCompiler(),
+                ".JSX" => new BabelCompiler(),
+                ".ES6" => new BabelCompiler(),
                 _ => throw new NotSupportedException($"No compiler found for file type {ext}")
             };
         }
