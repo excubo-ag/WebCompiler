@@ -1,37 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-        <PackAsTool>true</PackAsTool>
-        <ToolCommandName>webcompiler</ToolCommandName>
-        <Title>Web Compiler</Title>
-        <PackageId>Excubo.WebCompiler</PackageId>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>webcompiler</ToolCommandName>
+    <Title>Web Compiler</Title>
+    <PackageId>Excubo.WebCompiler</PackageId>
 
-        <Authors>Stefan Lörwald</Authors>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.4</Version>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Company>excubo ag</Company>
-        <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>
-        <PackageProjectUrl>https://github.com/excubo-ag/WebCompiler</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/excubo-ag/WebCompiler</RepositoryUrl>
-        <PackageTags>sass,web,css,js,scss</PackageTags>
-        <RepositoryType>git</RepositoryType>
-
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="LibSassHost" Version="1.2.10" />
-        <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" />
-        <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" />
-        <PackageReference Include="Microsoft.Build.Framework" Version="16.5.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.5.0" PrivateAssets="All" />
-        <PackageReference Include="NUglify" Version="1.5.14" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="..\LICENSE">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
-    </ItemGroup>
+    <Authors>Stefan Lörwald</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>2.0.13</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Company>excubo ag</Company>
+    <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>
+    <PackageProjectUrl>https://github.com/excubo-ag/WebCompiler</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/excubo-ag/WebCompiler</RepositoryUrl>
+    <PackageTags>sass,web,css,js,scss</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Excubo.WebCompiler</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LibSassHost" Version="1.2.10" />
+    <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" />
+    <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.5.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.5.0" PrivateAssets="All" />
+    <PackageReference Include="NUglify" Version="1.5.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>

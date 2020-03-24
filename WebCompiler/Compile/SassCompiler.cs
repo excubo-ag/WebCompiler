@@ -1,173 +1,128 @@
-﻿using System;
+﻿using LibSassHost;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
+using System.Linq;
+using System.Text.RegularExpressions;
+using WebCompiler.Configuration.Settings;
 
-namespace WebCompiler
+namespace WebCompiler.Compile
 {
-    internal class SassCompiler : ICompiler
+    public class SassCompiler : Compiler
     {
-        private string _output = string.Empty;
-        private readonly string _error = string.Empty;
+        private readonly SassSettings settings;
 
-        public class RawCompilerError
+        public SassCompiler(SassSettings settings)
         {
-            public string message { get; set; }
-            public int column { get; set; }
-            public int line { get; set; }
+            this.settings = settings;
         }
-
-        public CompilerResult Compile(Config config)
+        public override CompilerResult Compile(string file)
         {
-            var baseFolder = Path.GetDirectoryName(config.FileName);
-            var inputFile = Path.Combine(baseFolder, config.InputFile);
+            var tmp_output_file = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + ".css.tmp");
+            var output_file = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + ".css");
 
-            var info = new FileInfo(inputFile);
-            var content = File.ReadAllText(info.FullName);
-
-            var result = new CompilerResult
+            if (File.Exists(output_file))
             {
-                FileName = info.FullName,
-                OriginalContent = content,
-            };
+                // determine if this file with all its dependencies is newer than the output file, which necessitates compilation.
+                var dependencies = GetDependencies(file).ToList();
+                var last_write_output = new FileInfo(output_file).LastWriteTimeUtc;
+                var needs_compilation = dependencies.Select(d => new FileInfo(d).LastWriteTimeUtc).Any(last_write_input => last_write_input > last_write_output);
 
+                if (!needs_compilation)
+                {
+                    return new CompilerResult
+                    {
+                        OutputFile = output_file
+                    };
+                }
+            }
             try
             {
-                RunCompilerProcess(config, info);
-
-                var sourceMapIndex = _output.LastIndexOf("*/");
-                if (sourceMapIndex > -1 && _output.Contains("sourceMappingURL=data:"))
+                var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, new CompilationOptions
                 {
-                    _output = _output.Substring(0, sourceMapIndex + 2);
-                }
-
-                result.CompiledContent = _output;
-
-                if (_error.Length > 0)
+                    IndentType = settings.IndentType,
+                    IndentWidth = settings.IndentWidth,
+                    LineFeedType = settings.LineFeed,
+                    OutputStyle = settings.OutputStyle,
+                    Precision = settings.Precision,
+                    SourceMap = true,
+                    InlineSourceMap = settings.SourceMap
+                });
+                ReplaceIfNewer(output_file, compile_result.CompiledContent);
+                return new CompilerResult
                 {
-                    var json = JsonSerializer.Deserialize<RawCompilerError>(_error);
-
-                    var ce = new CompilerError
-                    {
-                        FileName = info.FullName,
-                        Message = json.message,
-                        ColumnNumber = json.column,
-                        LineNumber = json.line,
-                        IsWarning = !string.IsNullOrEmpty(_output)
-                    };
-
-                    result.Errors.Add(ce);
-                }
-            }
-            catch (Exception ex)
-            {
-                var error = new CompilerError
-                {
-                    FileName = info.FullName,
-                    Message = string.IsNullOrEmpty(_error) ? ex.Message : _error,
-                    LineNumber = 0,
-                    ColumnNumber = 0,
+                    OutputFile = output_file
                 };
-
-                result.Errors.Add(error);
             }
-
-            return result;
+            catch (SassСompilationException ex)
+            {
+                return new CompilerResult
+                {
+                    Errors = new List<CompilerError>
+                    {
+                        new CompilerError
+                        {
+                            FileName = ex.File,
+                            Message = ex.Message,
+                            LineNumber = ex.LineNumber,
+                            ColumnNumber = ex.ColumnNumber
+                        }
+                    }
+                };
+            }
         }
 
-        private void RunCompilerProcess(Config config, FileInfo info)
+        private IEnumerable<string> GetDependencies(string file)
         {
-            var arguments = ConstructArguments(config);
-            // TODO see whether more arguments need to be passed to SassCompiler
-            var inline_source_map = config.Compilers.Sass.SourceMap;
-            var result = LibSassHost.SassCompiler.CompileFile(info.FullName, config.GetAbsoluteOutputFile().FullName, info.Name, new LibSassHost.CompilationOptions
+            var content = File.ReadAllText(file, Encoding);
+            var info = new FileInfo(file);
+            //match both <@import "myFile.scss";> and <@import url("myFile.scss");> syntax
+            var matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
+            foreach (var match in matches.Where(m => m != null))
             {
-                SourceMap = true,
-                InlineSourceMap = inline_source_map
-            });
-            _output = result.CompiledContent;
-            //ProcessStartInfo start = new ProcessStartInfo
-            //{
-            //    WorkingDirectory = new FileInfo(config.FileName).DirectoryName, // use config's directory to fix source map relative paths
-            //    UseShellExecute = false,
-            //    WindowStyle = ProcessWindowStyle.Hidden,
-            //    CreateNoWindow = true,
-            //    FileName = "cmd.exe",
-            //    Arguments = $"/c \"\"{Path.Combine(_path, "node_modules\\.bin\\node-sass.cmd")}\" {arguments} \"{info.FullName}\" \"",
-            //    StandardOutputEncoding = Encoding.UTF8,
-            //    StandardErrorEncoding = Encoding.UTF8,
-            //    RedirectStandardOutput = true,
-            //    RedirectStandardError = true,
-            //};
-
-            //// Pipe output from node-sass to postcss if autoprefix option is set
-            //SassOptions options = SassOptions.FromConfig(config);
-            //if (!string.IsNullOrEmpty(options.autoPrefix))
-            //{
-            //    string postCssArguments = "--use autoprefixer";
-
-            //    if (!options.sourceMap && !config.sourceMap)
-            //        postCssArguments += " --no-map";
-
-            //    start.Arguments = start.Arguments.TrimEnd('"') + $" | \"{Path.Combine(_path, "node_modules\\.bin\\postcss.cmd")}\" {postCssArguments}\"";
-            //    start.EnvironmentVariables.Add("BROWSERSLIST", options.autoPrefix);
-            //}
-
-            //start.EnvironmentVariables["PATH"] = _path + ";" + start.EnvironmentVariables["PATH"];
-
-            //using (Process p = Process.Start(start))
-            //{
-            //    var stdout = p.StandardOutput.ReadToEndAsync();
-            //    var stderr = p.StandardError.ReadToEndAsync();
-            //    p.WaitForExit();
-
-            //    _output = stdout.Result;
-            //    // postcss outputs "√ Finished stdin (##ms)" to stderr for some reason
-            //    if (!stderr.Result.StartsWith("√"))
-            //        _error = stderr.Result;
-            //}
+                var importedfiles = GetFileInfos(info, match);
+                foreach (var importedfile in importedfiles)
+                {
+                    yield return importedfile;
+                    foreach (var dependency in GetDependencies(importedfile))
+                    {
+                        yield return dependency;
+                    }
+                }
+            }
         }
 
-        private static string ConstructArguments(Config config)
+        private static IEnumerable<string> GetFileInfos(FileInfo info, Match match)
         {
-            var arguments = "";
+            var url = match.Groups["url"].Value.Replace("'", "\"").Replace("(", "").Replace(")", "").Replace(";", "").Trim();
 
-            var options = config.Compilers.Sass;
-
-            if (options.SourceMap || config.SourceMap)
+            foreach (var name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
             {
-                arguments += " --source-map-embed=true";
+                var value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
+                if (value.EndsWith(".scss", StringComparison.InvariantCultureIgnoreCase) ||
+                    value.EndsWith(".sass", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (File.Exists(Path.Combine(info.DirectoryName, value)))
+                    {
+                        yield return Path.Combine(info.DirectoryName, value);
+                    }
+                    else if (File.Exists(Path.Combine(info.DirectoryName, "_" + value)))
+                    {
+                        yield return Path.Combine(info.DirectoryName, "_" + value);
+                    }
+                }
+                else
+                {
+                    if (File.Exists(Path.Combine(info.DirectoryName, value + ".scss")))
+                    {
+                        yield return Path.Combine(info.DirectoryName, value + ".scss");
+                    }
+                    else if (File.Exists(Path.Combine(info.DirectoryName, "_" + value + ".scss")))
+                    {
+                        yield return Path.Combine(info.DirectoryName, "_" + value + ".scss");
+                    }
+                }
             }
-
-            arguments += " --precision=" + options.Precision;
-
-            if (!string.IsNullOrEmpty(options.OutputStyle))
-            {
-                arguments += " --output-style=" + options.OutputStyle;
-            }
-
-            if (options.IndentType != "space")
-            {
-                arguments += " --indent-type=" + options.IndentType.ToLowerInvariant();
-            }
-
-            if (options.IndentWidth > -1)
-            {
-                arguments += " --indent-width=" + options.IndentWidth;
-            }
-
-            if (!string.IsNullOrEmpty(options.IncludePath))
-            {
-                arguments += " --include-path=" + options.IncludePath;
-            }
-
-            if (!string.IsNullOrEmpty(options.SourceMapRoot))
-            {
-                arguments += " --source-map-root=" + options.SourceMapRoot;
-            }
-
-            arguments += " --linefeed=" + options.LineFeed.ToString();
-
-            return arguments;
         }
     }
 }

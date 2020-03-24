@@ -1,0 +1,27 @@
+﻿@import "variables",  "sub/foo"; // Bootstrap overrides
+
+body {
+    background-color: $background;
+    content: "✔ æøå";
+}
+
+#test1{
+    color: red;
+}
+
+/*#test2{
+    color: blue;
+}*/
+
+#test3{
+    color: green;
+}
+
+.parent
+{
+    .child
+    {
+        width: 64px;
+        height: 24px;
+    }
+}
