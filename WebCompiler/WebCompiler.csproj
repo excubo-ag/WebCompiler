@@ -9,7 +9,7 @@
 
     <Authors>Stefan Lörwald</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.13</Version>
+    <Version>2.0.14</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Company>excubo ag</Company>
     <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>

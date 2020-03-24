@@ -186,7 +186,10 @@ File format to specify compiler configuration (-c|--config):
         {
             foreach (var file in Directory.GetFiles(directory))
             {
-                yield return file;
+                if (!Path.GetFileName(file).StartsWith('_'))
+                {
+                    yield return file;
+                }
             }
             foreach (var subdir in Directory.GetDirectories(directory))
             {
