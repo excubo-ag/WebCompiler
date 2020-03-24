@@ -1,8 +1,0 @@
-﻿[
-	{
-		"outputFile": "iced/error.js",
-		"inputFile": "iced/error.iced",
-		"minify": { },
-		"includeInProject": true
-	}
-]

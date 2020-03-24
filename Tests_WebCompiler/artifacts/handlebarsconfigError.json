@@ -1,8 +1,0 @@
-﻿[
-	{
-		"outputFile": "handlebars/error.js",
-		"inputFile": "handlebars/error.hbs",
-		"includeInProject": true,
-		"minify": { }
-	}
-]

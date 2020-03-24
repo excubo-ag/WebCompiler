@@ -1,8 +1,0 @@
-﻿[
-	{
-		"outputFile": "babel/error.js",
-		"inputFile": "babel/error.jsx",
-    "includeInProject": true,
-    "sourceMap": true
-	}
-]
