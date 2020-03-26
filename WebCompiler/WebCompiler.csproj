@@ -9,7 +9,7 @@
 
     <Authors>Stefan Lörwald</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.14</Version>
+    <Version>2.0.15</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Company>excubo ag</Company>
     <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>
@@ -22,10 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LibSassHost" Version="1.2.10" />
+    <PackageReference Include="LibSassHost.Native.osx-x64" Version="1.2.10" />
     <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.10" />
     <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.10" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.5.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.5.0" PrivateAssets="All" />
+    <PackageReference Include="LibSassHost.Native.win-x86" Version="1.2.10" />
     <PackageReference Include="NUglify" Version="1.5.14" />
   </ItemGroup>
   <ItemGroup>
