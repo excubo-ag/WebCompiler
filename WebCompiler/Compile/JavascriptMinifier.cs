@@ -1,4 +1,7 @@
 ﻿using NUglify;
+using NUglify.JavaScript;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WebCompiler.Configuration.Settings;
@@ -25,8 +28,25 @@ namespace WebCompiler.Compile
             }
             var content = File.ReadAllText(file, Encoding);
 
-
-            var minifiedJs = Uglify.Js(content, settings);
+            UglifyResult minifiedJs;
+            try
+            {
+                minifiedJs = Uglify.Js(content, settings);
+            }
+            catch (Exception e)
+            {
+                return new CompilerResult
+                {
+                    Errors = new List<CompilerError>
+                    {
+                        new CompilerError
+                        {
+                            FileName = file,
+                            Message = e.Message
+                        }
+                    }
+                };
+            }
 
             if (minifiedJs.Errors != null && minifiedJs.Errors.Any())
             {
