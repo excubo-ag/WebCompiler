@@ -183,7 +183,7 @@ File format to specify compiler configuration (-c|--config):
         {
             foreach (var error in errors)
             {
-                Console.WriteLine(error.Message);
+                Console.Error.WriteLine(error.Message);
             }
         }
 
@@ -257,12 +257,12 @@ File format to specify compiler configuration (-c|--config):
                 var arg_index = args.IndexOfAny("-f", "--files") + 1;
                 if (arg_index >= args.Count)
                 {
-                    Console.WriteLine("Argument missing for option -f. Did you mean to add a list of files?");
+                    Console.Error.WriteLine("Argument missing for option -f. Did you mean to add a list of files?");
                 }
                 var file = args[arg_index];
                 if (!File.Exists(file))
                 {
-                    Console.WriteLine($"File {file} not found");
+                    Console.Error.WriteLine($"File {file} not found");
                     yield break;
                 }
                 foreach (var item in File.ReadAllLines(file, Compiler.Encoding))
@@ -297,7 +297,7 @@ File format to specify compiler configuration (-c|--config):
                 var arg_index = args.IndexOfAny("-z", "--zip") + 1;
                 if (arg_index >= args.Count)
                 {
-                    Console.WriteLine("Argument missing for option -z. Did you mean to disable compression?");
+                    Console.Error.WriteLine("Argument missing for option -z. Did you mean to disable compression?");
                     return false;
                 }
                 return args[arg_index].StartsWith("d", StringComparison.InvariantCultureIgnoreCase);
@@ -311,7 +311,7 @@ File format to specify compiler configuration (-c|--config):
                 var arg_index = args.IndexOfAny("-m", "--minify") + 1;
                 if (arg_index >= args.Count)
                 {
-                    Console.WriteLine("Argument missing for option -m. Did you mean to disable minification?");
+                    Console.Error.WriteLine("Argument missing for option -m. Did you mean to disable minification?");
                     return false;
                 }
                 return args[arg_index].StartsWith("d", StringComparison.InvariantCultureIgnoreCase);
@@ -332,13 +332,13 @@ File format to specify compiler configuration (-c|--config):
                 }
                 else
                 {
-                    Console.WriteLine("Error reading configuration from file: no file specified");
+                    Console.Error.WriteLine("Error reading configuration from file: no file specified");
                     return null;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error reading configuration from file: {e.Message}");
+                Console.Error.WriteLine($"Error reading configuration from file: {e.Message}");
                 return null;
             }
         }
