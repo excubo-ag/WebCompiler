@@ -24,7 +24,7 @@ namespace WebCompiler.Compile
             if (File.Exists(output_file))
             {
                 // determine if this file with all its dependencies is newer than the output file, which necessitates compilation.
-                var dependencies = GetDependencies(file).ToList();
+                var dependencies = GetDependencies(file).Append(file).ToList();
                 var last_write_output = new FileInfo(output_file).LastWriteTimeUtc;
                 var needs_compilation = dependencies.Select(d => new FileInfo(d).LastWriteTimeUtc).Any(last_write_input => last_write_input > last_write_output);
 

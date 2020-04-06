@@ -33,14 +33,13 @@ namespace Tests_WebCompiler
             Assert.AreEqual(timestamp, new_timestamp, "Compiling a second time should not alter the file");
             TestEqual(expected_output, output_files.Last());
         }
-        private DateTime ProcessFile()
+        protected DateTime ProcessFile()
         {
             CompilationStep result = null;
             Assert.DoesNotThrow(() => result = pipeline(input), "Compiling should not result in exception");
             Assert.IsNotNull(result, "Compilation result may not be null");
             Assert.IsTrue(result.Errors == null || !result.Errors.Any(), "Compilation should not result in error");
             Assert.AreEqual(Path.GetFullPath(output_files.Last()), Path.GetFullPath(result.OutputFile), "Unexpected output file");
-            TestEqual(expected_output, result.OutputFile);
             foreach (var file in output_files)
             {
                 Assert.IsTrue(File.Exists(file), $"Output file or intermediate file {file} should exist");
@@ -54,7 +53,7 @@ namespace Tests_WebCompiler
             var stream_reader = new StreamReader(gzip_stream);
             return stream_reader.ReadToEnd();
         }
-        private void TestEqual(string expected, string value)
+        protected void TestEqual(string expected, string value)
         {
             if (expected.EndsWith("gz"))
             {
