@@ -135,6 +135,11 @@ File format to specify compiler configuration (-c|--config):
             }
             var compilers = new Compilers(config);
             var file_arguments = GetFileArguments(args.ToList());
+            if (!file_arguments.Any())
+            {
+                Console.Error.WriteLine("No file or folder specified.");
+                return 1;
+            }
             var recurse = args.Contains("-r") || args.Contains("--recursive");
 
             foreach (var item in file_arguments)
