@@ -30,20 +30,20 @@ namespace Tests_WebCompiler
         {
             var timestamp = ProcessFile();
             var new_timestamp = ProcessFile();
-            Assert.AreEqual(timestamp, new_timestamp);
+            Assert.AreEqual(timestamp, new_timestamp, "Compiling a second time should not alter the file");
             TestEqual(expected_output, output_files.Last());
         }
         private DateTime ProcessFile()
         {
             CompilationStep result = null;
-            Assert.DoesNotThrow(() => result = pipeline(input));
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Errors == null || !result.Errors.Any());
-            Assert.AreEqual(Path.GetFullPath(output_files.Last()), Path.GetFullPath(result.OutputFile));
+            Assert.DoesNotThrow(() => result = pipeline(input), "Compiling should not result in exception");
+            Assert.IsNotNull(result, "Compilation result may not be null");
+            Assert.IsTrue(result.Errors == null || !result.Errors.Any(), "Compilation should not result in error");
+            Assert.AreEqual(Path.GetFullPath(output_files.Last()), Path.GetFullPath(result.OutputFile), "Unexpected output file");
             TestEqual(expected_output, result.OutputFile);
             foreach (var file in output_files)
             {
-                Assert.IsTrue(File.Exists(file));
+                Assert.IsTrue(File.Exists(file), $"Output file or intermediate file {file} should exist");
             }
             return new FileInfo(output_files.Last()).LastWriteTimeUtc;
         }
@@ -60,11 +60,11 @@ namespace Tests_WebCompiler
             {
                 var e = Decompressed(expected);
                 var r = Decompressed(value);
-                Assert.AreEqual(e, r);
+                Assert.AreEqual(e, r, "Compressed files should have the same content when decompressed");
             }
             else
             {
-                Assert.AreEqual(File.ReadAllText(expected, Compiler.Encoding), File.ReadAllText(value, Compiler.Encoding));
+                Assert.AreEqual(File.ReadAllText(expected, Compiler.Encoding), File.ReadAllText(value, Compiler.Encoding), "Files should be identical");
             }
         }
     }
