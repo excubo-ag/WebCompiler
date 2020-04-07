@@ -20,7 +20,13 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
-#### Breaking changes in Version 2.0.X
+#### Changes in version 2.1.X
+
+- Previously, running e.g. `webcompiler -r` without specifying a file and/or folder just returned without any message, warning or error. This is now an error. If the intention is to run in the working directory, use `webcompiler -r .`.
+- Now writes to `stderr` instead of `stdout` where appropriate.
+- Bug fixed: Sass files were not recompiled on change, if that change was to the sass file itself rather than one of its dependencies. Now it correctly recompiles for any change to the file itself or any of its dependencies.
+
+#### Breaking changes in version 2.0.X
 
 The command line interface has been rewritten from scratch to enable sensible defaults without the need to have a configuration file around.
 Starting with version 2.0.0, the old compilerconfig.json.defaults is incompatible. A new file can be created with `webcompiler --defaults` (optional).
