@@ -1,22 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="package.csproj" Condition="Exists('package.csproj')"/>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>webcompiler</ToolCommandName>
-    <Title>Web Compiler</Title>
-    <PackageId>Excubo.WebCompiler</PackageId>
-
-    <Authors>Stefan Lörwald</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.1.1</Version>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Company>excubo ag</Company>
-    <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>
-    <PackageProjectUrl>https://github.com/excubo-ag/WebCompiler</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/excubo-ag/WebCompiler</RepositoryUrl>
-    <PackageTags>sass,web,css,js,scss</PackageTags>
-    <RepositoryType>git</RepositoryType>
     <Nullable>enable</Nullable>
     <AssemblyName>Excubo.WebCompiler</AssemblyName>
   </PropertyGroup>

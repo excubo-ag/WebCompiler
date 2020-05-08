@@ -1,0 +1,42 @@
+<Project>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <!--Title, Description, Tags, Product-->
+  <PropertyGroup>
+    <Title>Web Compiler</Title>
+    <Description>Excubo.WebCompiler is a dotnet global tool that compiles Scss files (other languages on the road map).</Description>
+    <PackageTags>sass,web,css,js,scss</PackageTags>
+    <Product>Excubo.WebCompiler</Product>
+  </PropertyGroup>
+  <!--Author, Company-->
+  <PropertyGroup>    
+    <Authors>Stefan Lörwald</Authors>
+    <Company>excubo ag</Company>
+  </PropertyGroup>
+  <!--Repository-->
+  <PropertyGroup>
+    <PackageProjectUrl>https://github.com/excubo-ag/WebCompiler</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/excubo-ag/WebCompiler</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <!--PackageId, Version-->
+  <PropertyGroup>
+    <PackageId>Excubo.WebCompiler</PackageId>
+    <Version>2.1.1</Version>
+  </PropertyGroup>
+  <!--Self Include-->
+  <ItemGroup>
+    <None Include="package.csproj" />
+  </ItemGroup>
+  <!--Licensing-->
+  <PropertyGroup>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
