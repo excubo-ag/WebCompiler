@@ -54,7 +54,7 @@ namespace WebCompiler.Compile
                     OutputFile = output_file
                 };
             }
-            catch (SassСompilationException ex)
+            catch (SassCompilationException ex)
             {
                 return new CompilerResult
                 {

@@ -1,5 +1,4 @@
 ﻿using NUglify;
-using NUglify.JavaScript;
 using System;
 using System.Collections.Generic;
 using System.IO;
