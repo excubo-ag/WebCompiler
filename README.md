@@ -72,11 +72,62 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 dotnet tool install Excubo.WebCompiler --version 2.2.0
 ```
 
-#### 2. Integrate the call to `webcompiler` into your build pipeline
+#### 2. Call `webcompiler`
 
 ```
 webcompiler -r wwwroot
 ```
+
+### Build integrations
+
+#### Command line / terminal
+
+Simply call `webcompiler` with the appropriate options, e.g. `webcompiler -r wwwroot`.
+
+#### MSBuild
+
+You can add `webcompiler` as a `Target` in your `csproj` file. This works cross platform:
+
+```xml
+  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile">
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" />
+  </Target>
+```
+
+In this example, `webcompiler` is executed on the folder `wwwroot` inside your project folder.
+
+#### MSBuild with execution of webcompiler only if it is installed
+
+This configuration will not break the build if `Excubo.WebCompiler` is not installed. This can be helpful, e.g. if compilation is only necessary on the build server.
+
+```xml
+  <Target Name="TestWebCompiler">
+    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+  </Target>
+
+  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" />
+  </Target>
+```
+
+The first target simply tests whether `Excubo.WebCompiler` is installed at all. The second target then executes `webcompiler` recursively on the `wwwroot` folder, if it is installed. 
+
+#### Compile on save (dotnet watch)
+
+For automatic compilation whenever the content of source files change, add the following to your `csproj`:
+
+```xml
+<ItemGroup>
+    <!--specify file extensions here as needed-->
+    <Watch Include="**\*.scss" />
+</ItemGroup>
+```
+
+Run `dotnet watch tool run webcompiler` with the appropriate options in a terminal, e.g.
+`dotnet watch tool run webcompiler -r wwwroot`.
 
 ### Configuration
 
