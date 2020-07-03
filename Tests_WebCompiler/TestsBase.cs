@@ -23,7 +23,10 @@ namespace Tests_WebCompiler
             }
             foreach (var file in output_files)
             {
-                File.Delete(file);
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
             }
         }
         protected void Test()

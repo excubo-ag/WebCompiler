@@ -8,18 +8,25 @@ namespace WebCompiler.Compile
         public string InputFile { get; set; }
         public string? OutputFile { get; set; }
         public List<CompilerError>? Errors { get; set; }
+        public List<(string File, bool Created)> AllFiles { get; set; } = new List<(string File, bool Created)>();
         public CompilationStep(string file)
         {
             InputFile = file;
+            AllFiles.Add((File: InputFile, Created: false));
         }
         public CompilationStep With(Compiler compiler)
         {
-            var result = compiler.Compile(InputFile);
+            var result = compiler.Compile(AllFiles);
             if (result.Errors != null)
             {
-                Errors = result.Errors;
+                if (Errors == null)
+                {
+                    Errors = new List<CompilerError>();
+                }
+                Errors.AddRange(result.Errors);
             }
             OutputFile = result.OutputFile;
+            AllFiles.Add((File: OutputFile!, Created: result.Created));
             return this;
         }
         public CompilationStep Then(Compiler compiler)

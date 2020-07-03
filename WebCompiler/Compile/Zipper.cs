@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
@@ -6,8 +7,9 @@ namespace WebCompiler.Compile
 {
     public class Zipper : Compiler
     {
-        public override CompilerResult Compile(string file)
+        public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
         {
+            var file = file_sequence.Last().File;
             var output_file = file + ".gz";
             if (File.Exists(output_file) && new FileInfo(file).LastWriteTimeUtc < new FileInfo(output_file).LastWriteTimeUtc)
             {
@@ -18,9 +20,11 @@ namespace WebCompiler.Compile
             }
             var tmp_file = output_file + ".tmp.gz";
             Zip(file, tmp_file);
+            var created = false;
             if (!File.Exists(output_file))
             {
                 File.Move(tmp_file, output_file);
+                created = true;
             }
             else if (!File.ReadAllBytes(output_file).SequenceEqual(File.ReadAllBytes(tmp_file)))
             {
@@ -32,7 +36,8 @@ namespace WebCompiler.Compile
             }
             return new CompilerResult
             {
-                OutputFile = output_file
+                OutputFile = output_file,
+                Created = created
             };
         }
         private static void Zip(string input_file, string output_file)

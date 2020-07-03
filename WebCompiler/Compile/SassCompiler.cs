@@ -16,10 +16,11 @@ namespace WebCompiler.Compile
         {
             this.settings = settings;
         }
-        public override CompilerResult Compile(string file)
+        public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
         {
-            var tmp_output_file = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + ".css.tmp");
-            var output_file = Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + ".css");
+            var file = file_sequence.Last().File;
+            var tmp_output_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.tmp");
+            var output_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css");
 
             if (File.Exists(output_file))
             {
@@ -48,10 +49,11 @@ namespace WebCompiler.Compile
                     SourceMap = true,
                     InlineSourceMap = settings.SourceMap
                 });
-                ReplaceIfNewer(output_file, compile_result.CompiledContent);
+                var created = ReplaceIfNewer(output_file, compile_result.CompiledContent);
                 return new CompilerResult
                 {
-                    OutputFile = output_file
+                    OutputFile = output_file,
+                    Created = created
                 };
             }
             catch (SassCompilationException ex)

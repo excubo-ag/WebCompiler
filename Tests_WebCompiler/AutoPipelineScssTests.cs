@@ -18,7 +18,7 @@ namespace Tests_WebCompiler
                         TermSemicolons = false
                     }
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/Scss/").TryCompile(file);
             input = "../../../TestCases/Scss/test.scss";
             output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css", "../../../TestCases/Scss/test.min.css.gz" };
             expected_output = "../../../TestCases/GzCss/test.min.css.gz";
@@ -42,7 +42,7 @@ namespace Tests_WebCompiler
                     },
                     GZip = false
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/Scss/").TryCompile(file);
             input = "../../../TestCases/Scss/test.scss";
             output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css" };
             expected_output = "../../../TestCases/MinCss/test.min.css";
@@ -65,7 +65,7 @@ namespace Tests_WebCompiler
                         TermSemicolons = true
                     }
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/Scss/").TryCompile(file);
             input = "../../../TestCases/Scss/site.scss";
             output_files = new List<string> { "../../../TestCases/Scss/site.css", "../../../TestCases/Scss/site.min.css", "../../../TestCases/Scss/site.min.css.gz" };
             expected_output = "../../../TestCases/GzCss/site.min.css.gz";
@@ -88,7 +88,7 @@ namespace Tests_WebCompiler
                         TermSemicolons = false
                     }
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/MinCss/").TryCompile(file);
             input = "../../../TestCases/MinCss/site.min.css";
             output_files = new List<string> { "../../../TestCases/MinCss/site.min.css.gz" };
             expected_output = "../../../TestCases/GzCss/site.min.css.gz";
@@ -108,7 +108,7 @@ namespace Tests_WebCompiler
                 {
                     GZip = false
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/Scss/").TryCompile(file);
             input = "../../../TestCases/Scss/site.scss";
             output_files = new List<string> { "../../../TestCases/Scss/site.css", "../../../TestCases/Scss/site.min.css" };
             expected_output = "../../../TestCases/MinCss/site.min.css";
@@ -129,7 +129,7 @@ namespace Tests_WebCompiler
                     Enabled = false,
                     GZip = false
                 }
-            }).TryCompile(file);
+            }, "../../../TestCases/Scss/").TryCompile(file);
             input = "../../../TestCases/Scss/site.scss";
             output_files = new List<string> { "../../../TestCases/Scss/site.css" };
             expected_output = "../../../TestCases/Css/site.css";

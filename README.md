@@ -20,6 +20,13 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 2.3.X
+
+There are now two more options:
+
+- `-o`/`--output-dir` helps to put files into a different folder. See `webcompiler -o --help` for more details.
+- `-p`/`--preserve` `disable` makes all temporary files disappear (note that this can increase compile time. The default is to keep all temporary files).
+
 #### Changes in version 2.1.X
 
 - Previously, running e.g. `webcompiler -r` without specifying a file and/or folder just returned without any message, warning or error. This is now an error. If the intention is to run in the working directory, use `webcompiler -r .`.
@@ -37,13 +44,15 @@ Usage:
   webcompiler [options]
 
 Options:
-  -c|--config <conf.json>        Specify a configuration file for compilation.
-  -d|--defaults [conf.json]      Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
-  -f|--files <files.conf>        Specify a list of files that should be compiled.
-  -h|--help                      Show command line help.
-  -m|--minify [disable/enable]   Enable/disable minification (default: enabled), ignored if configuration file is provided.
-  -r|--recursive                 Recursively search folders for compilable files (only if any of the provided arguments is a folder).
-  -z|--zip [disable/enable]      Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -c|--config <conf.json>          Specify a configuration file for compilation.
+  -d|--defaults [conf.json]        Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
+  -f|--files <files.conf>          Specify a list of files that should be compiled.
+  -h|--help                        Show command line help.
+  -m|--minify [disable/enable]     Enable/disable minification (default: enabled), ignored if configuration file is provided.
+  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided, ignored if configuration file is provided.
+  -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
+  -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
+  -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
 ```
 
 Recommended default usage: `webcompiler -r wwwroot`.
@@ -69,7 +78,7 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 `Excubo.Webcompiler` is distributed as a [nuget package](https://www.nuget.org/packages/Excubo.WebCompiler/). You can install it in a command line using
 
 ```
-dotnet tool install Excubo.WebCompiler --version 2.2.1
+dotnet tool install Excubo.WebCompiler --version 2.3.0
 ```
 
 #### 2. Call `webcompiler`

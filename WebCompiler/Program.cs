@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -26,6 +27,22 @@ namespace WebCompiler
             }
             return -1;
         }
+        public static bool ContainsOption(this List<string> args, string short_option, string long_option, [NotNullWhen(true)] out string? value)
+        {
+            value = null;
+            if (args.Contains(short_option) || args.Contains(long_option))
+            {
+                var arg_index = args.IndexOfAny(short_option, long_option) + 1;
+                if (arg_index >= args.Count)
+                {
+                    Console.Error.WriteLine($"Argument missing for option {short_option}.");
+                    return false;
+                }
+                value = args[arg_index];
+                return true;
+            }
+            return false;
+        }
     }
     internal static class Program
     {
@@ -43,7 +60,7 @@ namespace WebCompiler
             return options;
         }
 
-        private static void ShowHelp(bool show_file_help = false, bool show_config_help = false)
+        private static void ShowHelp(bool show_file_help = false, bool show_output_help = false, bool show_config_help = false)
         {
             Console.WriteLine(
 @"
@@ -54,13 +71,15 @@ Usage:
   webcompiler [options]
 
 Options:
-  -c|--config <conf.json>        Specify a configuration file for compilation.
-  -d|--defaults [conf.json]      Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
-  -f|--files <files.conf>        Specify a list of files that should be compiled.
-  -h|--help                      Show command line help.
-  -m|--minify [disable/enable]   Enable/disable minification (default: enabled), ignored if configuration file is provided.
-  -r|--recursive                 Recursively search folders for compilable files (only if any of the provided arguments is a folder).
-  -z|--zip [disable/enable]      Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -c|--config <conf.json>          Specify a configuration file for compilation.
+  -d|--defaults [conf.json]        Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
+  -f|--files <files.conf>          Specify a list of files that should be compiled.
+  -h|--help                        Show command line help.
+  -m|--minify [disable/enable]     Enable/disable minification (default: enabled), ignored if configuration file is provided.
+  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided, ignored if configuration file is provided.
+  -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
+  -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
+  -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
 ".Trim()
             );
             if (show_file_help)
@@ -71,6 +90,27 @@ Options:
 File format to specify list of files (-f|--files): one file per line
   path/to/file.scss
   path/to/other/file.scss
+".Trim()
+                );
+            }
+            if (show_output_help)
+            {
+                Console.WriteLine();
+                Console.WriteLine(
+@"
+Specifying the output directory has the following effect:
+Suppose the specified output directory is
+  wwwroot
+and the input files are
+  path/to/file.scss
+  path/to/other/file.scss
+  path/code.js
+
+All these files share the common prefix ""path/"", which is ignored.
+The output files will therefore be
+  wwwroot/to/file.min.css
+  wwwroot/to/other/file.min.css
+  wwwroot/code.min.js
 ".Trim()
                 );
             }
@@ -111,16 +151,13 @@ File format to specify compiler configuration (-c|--config):
                 );
             }
         }
-        private static int Main(params string[] args)
-        {
-            return Execute(args);
-        }
-
-        public static int Execute(string[] args)
+        public static int Main(params string[] args)
         {
             if (!args.Any() || args.Contains("-h") || args.Contains("--help"))
             {
-                ShowHelp(show_file_help: args.Contains("-f") || args.Contains("--files"), show_config_help: args.Contains("-c") || args.Contains("--config"));
+                ShowHelp(show_file_help: args.Contains("-f") || args.Contains("--files"),
+                         show_output_help: args.Contains("-o") || args.Contains("--output-dir"),
+                         show_config_help: args.Contains("-c") || args.Contains("--config"));
                 return 0;
             }
             if (args.Contains("-d") || args.Contains("--defaults"))
@@ -133,18 +170,18 @@ File format to specify compiler configuration (-c|--config):
             {
                 return 1;
             }
-            var compilers = new Compilers(config);
-            var file_arguments = GetFileArguments(args.ToList());
+            var file_arguments = GetFileArguments(args.ToList()).ToList();
             if (!file_arguments.Any())
             {
                 Console.Error.WriteLine("No file or folder specified.");
                 return 1;
             }
             var recurse = args.Contains("-r") || args.Contains("--recursive");
-
+            var base_path = GetCommonBase(file_arguments);
+            var compilers = new Compilers(config, base_path);
             foreach (var item in file_arguments)
             {
-                if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
+                if (Directory.Exists(item))
                 {
                     if (!recurse)
                     {
@@ -163,7 +200,7 @@ File format to specify compiler configuration (-c|--config):
                         }
                     }
                 }
-                else
+                else if (File.Exists(item))
                 {
                     var result = compilers.TryCompile(item);
                     if (result.Errors != null)
@@ -175,10 +212,34 @@ File format to specify compiler configuration (-c|--config):
                         }
                     }
                 }
+                else
+                {
+                    Console.Error.WriteLine($"{item} does not exist");
+                }
             }
             return 0;
         }
-
+        private static string GetCommonBase(List<string> paths)
+        {
+            return paths
+                .Select(p => Path.GetFullPath(p))
+                .Aggregate((f, s) =>
+            {
+                if (File.Exists(f))
+                {
+                    f = Path.GetDirectoryName(f)!;
+                }
+                if (File.Exists(s))
+                {
+                    s = Path.GetDirectoryName(s)!;
+                }
+                while (!s.StartsWith(f))
+                {
+                    f = Path.GetDirectoryName(f)!;
+                }
+                return f;
+            });
+        }
         private static void PrintErrors(List<CompilerError> errors)
         {
             foreach (var error in errors)
@@ -215,6 +276,8 @@ File format to specify compiler configuration (-c|--config):
             "-c", "--config",
             "-f", "--files",
             "-m", "--minify",
+            "-o", "--output-dir",
+            "-p", "--preserve",
             "-z", "--zip"
         };
         private static readonly List<string> options_without_arguments = new List<string>
@@ -224,13 +287,15 @@ File format to specify compiler configuration (-c|--config):
         private static IEnumerable<string> GetFileArguments(List<string> args)
         {
             /*
-  -c|--config <conf.json>        Specify a configuration file for compilation.
-  -d|--defaults [conf.json]      Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
-  -f|--files <files.conf>        Specify a list of files that should be compiled.
-  -h|--help                      Show command line help.
-  -m|--minify [disable/enable]   Enable/disable minification (default: enabled), ignored if configuration file is provided.
-  -r|--recursive                 Recursively search folders for compilable files (only if any of the provided arguments is a folder).
-  -z|--zip [disable/enable]      Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -c|--config <conf.json>          Specify a configuration file for compilation.
+  -d|--defaults [conf.json]        Write a default configuration file (file name is webcompilerconfiguration.json, if none is specified).
+  -f|--files <files.conf>          Specify a list of files that should be compiled.
+  -h|--help                        Show command line help.
+  -m|--minify [disable/enable]     Enable/disable minification (default: enabled), ignored if configuration file is provided.
+  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided, ignored if configuration file is provided.
+  -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
+  -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
+  -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
              */
             if (other_options.Intersect(args).Any())
             {
@@ -287,38 +352,42 @@ File format to specify compiler configuration (-c|--config):
             {
                 config.Minifiers.GZip = false;
             }
+            if (IsPreservationDisabled(args))
+            {
+                config.Output.Preserve = false;
+            }
+            if (args.ContainsOption("-o", "--output-dir", out var argument))
+            {
+                config.Output.Directory = argument;
+            }
             return config;
         }
-
-        private static bool IsCompressionDisabled(List<string> args)
+        private static bool IsOptionDisabled(List<string> args, string short_option, string long_option, string feature)
         {
-            if (args.Contains("-z") || args.Contains("--zip"))
+            if (args.Contains(short_option) || args.Contains(long_option))
             {
-                var arg_index = args.IndexOfAny("-z", "--zip") + 1;
+                var arg_index = args.IndexOfAny(short_option, long_option) + 1;
                 if (arg_index >= args.Count)
                 {
-                    Console.Error.WriteLine("Argument missing for option -z. Did you mean to disable compression?");
+                    Console.Error.WriteLine($"Argument missing for option {short_option}. Did you mean to disable {feature}?");
                     return false;
                 }
                 return args[arg_index].StartsWith("d", StringComparison.InvariantCultureIgnoreCase);
             }
             return false;
+        }
+        private static bool IsCompressionDisabled(List<string> args)
+        {
+            return IsOptionDisabled(args, "-z", "--zip", "compression");
         }
         private static bool IsMinificationDisabled(List<string> args)
         {
-            if (args.Contains("-m") || args.Contains("--minify"))
-            {
-                var arg_index = args.IndexOfAny("-m", "--minify") + 1;
-                if (arg_index >= args.Count)
-                {
-                    Console.Error.WriteLine("Argument missing for option -m. Did you mean to disable minification?");
-                    return false;
-                }
-                return args[arg_index].StartsWith("d", StringComparison.InvariantCultureIgnoreCase);
-            }
-            return false;
+            return IsOptionDisabled(args, "-m", "--minify", "minification");
         }
-
+        private static bool IsPreservationDisabled(List<string> args)
+        {
+            return IsOptionDisabled(args, "-p", "--preserve", "preservation of intermediate files");
+        }
         private static Config? GetConfigFromFile(List<string> args)
         {
             try

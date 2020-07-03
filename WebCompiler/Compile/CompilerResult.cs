@@ -8,6 +8,7 @@ namespace WebCompiler.Compile
     public class CompilerResult
     {
         public string? OutputFile { get; set; }
+        public bool Created { get; set; }
 
         /// <summary>
         /// A collection of any errors reported by the compiler.

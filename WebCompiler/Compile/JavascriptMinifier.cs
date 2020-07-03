@@ -15,8 +15,9 @@ namespace WebCompiler.Compile
         {
             this.settings = settings;
         }
-        public override CompilerResult Compile(string file)
+        public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
         {
+            var file = file_sequence.Last().File;
             var output_file = GetMinFileName(file);
             if (File.Exists(output_file) && new FileInfo(file).LastWriteTimeUtc < new FileInfo(output_file).LastWriteTimeUtc)
             {
@@ -62,11 +63,12 @@ namespace WebCompiler.Compile
                 };
             }
 
-            ReplaceIfNewer(output_file, minifiedJs.Code);
+            var created = ReplaceIfNewer(output_file, minifiedJs.Code);
 
             return new CompilerResult
             {
-                OutputFile = output_file
+                OutputFile = output_file,
+                Created = created
             };
         }
     }
