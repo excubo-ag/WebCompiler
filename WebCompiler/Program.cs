@@ -76,7 +76,7 @@ Options:
   -f|--files <files.conf>          Specify a list of files that should be compiled.
   -h|--help                        Show command line help.
   -m|--minify [disable/enable]     Enable/disable minification (default: enabled), ignored if configuration file is provided.
-  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided, ignored if configuration file is provided.
+  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided.
   -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
   -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
   -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
