@@ -221,9 +221,9 @@ File format to specify compiler configuration (-c|--config):
         }
         private static string GetCommonBase(List<string> paths)
         {
+            paths = paths.Select(p => Path.GetFullPath(p)).ToList();
             return paths
-                .Select(p => Path.GetFullPath(p))
-                .Aggregate((f, s) =>
+                .Aggregate(File.Exists(paths.First()) ? Path.GetDirectoryName(paths.First()) : paths.First(), (f, s) =>
             {
                 if (File.Exists(f))
                 {

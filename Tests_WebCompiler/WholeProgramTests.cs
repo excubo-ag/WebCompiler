@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using WebCompiler;
 
 namespace Tests_WebCompiler
@@ -133,11 +134,11 @@ namespace Tests_WebCompiler
             };
             output_files = new List<string>
             {
-                "../../../output/Js/test.min.js.gz",
-                "../../../output/MinCss/site.min.css.gz",
-                "../../../output/Css/site.min.css.gz",
-                "../../../output/Css/test.min.css.gz",
-                "../../../output/Css/sub/site.min.css.gz"
+                "../../../output/path/Js/test.min.js.gz",
+                "../../../output/path/MinCss/site.min.css.gz",
+                "../../../output/path/Css/site.min.css.gz",
+                "../../../output/path/Css/test.min.css.gz",
+                "../../../output/path/Css/sub/site.min.css.gz"
             };
             foreach (var tmp_file in temporary_files)
             {
@@ -147,7 +148,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"));
             foreach (var output_file in output_files)
             {
                 Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
@@ -182,11 +183,11 @@ namespace Tests_WebCompiler
             };
             output_files = new List<string>
             {
-                "../../../output/Js/test.min.js.gz",
-                "../../../output/MinCss/site.min.css.gz",
-                "../../../output/Css/site.min.css.gz",
-                "../../../output/Css/test.min.css.gz",
-                "../../../output/Css/sub/site.min.css.gz"
+                "../../../output/path/Js/test.min.js.gz",
+                "../../../output/path/MinCss/site.min.css.gz",
+                "../../../output/path/Css/site.min.css.gz",
+                "../../../output/path/Css/test.min.css.gz",
+                "../../../output/path/Css/sub/site.min.css.gz"
             };
             foreach (var tmp_file in temporary_files)
             {
@@ -196,7 +197,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output", "-p", "d"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"));
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
@@ -209,6 +210,44 @@ namespace Tests_WebCompiler
                     File.Delete(tmp_file);
                 }
             }
+        }
+        [Test]
+        public void OutputPathNotFullyUsed()
+        {
+            var temporary_files = new List<string>
+            {
+                "Css/site.min.css"
+            };
+            output_files = new List<string>
+            {
+                "wwwroot/css/site.min.css"
+            };
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+            DeleteTemporaryFiles();
+            Directory.CreateDirectory("Css");
+            File.Copy("../../../TestCases/Css/site.css", "Css/site.css", overwrite: true);
+            Assert.DoesNotThrow(() => Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"));
+            Assert.IsTrue(File.Exists(output_files.Last()), "output needs to exist");
+            File.Delete("Css/site.css");
+            DeleteTemporaryFiles();
+            foreach (var tmp_file in temporary_files)
+            {
+                Assert.IsFalse(File.Exists(tmp_file), $"Temporary {tmp_file} should not exist");
+            }
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+            Directory.Delete("Css");
         }
     }
 }
