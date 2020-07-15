@@ -98,7 +98,7 @@ Simply call `webcompiler` with the appropriate options, e.g. `webcompiler -r www
 You can add `webcompiler` as a `Target` in your `csproj` file. This works cross platform:
 
 ```xml
-  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile">
+  <Target Name="CompileStaticAssets" AfterTargets="AfterBuild">
     <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" />
   </Target>
 ```
