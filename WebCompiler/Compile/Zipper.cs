@@ -47,7 +47,7 @@ namespace WebCompiler.Compile
             using var gzipStream = new GZipStream(targetStream, CompressionMode.Compress);
             sourceStream.CopyTo(gzipStream);
             gzipStream.Close();
-            
+
         }
     }
 }

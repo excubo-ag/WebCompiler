@@ -32,29 +32,29 @@ namespace WebCompiler.Compile
                 case ".SCSS":
                 case ".SASS":
                     return Compile(file).With(sass).Then(css_minifier).Then(zipper).Then(place).Then(cleanup);
-                
+
                 case ".CSS" // we minify (and potentially gzip) .css files, if they are not created by webcompiler
                 when css_minifier != terminating_compiler
                 && !file.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase):
                     return Compile(file).With(css_minifier).Then(zipper).Then(place).Then(cleanup);
-                
+
                 case ".JS" // we minify (and potentially gzip) .js files, if they are not created by webcompiler
                 when js_minifier != terminating_compiler
                 && !file.EndsWith(".min.js", StringComparison.InvariantCultureIgnoreCase):
                     return Compile(file).With(js_minifier).Then(zipper).Then(place).Then(cleanup);
-                
+
                 case ".CSS" //we zip .css files, if they are .min.css files that are not created by webcompiler
                 when zipper != terminating_compiler
                 && file.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase)
                 && !File.Exists(file.Replace(".min.css", ".css", StringComparison.InvariantCultureIgnoreCase)):
                     return Compile(file).With(zipper).Then(place).Then(cleanup);
-                
+
                 case ".JS" //we zip .js files, if they are .min.js files that are not created by webcompiler
                 when zipper != terminating_compiler
                 && file.EndsWith(".min.js", StringComparison.InvariantCultureIgnoreCase)
                 && !File.Exists(file.Replace(".min.js", ".js", StringComparison.InvariantCultureIgnoreCase)):
                     return Compile(file).With(zipper).Then(place).Then(cleanup);
-                
+
                 case ".LESS":
                 case ".HANDLEBARS":
                 case ".HBS":

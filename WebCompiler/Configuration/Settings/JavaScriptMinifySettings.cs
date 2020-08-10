@@ -10,7 +10,7 @@ namespace WebCompiler.Configuration.Settings
         public bool RenameLocals { get; set; } = true;
         public bool PreserveImportantComments { get; set; } = true;
         public EvalTreatment EvalTreatment { get; set; } = EvalTreatment.Ignore;
-        public static implicit  operator CodeSettings(JavaScriptMinifySettings self)
+        public static implicit operator CodeSettings(JavaScriptMinifySettings self)
         {
             return new CodeSettings
             {
