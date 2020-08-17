@@ -1,8 +1,8 @@
 ## Excubo.WebCompiler
 
-![Nuget](https://img.shields.io/nuget/v/Excubo.WebCompiler)
-![Nuget](https://img.shields.io/nuget/dt/Excubo.WebCompiler)
-![GitHub](https://img.shields.io/github/license/excubo-ag/WebCompiler)
+[![Nuget](https://img.shields.io/nuget/v/Excubo.WebCompiler)](https://www.nuget.org/packages/Excubo.WebCompiler/)
+[![Nuget](https://img.shields.io/nuget/dt/Excubo.WebCompiler)](https://www.nuget.org/packages/Excubo.WebCompiler/)
+[![GitHub](https://img.shields.io/github/license/excubo-ag/WebCompiler)](https://github.com/excubo-ag/WebCompiler/)
 
 `Excubo.WebCompiler` is a dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
 
