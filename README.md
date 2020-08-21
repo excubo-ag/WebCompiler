@@ -78,7 +78,7 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 `Excubo.Webcompiler` is distributed as a [nuget package](https://www.nuget.org/packages/Excubo.WebCompiler/). You can install it in a command line using
 
 ```
-dotnet tool install Excubo.WebCompiler --global --version 2.3.3
+dotnet tool install Excubo.WebCompiler --global --version 2.3.4
 ```
 
 #### 2. Call `webcompiler`
