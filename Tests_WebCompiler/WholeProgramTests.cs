@@ -30,6 +30,141 @@ namespace Tests_WebCompiler
             }
         }
         [Test]
+        public void UseConfig()
+        {
+            var temporary_files = new List<string>
+            {
+            };
+            output_files = new List<string>
+            {
+                "../../../TestCases/Scss/site.css"
+            };
+            var non_output_files = new List<string> // supressed by config: no gzip and no minification
+            {
+                "../../../TestCases/Scss/site.min.css",
+                "../../../TestCases/Scss/site.min.css.gz"
+            };
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+            DeleteTemporaryFiles();
+            File.WriteAllText("webcompilerconfiguration.json", @"{
+  ""Minifiers"": {
+    ""GZip"": false,
+    ""Enabled"": false
+  },
+  ""CompilerSettings"": {
+    ""Sass"": {
+      ""IndentType"": ""Space"",
+      ""IndentWidth"": 2,
+      ""OutputStyle"": ""Nested"",
+      ""Precision"": 5,
+      ""RelativeUrls"": true,
+      ""LineFeed"": ""Lf"",
+      ""SourceMap"": true
+    }
+  },
+  ""Output"": {
+    ""Preserve"": true
+  }
+}");
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+            File.Delete("webcompilerconfiguration.json");
+            foreach (var output_file in output_files)
+            {
+                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+            }
+            foreach (var non_output_file in non_output_files)
+            {
+                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+            }
+            DeleteTemporaryFiles();
+            foreach (var tmp_file in temporary_files)
+            {
+                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+            }
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+        }
+        [Test]
+        public void UseConfigWithRecursion()
+        {
+            var temporary_files = new List<string>
+            {
+            };
+            output_files = new List<string>
+            {
+                "../../../TestCases/Scss/sub/foo.css",
+                "../../../TestCases/Scss/sub/relative.css"
+            };
+            var non_output_files = new List<string> // supressed by config: no gzip and no minification
+            {
+                "../../../TestCases/Scss/sub/foo.min.css",
+                "../../../TestCases/Scss/sub/foo.min.css.gz",
+                "../../../TestCases/Scss/sub/relative.min.css",
+                "../../../TestCases/Scss/sub/relative.min.css.gz"
+            };
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+            DeleteTemporaryFiles();
+            File.WriteAllText("webcompilerconfiguration.json", @"{
+  ""Minifiers"": {
+    ""GZip"": false,
+    ""Enabled"": false
+  },
+  ""CompilerSettings"": {
+    ""Sass"": {
+      ""IndentType"": ""Space"",
+      ""IndentWidth"": 2,
+      ""OutputStyle"": ""Nested"",
+      ""Precision"": 5,
+      ""RelativeUrls"": true,
+      ""LineFeed"": ""Lf"",
+      ""SourceMap"": true
+    }
+  },
+  ""Output"": {
+    ""Preserve"": true
+  }
+}");
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-c", "webcompilerconfiguration.json"));
+            File.Delete("webcompilerconfiguration.json");
+            foreach (var output_file in output_files)
+            {
+                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+            }
+            foreach (var non_output_file in non_output_files)
+            {
+                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+            }
+            DeleteTemporaryFiles();
+            foreach (var tmp_file in temporary_files)
+            {
+                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+            }
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+        }
+        [Test]
         public void OutputAtSamePlace()
         {
             var temporary_files = new List<string>
