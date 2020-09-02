@@ -141,7 +141,7 @@ namespace Tests_WebCompiler
     ""Preserve"": true
   }
 }");
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-c", "webcompilerconfiguration.json"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
             {
