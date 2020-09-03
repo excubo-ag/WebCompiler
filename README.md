@@ -9,6 +9,8 @@
 This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules have been removed, to facilitate a pure dotnet core implementation.
 As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
 
+:warning: A common mistake is to add the package `Excubo.WebCompiler` as a nuget package reference to a project (e.g. by installing it via the nuget package manager in Visual Studio). This does not work! Instead, one needs to install it as a `dotnet tool`. See the "Getting started" section further down on this page.
+
 ### Features
 
 - Compilation of Scss files
