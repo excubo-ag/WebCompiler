@@ -22,6 +22,10 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 2.4.X
+
+Added support for .NET 5. You will most likely only notice that when using webcompiler in a docker context, but that's covered now as well!
+
 #### Changes in version 2.3.X
 
 There are now two more options:
@@ -80,7 +84,7 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 `Excubo.Webcompiler` is distributed as a [nuget package](https://www.nuget.org/packages/Excubo.WebCompiler/). You can install it in a command line using
 
 ```
-dotnet tool install Excubo.WebCompiler --global --version 2.3.6
+dotnet tool install Excubo.WebCompiler --global --version 2.4.0
 ```
 
 #### 2. Call `webcompiler`
