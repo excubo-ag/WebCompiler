@@ -79,7 +79,9 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 
 ### Getting started
 
-#### 1. Install the tool as dotnet global tool
+#### Global
+
+##### 1. Install the tool as dotnet global tool
 
 `Excubo.Webcompiler` is distributed as a [nuget package](https://www.nuget.org/packages/Excubo.WebCompiler/). You can install it in a command line using
 
@@ -87,17 +89,45 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 dotnet tool install Excubo.WebCompiler --global --version 2.4.1
 ```
 
-#### 2. Call `webcompiler`
+##### 2. Call `webcompiler`
 
 ```
 webcompiler -r wwwroot
+```
+
+#### Local
+
+It's also possible to use `Excubo.Webcompiler` as a local tool (ideal for CI environments)
+
+##### 1. Create a new tool manifest
+
+```
+dotnet new tool-manifest
+```
+
+###### 2. Add `Excubo.Webcompiler`
+
+```
+dotnet tool install Excubo.WebCompiler
+```
+
+###### 3. Restore
+
+```
+dotnet tool restore
+```
+
+###### 4. Usage
+
+```
+dotnet tool webcompiler -h
 ```
 
 ### Build integrations
 
 #### Command line / terminal
 
-Simply call `webcompiler` with the appropriate options, e.g. `webcompiler -r wwwroot`.
+Simply call `webcompiler` (or `dotnet tool webcompiler` for local install) with the appropriate options, e.g. `webcompiler -r wwwroot`.
 
 #### MSBuild
 
@@ -113,6 +143,7 @@ In this example, `webcompiler` is executed on the folder `wwwroot` inside your p
 
 #### MSBuild with execution of webcompiler only if it is installed
 
+##### Global
 This configuration will not break the build if `Excubo.WebCompiler` is not installed. This can be helpful, e.g. if compilation is only necessary on the build server.
 
 ```xml
@@ -129,6 +160,25 @@ This configuration will not break the build if `Excubo.WebCompiler` is not insta
 ```
 
 The first target simply tests whether `Excubo.WebCompiler` is installed at all. The second target then executes `webcompiler` recursively on the `wwwroot` folder, if it is installed. 
+
+##### Local
+
+```xml
+  <Target Name="TestWebCompiler" BeforeTargets="PreBuildEvent">
+      <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+      <Exec Command="dotnet tool webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+          <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+      </Exec>
+  </Target>
+
+  <Target Name="ToolRestore" AfterTargets="TestWebCompiler" Condition="'$(ErrorCode)' != '0'">
+      <Exec Command="dotnet tool restore" StandardOutputImportance="high" />
+  </Target>
+
+  <Target Name="PreBuild" AfterTargets="ToolRestore;TestWebCompiler">
+      <Exec Command="dotnet tool run webcompiler -r wwwroot" StandardOutputImportance="high" />
+  </Target>
+```
 
 #### Compile on save (dotnet watch)
 
