@@ -105,19 +105,19 @@ It's also possible to use `Excubo.Webcompiler` as a local tool (ideal for CI env
 dotnet new tool-manifest
 ```
 
-###### 2. Add `Excubo.Webcompiler`
+##### 2. Add Excubo.Webcompiler
 
 ```
 dotnet tool install Excubo.WebCompiler
 ```
 
-###### 3. Restore
+##### 3. Restore
 
 ```
 dotnet tool restore
 ```
 
-###### 4. Usage
+##### 4. Usage
 
 ```
 dotnet tool webcompiler -h
