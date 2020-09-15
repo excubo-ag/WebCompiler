@@ -164,7 +164,7 @@ The first target simply tests whether `Excubo.WebCompiler` is installed at all. 
 ##### Local
 
 ```xml
-  <Target Name="TestWebCompiler" BeforeTargets="PreBuildEvent">
+  <Target Name="TestWebCompiler">
       <!-- Test if Excubo.WebCompiler is installed (recommended) -->
       <Exec Command="dotnet tool webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
           <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
