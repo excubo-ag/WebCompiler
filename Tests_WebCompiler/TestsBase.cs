@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using WebCompiler.Compile;
 
 namespace Tests_WebCompiler
@@ -60,13 +61,15 @@ namespace Tests_WebCompiler
         {
             if (expected.EndsWith("gz"))
             {
-                var e = Decompressed(expected);
-                var r = Decompressed(value);
-                Assert.AreEqual(e, r, "Compressed files should have the same content when decompressed");
+                var normalisedExpected = Regex.Replace(Decompressed(expected), @"\r\n?|\n", string.Empty);
+                var normalisedActual   = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty);
+                Assert.AreEqual(normalisedExpected, normalisedActual, "Compressed files should have the same content when decompressed");
             }
             else
             {
-                Assert.AreEqual(File.ReadAllText(expected, Compiler.Encoding), File.ReadAllText(value, Compiler.Encoding), "Files should be identical");
+                var normalisedExpected = Regex.Replace(File.ReadAllText(expected, Compiler.Encoding), @"\r\n?|\n", string.Empty);
+                var normalisedActual   = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty);
+                Assert.AreEqual(normalisedExpected, normalisedActual, "Files should be identical");
             }
         }
     }
