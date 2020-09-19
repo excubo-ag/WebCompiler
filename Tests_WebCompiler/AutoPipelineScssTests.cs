@@ -1,6 +1,9 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using AutoprefixerHost;
+using NUnit.Framework;
 using WebCompiler.Compile;
+using WebCompiler.Configuration;
+using WebCompiler.Configuration.Settings;
 
 namespace Tests_WebCompiler
 {
@@ -9,11 +12,11 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
-                    Css = new WebCompiler.Configuration.Settings.CssMinifySettings
+                    Css = new CssMinifySettings
                     {
                         TermSemicolons = false
                     }
@@ -32,11 +35,11 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
-                    Css = new WebCompiler.Configuration.Settings.CssMinifySettings
+                    Css = new CssMinifySettings
                     {
                         TermSemicolons = false
                     },
@@ -56,11 +59,11 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
-                    Css = new WebCompiler.Configuration.Settings.CssMinifySettings
+                    Css = new CssMinifySettings
                     {
                         TermSemicolons = true
                     }
@@ -79,11 +82,11 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
-                    Css = new WebCompiler.Configuration.Settings.CssMinifySettings
+                    Css = new CssMinifySettings
                     {
                         TermSemicolons = false
                     }
@@ -102,9 +105,9 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
                     GZip = false
                 }
@@ -122,9 +125,9 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => new Compilers(new WebCompiler.Configuration.Config
+            pipeline = file => new Compilers(new Config
             {
-                Minifiers = new WebCompiler.Configuration.MinificationSettings
+                Minifiers = new MinificationSettings
                 {
                     Enabled = false,
                     GZip = false

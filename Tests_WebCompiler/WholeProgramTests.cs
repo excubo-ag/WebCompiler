@@ -9,6 +9,26 @@ namespace Tests_WebCompiler
 {
     public class WholeProgramTests : TestsBase
     {
+        private const string defaultConfigFile = @"{
+  ""Minifiers"": {
+    ""GZip"": false,
+    ""Enabled"": false
+  },
+  ""CompilerSettings"": {
+    ""Sass"": {
+      ""IndentType"": ""Space"",
+      ""IndentWidth"": 2,
+      ""OutputStyle"": ""Nested"",
+      ""Precision"": 5,
+      ""RelativeUrls"": true,
+      ""LineFeed"": ""Lf"",
+      ""SourceMap"": true
+    }
+  },
+  ""Output"": {
+    ""Preserve"": true
+  }
+}";
         [Test]
         public void ShowHelp()
         {
@@ -52,26 +72,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            File.WriteAllText("webcompilerconfiguration.json", @"{
-  ""Minifiers"": {
-    ""GZip"": false,
-    ""Enabled"": false
-  },
-  ""CompilerSettings"": {
-    ""Sass"": {
-      ""IndentType"": ""Space"",
-      ""IndentWidth"": 2,
-      ""OutputStyle"": ""Nested"",
-      ""Precision"": 5,
-      ""RelativeUrls"": true,
-      ""LineFeed"": ""Lf"",
-      ""SourceMap"": true
-    }
-  },
-  ""Output"": {
-    ""Preserve"": true
-  }
-}");
+            File.WriteAllText("webcompilerconfiguration.json", defaultConfigFile);
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -121,26 +122,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            File.WriteAllText("webcompilerconfiguration.json", @"{
-  ""Minifiers"": {
-    ""GZip"": false,
-    ""Enabled"": false
-  },
-  ""CompilerSettings"": {
-    ""Sass"": {
-      ""IndentType"": ""Space"",
-      ""IndentWidth"": 2,
-      ""OutputStyle"": ""Nested"",
-      ""Precision"": 5,
-      ""RelativeUrls"": true,
-      ""LineFeed"": ""Lf"",
-      ""SourceMap"": true
-    }
-  },
-  ""Output"": {
-    ""Preserve"": true
-  }
-}");
+            File.WriteAllText("webcompilerconfiguration.json", defaultConfigFile);
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)

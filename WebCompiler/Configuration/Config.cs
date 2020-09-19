@@ -9,6 +9,8 @@
         /// Settings for the minification.
         /// </summary>
         public MinificationSettings Minifiers { get; set; } = new MinificationSettings();
+        
+        public CssAutoprefixSettings Autoprefix { get; set; } = new CssAutoprefixSettings();
 
         /// <summary>
         /// Options specific to each compiler. Based on the inputFile property.
