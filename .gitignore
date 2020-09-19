@@ -3,6 +3,7 @@
 *.user
 *.sln.docstates
 .vs/
+.idea/
 
 bin
 obj
