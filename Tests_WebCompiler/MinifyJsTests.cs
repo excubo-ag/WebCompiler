@@ -13,7 +13,7 @@ namespace Tests_WebCompiler
             pipeline = (file) => new CompilationStep(file).With(new JavascriptMinifier(new JavaScriptMinifySettings { TermSemicolons = false }));
             input = "../../../TestCases/Js/test.js";
             output_files = new List<string> { "../../../TestCases/Js/test.min.js" };
-            expected_output = "../../../TestCases/Js/test.min.js";
+            expected_output = "../../../TestCases/MinJs/test.min.js";
             DeleteTemporaryFiles();
         }
         [Test]
