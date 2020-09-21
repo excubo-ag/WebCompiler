@@ -12,3 +12,4 @@ WebCompiler/Dockerfile.df
 WebCompiler/Dockerfile.df.dockerignore
 nuget.config
 build.ps1
+.idea/

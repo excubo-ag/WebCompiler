@@ -14,12 +14,14 @@ namespace WebCompiler.Compile
         private readonly Compiler zipper;
         private readonly Compiler place;
         private readonly Compiler cleanup;
+        private readonly Compiler autoprefix;
 
         public Compilers(Config config, string base_path)
         {
-            sass = new SassCompiler(config.CompilerSettings.Sass);
+            sass = config.Autoprefix.Enabled ? new SassCompiler(config.CompilerSettings.Sass, config.Autoprefix) : new SassCompiler(config.CompilerSettings.Sass);
             css_minifier = config.Minifiers.Enabled ? new CssMinifier(config.Minifiers.Css) : terminating_compiler;
             js_minifier = config.Minifiers.Enabled ? new JavascriptMinifier(config.Minifiers.Javascript) : terminating_compiler;
+            autoprefix = config.Autoprefix.Enabled ? new CssAutoprefixer(config.Autoprefix) : terminating_compiler;
             zipper = config.Minifiers.GZip ? new Zipper() : terminating_compiler;
             place = config.Output.Directory != null ? new Place(config.Output.Directory, base_path) : terminating_compiler;
             cleanup = !config.Output.Preserve ? new Cleaner() : terminating_compiler;
@@ -36,7 +38,7 @@ namespace WebCompiler.Compile
                 case ".CSS" // we minify (and potentially gzip) .css files, if they are not created by webcompiler
                 when css_minifier != terminating_compiler
                 && !file.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase):
-                    return Compile(file).With(css_minifier).Then(zipper).Then(place).Then(cleanup);
+                    return Compile(file).With(autoprefix).Then(css_minifier).Then(zipper).Then(place).Then(cleanup);
 
                 case ".JS" // we minify (and potentially gzip) .js files, if they are not created by webcompiler
                 when js_minifier != terminating_compiler

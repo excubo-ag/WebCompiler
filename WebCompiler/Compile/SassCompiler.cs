@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AutoprefixerHost;
+using JavaScriptEngineSwitcher.ChakraCore;
+using Newtonsoft.Json;
+using WebCompiler.Configuration;
 using WebCompiler.Configuration.Settings;
 
 namespace WebCompiler.Compile
@@ -11,11 +15,23 @@ namespace WebCompiler.Compile
     public class SassCompiler : Compiler
     {
         private readonly SassSettings settings;
+        private readonly CssAutoprefixSettings autoprefixSettings;
 
         public SassCompiler(SassSettings settings)
         {
             this.settings = settings;
+            autoprefixSettings = new CssAutoprefixSettings
+            {
+                Enabled = false
+            };
         }
+
+        public SassCompiler(SassSettings settings, CssAutoprefixSettings autoprefixSettings)
+        {
+            this.settings = settings;
+            this.autoprefixSettings = autoprefixSettings;
+        }
+
         public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
         {
             var file = file_sequence.Last().File;
@@ -49,12 +65,26 @@ namespace WebCompiler.Compile
                     SourceMap = true,
                     InlineSourceMap = settings.SourceMap
                 });
-                var created = ReplaceIfNewer(output_file, compile_result.CompiledContent);
+                var scssCreated = ReplaceIfNewer(output_file, compile_result.CompiledContent);
+                if (!autoprefixSettings.Enabled)
+                {
+                    return new CompilerResult
+                    {
+                        OutputFile = output_file,
+                        Created = scssCreated
+                    };
+                }
+
+                var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
+                using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), autoprefixSettings.ProcessingOptions);
+                var result = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
+
                 return new CompilerResult
                 {
                     OutputFile = output_file,
-                    Created = created
+                    Created = ReplaceIfNewer(output_file, result.ProcessedContent)
                 };
+
             }
             catch (SassCompilationException ex)
             {
