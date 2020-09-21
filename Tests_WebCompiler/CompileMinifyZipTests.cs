@@ -11,7 +11,7 @@ namespace Tests_WebCompiler
         [SetUp]
         public void CreatePipeline()
         {
-            pipeline = (file) => 
+            pipeline = (file) =>
                     new CompilationStep(file)
                            .With(new SassCompiler(new SassSettings()))
                            .Then(new CssAutoprefixer(new CssAutoprefixSettings()))

@@ -14,7 +14,7 @@ namespace WebCompiler.Compile
 {
     public class SassCompiler : Compiler
     {
-        private readonly SassSettings          settings;
+        private readonly SassSettings settings;
         private readonly CssAutoprefixSettings autoprefixSettings;
 
         public SassCompiler(SassSettings settings)
@@ -25,10 +25,10 @@ namespace WebCompiler.Compile
                 Enabled = false
             };
         }
-        
+
         public SassCompiler(SassSettings settings, CssAutoprefixSettings autoprefixSettings)
         {
-            this.settings           = settings;
+            this.settings = settings;
             this.autoprefixSettings = autoprefixSettings;
         }
 
@@ -70,19 +70,19 @@ namespace WebCompiler.Compile
                 {
                     return new CompilerResult
                     {
-                            OutputFile = output_file,
-                            Created    = scssCreated
+                        OutputFile = output_file,
+                        Created = scssCreated
                     };
                 }
-                
+
                 var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
                 using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), autoprefixSettings.ProcessingOptions);
-                var       result       = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
+                var result = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
 
                 return new CompilerResult
                 {
-                        OutputFile = output_file,
-                        Created    = ReplaceIfNewer(output_file, result.ProcessedContent)
+                    OutputFile = output_file,
+                    Created = ReplaceIfNewer(output_file, result.ProcessedContent)
                 };
 
             }

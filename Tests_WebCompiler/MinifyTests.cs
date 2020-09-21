@@ -14,7 +14,7 @@ namespace Tests_WebCompiler
             pipeline = (file) =>
                     new CompilationStep(file)
                        .With(new CssAutoprefixer(new CssAutoprefixSettings()))
-                       .Then(new CssMinifier(new CssMinifySettings {TermSemicolons = false}));
+                       .Then(new CssMinifier(new CssMinifySettings { TermSemicolons = false }));
             input = "../../../TestCases/Css/test.css";
             output_files = new List<string> { "../../../TestCases/Css/test.min.css" };
             expected_output = "../../../TestCases/MinCss/test.min.css";

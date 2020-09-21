@@ -34,12 +34,12 @@ namespace WebCompiler.Compile
                 case ".SCSS":
                 case ".SASS":
                     return Compile(file).With(sass).Then(css_minifier).Then(zipper).Then(place).Then(cleanup);
-                
+
                 case ".CSS" // we minify (and potentially gzip) .css files, if they are not created by webcompiler
                 when css_minifier != terminating_compiler
                 && !file.EndsWith(".min.css", StringComparison.InvariantCultureIgnoreCase):
                     return Compile(file).With(autoprefix).Then(css_minifier).Then(zipper).Then(place).Then(cleanup);
-                
+
                 case ".JS" // we minify (and potentially gzip) .js files, if they are not created by webcompiler
                 when js_minifier != terminating_compiler
                 && !file.EndsWith(".min.js", StringComparison.InvariantCultureIgnoreCase):

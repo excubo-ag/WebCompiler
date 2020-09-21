@@ -62,13 +62,13 @@ namespace Tests_WebCompiler
             if (expected.EndsWith("gz"))
             {
                 var normalisedExpected = Regex.Replace(Decompressed(expected), @"\r\n?|\n", string.Empty);
-                var normalisedActual   = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty);
+                var normalisedActual = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty);
                 Assert.AreEqual(normalisedExpected, normalisedActual, "Compressed files should have the same content when decompressed");
             }
             else
             {
                 var normalisedExpected = Regex.Replace(File.ReadAllText(expected, Compiler.Encoding), @"\r\n?|\n", string.Empty);
-                var normalisedActual   = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty);
+                var normalisedActual = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty);
                 Assert.AreEqual(normalisedExpected, normalisedActual, "Files should be identical");
             }
         }

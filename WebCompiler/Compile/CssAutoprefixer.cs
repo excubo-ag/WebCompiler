@@ -25,7 +25,7 @@ namespace WebCompiler.Compile
             var tmp_output_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.tmp");
             var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
             var output_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css");
-            
+
             if (File.Exists(output_file) && HasBeenAutoprefixed(output_file))
             {
                 return new CompilerResult
@@ -33,24 +33,24 @@ namespace WebCompiler.Compile
                     OutputFile = output_file
                 };
             }
-            
+
             try
             {
                 using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), _settings.ProcessingOptions);
-                var       result       = autoprefixer.Process(File.ReadAllText(file), file, tmp_output_file, map_file, string.Empty);
+                var result = autoprefixer.Process(File.ReadAllText(file), file, tmp_output_file, map_file, string.Empty);
 
                 var created = ReplaceIfNewer(output_file, result.ProcessedContent);
                 return new CompilerResult
                 {
                     OutputFile = output_file,
-                    Created    = created
+                    Created = created
                 };
-            } 
+            }
             catch (AutoprefixerProcessingException ex)
             {
                 return new CompilerResult
                 {
-                        Errors = new List<CompilerError>
+                    Errors = new List<CompilerError>
                         {
                                 new CompilerError
                                 {
@@ -64,7 +64,7 @@ namespace WebCompiler.Compile
             }
         }
 
-        bool HasBeenAutoprefixed(string file) => 
-                Regex.IsMatch( File.ReadAllText(file, Encoding), @"\/\*\# sourceMappingURL(.*).css.map");
+        bool HasBeenAutoprefixed(string file) =>
+                Regex.IsMatch(File.ReadAllText(file, Encoding), @"\/\*\# sourceMappingURL(.*).css.map");
     }
 }
