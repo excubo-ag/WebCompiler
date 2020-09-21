@@ -80,6 +80,7 @@ Options:
   -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
   -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
   -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -a|--autoprefix [disable/enable] Enable/disable autoprefixing (default: enabled), ignored if configuration file is provided.
 ".Trim()
             );
             if (show_file_help)
@@ -144,6 +145,26 @@ File format to specify compiler configuration (-c|--config):
                 ""enabled"": true,
                 ""termSemicolons"": true,
                 ""gzip"": false
+            }
+        },
+        ""autoprefix"": {
+            ""enabled"": true,
+            ""processingOptions"": {
+                ""browsers"": [
+                    ""last 4 versions""
+                ],
+                ""cascade"": true,
+                ""add"": true,
+                ""remove"": true,
+                ""supports"": true,
+                ""flexbox"": ""All"",
+                ""grid"": ""None"",
+                ""ignoreUnknownVersions"": false,
+                ""stats"": """",
+                ""sourceMap"": true,
+                ""inlineSourceMap"": false,
+                ""sourceMapIncludeContents"": false,
+                ""omitSourceMapUrl"": false
             }
         }
     }
@@ -278,7 +299,8 @@ File format to specify compiler configuration (-c|--config):
             "-m", "--minify",
             "-o", "--output-dir",
             "-p", "--preserve",
-            "-z", "--zip"
+            "-z", "--zip",
+            "-a", "--autoprefix"
         };
         private static readonly List<string> options_without_arguments = new List<string>
         {
@@ -292,10 +314,11 @@ File format to specify compiler configuration (-c|--config):
   -f|--files <files.conf>          Specify a list of files that should be compiled.
   -h|--help                        Show command line help.
   -m|--minify [disable/enable]     Enable/disable minification (default: enabled), ignored if configuration file is provided.
-  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided, ignored if configuration file is provided.
+  -o|--output-dir <path/to/dir>    Specify the output directory, ignored if configuration file is provided.
   -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
   -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
   -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -a|--autoprefix [disable/enable] Enable/disable autoprefixing (default: enabled), ignored if configuration file is provided.
              */
             if (other_options.Intersect(args).Any())
             {
@@ -356,6 +379,10 @@ File format to specify compiler configuration (-c|--config):
             {
                 config.Output.Preserve = false;
             }
+            if (IsAutoprefixDisabled(args))
+            {
+                config.Autoprefix.Enabled = false;
+            }
             if (args.ContainsOption("-o", "--output-dir", out var argument))
             {
                 config.Output.Directory = argument;
@@ -387,6 +414,10 @@ File format to specify compiler configuration (-c|--config):
         private static bool IsPreservationDisabled(List<string> args)
         {
             return IsOptionDisabled(args, "-p", "--preserve", "preservation of intermediate files");
+        }
+        private static bool IsAutoprefixDisabled(List<string> args)
+        {
+            return IsOptionDisabled(args, "-a", "--autoprefix", "autoprefix");
         }
         private static Config? GetConfigFromFile(List<string> args)
         {

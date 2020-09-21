@@ -19,6 +19,7 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 - `dotnet` core build pipeline support cross-platform
 - Minify the compiled output
 - Minification options for each language is customizable
+- Autoprefix for CSS
 
 ### Changelog
 
@@ -59,6 +60,7 @@ Options:
   -p|--preserve [disable/enable]   Enable/disable whether to preserve intermediate files (default: enabled).
   -r|--recursive                   Recursively search folders for compilable files (only if any of the provided arguments is a folder).
   -z|--zip [disable/enable]        Enable/disable gzip (default: enabled), ignored if configuration file is provided.
+  -a|--autoprefix [disable/enable] Enable/disable autoprefixing (default: enabled), ignored if configuration file is provided.
 ```
 
 Recommended default usage: `webcompiler -r wwwroot`.
@@ -226,6 +228,26 @@ The default configuration is
       "IndentSize": 2
     }
   },
+  "Autoprefix": {
+    "Enabled": true,
+    "ProcessingOptions": {
+      "Browsers": [
+        "last 4 versions"
+      ],
+      "Cascade": true,
+      "Add": true,
+      "Remove": true,
+      "Supports": true,
+      "Flexbox": "All",
+      "Grid": "None",
+      "IgnoreUnknownVersions": false,
+      "Stats": "",
+      "SourceMap": true,
+      "InlineSourceMap": false,
+      "SourceMapIncludeContents": false,
+      "OmitSourceMapUrl": false
+    }
+  },
   "CompilerSettings": {
     "Sass": {
       "IndentType": "Space",
@@ -236,6 +258,9 @@ The default configuration is
       "LineFeed": "Lf",
       "SourceMap": false
     }
+  },
+  "Output": {
+    "Preserve": true
   }
 }
 ```
@@ -277,4 +302,5 @@ This project is just starting. You can help in many different ways:
 | Language | Library |
 |----------|---------|
 | Sass     | [LibSassHost](https://github.com/Taritsyn/LibSassHost) |
+| Autoprefix | [AutoprefixHost](https://github.com/Taritsyn/AutoprefixerHost) |
 | CSS/JS   | [NUglify](https://github.com/xoofx/NUglify) | 
