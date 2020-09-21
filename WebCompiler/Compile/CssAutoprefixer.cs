@@ -62,10 +62,6 @@ namespace WebCompiler.Compile
                         }
                 };
             }
-            // if (File.Exists(output_file))
-            // {
-            //     
-            // }
         }
 
         bool HasBeenAutoprefixed(string file) => 
