@@ -13,10 +13,12 @@ body {
     color: blue;
 }*/
 #test3 {
-  color: green; }
+  color: green;
+  -webkit-transition: all .5s;
+  -o-transition: all .5s;
+  transition: all .5s; }
 
 .parent .child {
   width: 64px;
   height: 24px; }
-
-/*# sourceMappingURL=test.scss */
+/*# sourceMappingURL=..\..\..\TestCases\Scss\test.css.map */

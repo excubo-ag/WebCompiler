@@ -3,7 +3,6 @@
 *.user
 *.sln.docstates
 .vs/
-.idea/
 
 bin
 obj
@@ -13,3 +12,4 @@ WebCompiler/Dockerfile.df
 WebCompiler/Dockerfile.df.dockerignore
 nuget.config
 build.ps1
+.idea/
