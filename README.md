@@ -165,22 +165,30 @@ The first target simply tests whether `Excubo.WebCompiler` is installed at all. 
 
 ##### Local
 
-```xml
-  <Target Name="TestWebCompiler">
-      <!-- Test if Excubo.WebCompiler is installed (recommended) -->
-      <Exec Command="dotnet tool webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-          <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-      </Exec>
-  </Target>
+Using `dotnet tool` locally is quite simple. Unfortunately, there's no easy way to check if tools already exists (as the help always returns error code 0) without a script.
 
-  <Target Name="ToolRestore" AfterTargets="TestWebCompiler" Condition="'$(ErrorCode)' != '0'">
+```xml
+  <Target Name="ToolRestore" BeforeTargets="PreBuildEvent">
       <Exec Command="dotnet tool restore" StandardOutputImportance="high" />
   </Target>
 
-  <Target Name="PreBuild" AfterTargets="ToolRestore;TestWebCompiler">
+  <Target Name="PreBuild" AfterTargets="ToolRestore">
       <Exec Command="dotnet tool run webcompiler -r wwwroot" StandardOutputImportance="high" />
   </Target>
 ```
+
+If you only rely on webcompiler, it may be preferable to use the below `PreBuildEvent`
+
+```xml
+ <Target Name="ToolRestore" BeforeTargets="PreBuildEvent">
+        <Exec Command="dotnet tool update excubo.webcompiler" StandardOutputImportance="high" />
+    </Target>
+```
+
+Which will either:
+
+- Do nothing if latest is installed
+- Install the latest if either out of date or uninstalled
 
 #### Compile on save (dotnet watch)
 
