@@ -57,6 +57,7 @@ namespace WebCompiler.Compile
             {
                 var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, new CompilationOptions
                 {
+                    IncludePaths = settings.IncludePath != null ? new List<string> { settings.IncludePath } : null,
                     IndentType = settings.IndentType,
                     IndentWidth = settings.IndentWidth,
                     LineFeedType = settings.LineFeed,
