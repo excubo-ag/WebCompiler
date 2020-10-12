@@ -55,9 +55,8 @@ namespace WebCompiler.Compile
             }
             try
             {
-                var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, new CompilationOptions
+                var options = new CompilationOptions
                 {
-                    IncludePaths = settings.IncludePath != null ? new List<string> { settings.IncludePath } : null,
                     IndentType = settings.IndentType,
                     IndentWidth = settings.IndentWidth,
                     LineFeedType = settings.LineFeed,
@@ -65,7 +64,12 @@ namespace WebCompiler.Compile
                     Precision = settings.Precision,
                     SourceMap = true,
                     InlineSourceMap = settings.SourceMap
-                });
+                };
+                if (settings.IncludePath != null)
+                {
+                    options.IncludePaths.Add(settings.IncludePath);
+                }
+                var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, options);
                 var scssCreated = ReplaceIfNewer(output_file, compile_result.CompiledContent);
                 if (!autoprefixSettings.Enabled)
                 {
