@@ -282,6 +282,12 @@ namespace Tests_WebCompiler
                     File.Delete(tmp_file);
                 }
             }
+            Directory.Delete("../../../output/path/Css/sub");
+            Directory.Delete("../../../output/path/Js");
+            Directory.Delete("../../../output/path/MinCss");
+            Directory.Delete("../../../output/path/Css");
+            Directory.Delete("../../../output/path");
+            Directory.Delete("../../../output");
         }
         [Test]
         public void OutputWithoutPreserve()
