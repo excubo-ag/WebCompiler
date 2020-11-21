@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="package.csproj" Condition="Exists('package.csproj')" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
