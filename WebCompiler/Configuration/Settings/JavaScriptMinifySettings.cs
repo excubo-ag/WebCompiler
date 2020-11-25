@@ -16,7 +16,7 @@ namespace WebCompiler.Configuration.Settings
             {
                 LocalRenaming = self.RenameLocals ? LocalRenaming.CrunchAll : LocalRenaming.KeepAll,
                 PreserveImportantComments = self.PreserveImportantComments,
-                IndentSize = self.IndentSize,
+                Indent = new string(' ', self.IndentSize),
                 TermSemicolons = self.TermSemicolons,
                 OutputMode = self.OutputMode,
                 EvalTreatment = self.EvalTreatment

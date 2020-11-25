@@ -14,7 +14,7 @@ namespace WebCompiler.Configuration.Settings
             return new CssSettings
             {
                 TermSemicolons = self.TermSemicolons,
-                IndentSize = self.IndentSize,
+                Indent = new string(' ', self.IndentSize),
                 CommentMode = self.CommentMode,
                 ColorNames = self.ColorNames,
                 OutputMode = self.OutputMode

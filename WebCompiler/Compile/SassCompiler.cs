@@ -1,12 +1,11 @@
-﻿using LibSassHost;
+﻿using AutoprefixerHost;
+using JavaScriptEngineSwitcher.ChakraCore;
+using LibSassHost;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AutoprefixerHost;
-using JavaScriptEngineSwitcher.ChakraCore;
-using Newtonsoft.Json;
 using WebCompiler.Configuration;
 using WebCompiler.Configuration.Settings;
 
@@ -15,21 +14,21 @@ namespace WebCompiler.Compile
     public class SassCompiler : Compiler
     {
         private readonly SassSettings settings;
-        private readonly CssAutoprefixSettings autoprefixSettings;
+        private readonly CssAutoprefixSettings autoprefix_settings;
 
         public SassCompiler(SassSettings settings)
         {
             this.settings = settings;
-            autoprefixSettings = new CssAutoprefixSettings
+            autoprefix_settings = new CssAutoprefixSettings
             {
                 Enabled = false
             };
         }
 
-        public SassCompiler(SassSettings settings, CssAutoprefixSettings autoprefixSettings)
+        public SassCompiler(SassSettings settings, CssAutoprefixSettings autoprefix_settings)
         {
             this.settings = settings;
-            this.autoprefixSettings = autoprefixSettings;
+            this.autoprefix_settings = autoprefix_settings;
         }
 
         public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
@@ -71,7 +70,7 @@ namespace WebCompiler.Compile
                 }
                 var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, options);
                 var scssCreated = ReplaceIfNewer(output_file, compile_result.CompiledContent);
-                if (!autoprefixSettings.Enabled)
+                if (!autoprefix_settings.Enabled)
                 {
                     return new CompilerResult
                     {
@@ -81,7 +80,7 @@ namespace WebCompiler.Compile
                 }
 
                 var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
-                using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), autoprefixSettings.ProcessingOptions);
+                using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), autoprefix_settings.ProcessingOptions);
                 var result = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
 
                 return new CompilerResult

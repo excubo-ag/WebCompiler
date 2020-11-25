@@ -1,22 +1,20 @@
-﻿using System;
+﻿using AutoprefixerHost;
+using JavaScriptEngineSwitcher.ChakraCore;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AutoprefixerHost;
-using AutoprefixerHost.Helpers;
-using JavaScriptEngineSwitcher.ChakraCore;
 using WebCompiler.Configuration;
 
 namespace WebCompiler.Compile
 {
     public class CssAutoprefixer : Compiler
     {
-        private readonly CssAutoprefixSettings _settings;
+        private readonly CssAutoprefixSettings settings;
 
         public CssAutoprefixer(CssAutoprefixSettings settings)
         {
-            _settings = settings;
+            this.settings = settings;
         }
 
         public override CompilerResult Compile(List<(string File, bool Created)> file_sequence)
@@ -36,7 +34,7 @@ namespace WebCompiler.Compile
 
             try
             {
-                using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), _settings.ProcessingOptions);
+                using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), settings.ProcessingOptions);
                 var result = autoprefixer.Process(File.ReadAllText(file), file, tmp_output_file, map_file, string.Empty);
 
                 var created = ReplaceIfNewer(output_file, result.ProcessedContent);
@@ -64,7 +62,7 @@ namespace WebCompiler.Compile
             }
         }
 
-        bool HasBeenAutoprefixed(string file) =>
+        private bool HasBeenAutoprefixed(string file) =>
                 Regex.IsMatch(File.ReadAllText(file, Encoding), @"\/\*\# sourceMappingURL(.*).css.map");
     }
 }

@@ -9,7 +9,7 @@ namespace Tests_WebCompiler
 {
     public class WholeProgramTests : TestsBase
     {
-        private const string defaultConfigFile = @"{
+        private const string DefaultConfigFile = @"{
   ""Minifiers"": {
     ""GZip"": false,
     ""Enabled"": false
@@ -72,7 +72,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            File.WriteAllText("webcompilerconfiguration.json", defaultConfigFile);
+            File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -122,7 +122,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            File.WriteAllText("webcompilerconfiguration.json", defaultConfigFile);
+            File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -353,7 +353,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Directory.CreateDirectory("Css");
+            _ = Directory.CreateDirectory("Css");
             File.Copy("../../../TestCases/Css/site.css", "Css/site.css", overwrite: true);
             Assert.DoesNotThrow(() => Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"));
             Assert.IsTrue(File.Exists(output_files.Last()), "output needs to exist");
