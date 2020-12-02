@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using WebCompiler.Compile;
 using WebCompiler.Configuration.Settings;
 
@@ -22,7 +24,9 @@ namespace Tests_WebCompiler
         {
             var timestamp = ProcessFile();
             File.Copy(input, input + ".bak");
+            Task.Delay(TimeSpan.FromSeconds(1));
             File.AppendAllText(input, "\n.new-rule { color: black; }");
+            Task.Delay(TimeSpan.FromSeconds(1));
             var new_timestamp = ProcessFile();
             File.Move(input + ".bak", input, overwrite: true);
             Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
