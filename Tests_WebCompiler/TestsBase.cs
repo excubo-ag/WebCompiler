@@ -61,8 +61,8 @@ namespace Tests_WebCompiler
         {
             if (expected.EndsWith("gz"))
             {
-                var normalisedExpected = Regex.Replace(Decompressed(expected), @"\r\n?|\n", string.Empty);
-                var normalisedActual = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty);
+                var normalisedExpected = Regex.Replace(Decompressed(expected), @"\r\n?|\n", string.Empty).Replace('\\', '/');
+                var normalisedActual = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty).Replace('\\', '/');
                 Assert.AreEqual(normalisedExpected, normalisedActual, "Compressed files should have the same content when decompressed");
             }
             else
