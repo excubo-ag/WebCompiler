@@ -67,8 +67,8 @@ namespace Tests_WebCompiler
             }
             else
             {
-                var normalisedExpected = Regex.Replace(File.ReadAllText(expected, Compiler.Encoding), @"\r\n?|\n", string.Empty);
-                var normalisedActual = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty);
+                var normalisedExpected = Regex.Replace(File.ReadAllText(expected, Compiler.Encoding), @"\r\n?|\n", string.Empty).Replace('\\', '/');
+                var normalisedActual = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty).Replace('\\', '/');
                 Assert.AreEqual(normalisedExpected, normalisedActual, "Files should be identical");
             }
         }
