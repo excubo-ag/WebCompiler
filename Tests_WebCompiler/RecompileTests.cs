@@ -19,7 +19,7 @@ namespace Tests_WebCompiler
             expected_output = "../../../TestCases/MinCss/test.min.css";
             DeleteTemporaryFiles();
         }
-        [Test, Ignore]
+        [Test, Ignore("unix")]
         public void CallTest()
         {
             var timestamp = ProcessFile();
