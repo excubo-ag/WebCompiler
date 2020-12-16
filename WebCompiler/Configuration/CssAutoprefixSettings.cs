@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using AutoprefixerHost;
+﻿using AutoprefixerHost;
+using System.Collections.Generic;
 
 namespace WebCompiler.Configuration
 {

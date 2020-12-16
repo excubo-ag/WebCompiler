@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using AutoprefixerHost;
+﻿using AutoprefixerHost;
 using NUnit.Framework;
+using System.Collections.Generic;
 using WebCompiler.Compile;
 using WebCompiler.Configuration;
 using WebCompiler.Configuration.Settings;
