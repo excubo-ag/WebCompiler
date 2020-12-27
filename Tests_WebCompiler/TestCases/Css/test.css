@@ -2,6 +2,9 @@
 div {
   background: url(../foo.png); }
 
+div {
+  background: url(../bar.png); }
+
 body {
   background-color: blue;
   content: "✔ æøå"; }

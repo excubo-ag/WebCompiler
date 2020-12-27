@@ -29,5 +29,20 @@ namespace Tests_WebCompiler
             File.Move(input + ".bak", input, overwrite: true);
             Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
         }
+        [Test]
+        public void CallNeedsCompileSubDirTest()
+        {
+            var timestamp = ProcessFile();
+            var input_path = new FileInfo(input).DirectoryName ?? string.Empty;
+
+            // update the scss source file in a sub directory.
+            var import_file = Path.Combine(input_path, "sub", "_bar.scss");
+            File.Copy(import_file, import_file + ".bak",overwrite: true);
+            File.AppendAllText(import_file, "\n.new-rule { color: black; }");
+
+            var new_timestamp = ProcessFile();
+            File.Move(import_file + ".bak", import_file, overwrite: true);
+            Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
+        }
     }
 }
