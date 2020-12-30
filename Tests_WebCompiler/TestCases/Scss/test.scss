@@ -1,4 +1,4 @@
-@import "variables",  "sub/foo"; // Bootstrap overrides
+@import "variables", "sub/foo", "sub/bar";  // Bootstrap overrides
 
 body {
     background-color: $background;

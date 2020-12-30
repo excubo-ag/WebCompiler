@@ -135,6 +135,10 @@ namespace WebCompiler.Compile
             foreach (var name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
+
+                string file_name = Path.GetFileName(value);
+                string file_path = Path.GetDirectoryName(value) ?? string.Empty;
+
                 if (value.EndsWith(".scss", StringComparison.InvariantCultureIgnoreCase) ||
                     value.EndsWith(".sass", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -142,9 +146,9 @@ namespace WebCompiler.Compile
                     {
                         yield return Path.Combine(info.DirectoryName, value);
                     }
-                    else if (File.Exists(Path.Combine(info.DirectoryName, "_" + value)))
+                    else if (File.Exists(Path.Combine(info.DirectoryName, file_path, "_" + file_name)))
                     {
-                        yield return Path.Combine(info.DirectoryName, "_" + value);
+                        yield return Path.Combine(info.DirectoryName, file_path, "_" + file_name);
                     }
                 }
                 else
@@ -153,9 +157,9 @@ namespace WebCompiler.Compile
                     {
                         yield return Path.Combine(info.DirectoryName, value + ".scss");
                     }
-                    else if (File.Exists(Path.Combine(info.DirectoryName, "_" + value + ".scss")))
+                    else if (File.Exists(Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".scss")))
                     {
-                        yield return Path.Combine(info.DirectoryName, "_" + value + ".scss");
+                        yield return Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".scss");
                     }
                 }
             }
