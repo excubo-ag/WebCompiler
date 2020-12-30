@@ -29,7 +29,7 @@ namespace Tests_WebCompiler
             File.Move(input + ".bak", input, overwrite: true);
             Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
         }
-        [Test]
+        [Test, Ignore("unix")]
         public void CallNeedsCompileSubDirTest()
         {
             var timestamp = ProcessFile();
