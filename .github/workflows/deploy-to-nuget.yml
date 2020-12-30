@@ -5,7 +5,6 @@ env:
   project_name: "WebCompiler/WebCompiler.csproj"
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main ]
 
