@@ -37,7 +37,7 @@ namespace Tests_WebCompiler
 
             // update the scss source file in a sub directory.
             var import_file = Path.Combine(input_path, "sub", "_bar.scss");
-            File.Copy(import_file, import_file + ".bak",overwrite: true);
+            File.Copy(import_file, import_file + ".bak", overwrite: true);
             File.AppendAllText(import_file, "\n.new-rule { color: black; }");
 
             var new_timestamp = ProcessFile();
