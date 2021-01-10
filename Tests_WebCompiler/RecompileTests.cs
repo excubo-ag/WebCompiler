@@ -19,27 +19,29 @@ namespace Tests_WebCompiler
             expected_output = "../../../TestCases/MinCss/test.min.css";
             DeleteTemporaryFiles();
         }
-        [Test, Ignore("unix")]
-        public void CallTest()
+        [Test]
+        public async Task CallTest()
         {
             var timestamp = ProcessFile();
+            await Task.Delay(100); // create a delay, because if things happen fast enough, the accuracy of the file timestamp is too low to detect the change in file
             File.Copy(input, input + ".bak");
             File.AppendAllText(input, "\n.new-rule { color: black; }");
+            await Task.Delay(100); // create a delay, because if things happen fast enough, the accuracy of the file timestamp is too low to detect the change in file
             var new_timestamp = ProcessFile();
             File.Move(input + ".bak", input, overwrite: true);
             Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
         }
-        [Test, Ignore("unix")]
-        public void CallNeedsCompileSubDirTest()
+        [Test]
+        public async Task CallNeedsCompileSubDirTest()
         {
             var timestamp = ProcessFile();
+            await Task.Delay(100); // create a delay, because if things happen fast enough, the accuracy of the file timestamp is too low to detect the change in file
             var input_path = new FileInfo(input).DirectoryName ?? string.Empty;
-
             // update the scss source file in a sub directory.
             var import_file = Path.Combine(input_path, "sub", "_bar.scss");
             File.Copy(import_file, import_file + ".bak", overwrite: true);
             File.AppendAllText(import_file, "\n.new-rule { color: black; }");
-
+            await Task.Delay(100); // create a delay, because if things happen fast enough, the accuracy of the file timestamp is too low to detect the change in file
             var new_timestamp = ProcessFile();
             File.Move(import_file + ".bak", import_file, overwrite: true);
             Assert.AreNotEqual(timestamp, new_timestamp, "Compiling a second time should alter the file, since there is an actual change for once!");
