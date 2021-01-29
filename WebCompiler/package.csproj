@@ -20,7 +20,7 @@
   <!--PackageId, Version-->
   <PropertyGroup>
     <PackageId>Excubo.WebCompiler</PackageId>
-    <Version>2.6.2</Version>
+    <Version>2.6.3</Version>
   </PropertyGroup>
   <!--Self Include-->
   <ItemGroup>
