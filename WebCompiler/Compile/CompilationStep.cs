@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WebCompiler.Compile
@@ -16,17 +17,36 @@ namespace WebCompiler.Compile
         }
         public CompilationStep With(Compiler compiler)
         {
-            var result = compiler.Compile(AllFiles);
-            if (result.Errors != null)
+            try
             {
+                var result = compiler.Compile(AllFiles);
+                if (result.Errors != null)
+                {
+                    if (Errors == null)
+                    {
+                        Errors = new List<CompilerError>();
+                    }
+                    Errors.AddRange(result.Errors);
+                    OutputFile = result.OutputFile;
+                    AllFiles.Add((File: OutputFile!, Created: result.Created));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"A compilation step encountered an exception {e.Message} with stacktrace:\n{e.StackTrace}\n");
                 if (Errors == null)
                 {
                     Errors = new List<CompilerError>();
                 }
-                Errors.AddRange(result.Errors);
+                Errors.Add(new CompilerError
+                {
+                    Message = $@"The internal compiler {compiler.GetType().Name} encountered an exception: {e.Message}. 
+The stacktrace was:
+{e.StackTrace}
+The state before this operations looked like this:
+{string.Join("\n", AllFiles.Select(f => $"- {f.File} ({f.Created})"))}"
+                });
             }
-            OutputFile = result.OutputFile;
-            AllFiles.Add((File: OutputFile!, Created: result.Created));
             return this;
         }
         public CompilationStep Then(Compiler compiler)
