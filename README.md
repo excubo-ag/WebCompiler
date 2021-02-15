@@ -157,7 +157,7 @@ This configuration will not break the build if `Excubo.WebCompiler` is not insta
   </Target>
 
   <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" />
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
   </Target>
 ```
 
