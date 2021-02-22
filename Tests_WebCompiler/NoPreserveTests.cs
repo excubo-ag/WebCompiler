@@ -19,9 +19,14 @@ namespace Tests_WebCompiler
             .Then(new Cleaner());
             input = "../../../TestCases/Scss/test.scss";
             output_files = new List<string> { "../../../output/test.min.css" };
+            unexpected_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css" };
             expected_output = "../../../TestCases/MinCss/test.min.css";
             DeleteTemporaryFiles();
         }
+        /// <summary>
+        /// Even if we do not preserve the intermediate files, the output file should only be changed, if the source file changed.
+        /// </summary>
+        /// <returns></returns>
         [Test]
         public async Task CallNoRecompilation()
         {

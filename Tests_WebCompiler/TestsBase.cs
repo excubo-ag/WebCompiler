@@ -14,6 +14,7 @@ namespace Tests_WebCompiler
         protected Func<string, CompilationStep> pipeline;
         protected string input;
         protected List<string> output_files;
+        protected List<string> unexpected_files;
         protected string expected_output;
         [TearDown]
         protected void DeleteTemporaryFiles()
@@ -47,6 +48,13 @@ namespace Tests_WebCompiler
             foreach (var file in output_files)
             {
                 Assert.IsTrue(File.Exists(file), $"Output file or intermediate file {file} should exist");
+            }
+            if (unexpected_files != null)
+            {
+                foreach (var file in unexpected_files)
+                {
+                    Assert.IsFalse(File.Exists(file), $"File {file} should NOT exist, but does");
+                }
             }
             return new FileInfo(output_files.Last()).LastWriteTimeUtc;
         }
