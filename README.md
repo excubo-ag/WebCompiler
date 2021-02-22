@@ -143,6 +143,10 @@ You can add `webcompiler` as a `Target` in your `csproj` file. This works cross 
 
 In this example, `webcompiler` is executed on the folder `wwwroot` inside your project folder.
 
+#### Docker
+
+The integration into docker images is as straight-forward as installing the tool and invoking it. However, there's a caveat that some users ran into, which is the use of `alpine`-based images, such as `mcr.microsoft.com/dotnet/sdk:5.0-alpine`. `Excubo.WebCompiler` will not work on this image, as some fundamental libraries are missing on `alpine`. The `alpine` distribution is usually intended to create small resulting images. If this is the goal, the best approach is to perform build/compilation operations in a non-`alpine` distribution, and then finally copy only the resulting files to an `alpine` based image intended only for execution. Learn more about it [here, in Microsoft's usage for dotnet](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-5.0) and [here, in the docker documentation about multi-stage-build](https://docs.docker.com/develop/develop-images/multistage-build/).
+
 #### MSBuild with execution of webcompiler only if it is installed
 
 ##### Global
@@ -157,7 +161,7 @@ This configuration will not break the build if `Excubo.WebCompiler` is not insta
   </Target>
 
   <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" />
+    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
   </Target>
 ```
 
