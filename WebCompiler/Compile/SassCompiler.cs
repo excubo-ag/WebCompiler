@@ -61,7 +61,7 @@ namespace WebCompiler.Compile
                     LineFeedType = settings.LineFeed,
                     OutputStyle = settings.OutputStyle,
                     Precision = settings.Precision,
-                    SourceMap = true,
+                    SourceMap = settings.SourceMap,
                     InlineSourceMap = settings.SourceMap
                 };
                 if (settings.IncludePath != null)
