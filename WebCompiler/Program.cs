@@ -266,6 +266,10 @@ File format to specify compiler configuration (-c|--config):
             foreach (var error in errors)
             {
                 Console.Error.WriteLine(error.Message);
+                if (error.FileName != null)
+                {
+                    Console.Error.WriteLine($"-- in file {error.FileName} L{error.LineNumber}:{error.ColumnNumber}");
+                }
             }
         }
 
