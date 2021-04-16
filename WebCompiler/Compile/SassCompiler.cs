@@ -69,24 +69,24 @@ namespace WebCompiler.Compile
                     options.IncludePaths.Add(settings.IncludePath);
                 }
                 var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, options);
-                var scssCreated = ReplaceIfNewer(output_file, compile_result.CompiledContent);
+                var replaced = ReplaceIfNewer(output_file, compile_result.CompiledContent);
                 if (!autoprefix_settings.Enabled)
                 {
                     return new CompilerResult
                     {
                         OutputFile = output_file,
-                        Created = scssCreated
+                        Created = replaced
                     };
                 }
 
                 var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
                 using var autoprefixer = new Autoprefixer(new ChakraCoreJsEngineFactory(), autoprefix_settings.ProcessingOptions);
                 var result = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
-
+                var autoPrefixerReplaced = ReplaceIfNewer(output_file, result.ProcessedContent);
                 return new CompilerResult
                 {
                     OutputFile = output_file,
-                    Created = ReplaceIfNewer(output_file, result.ProcessedContent)
+                    Created = replaced || autoPrefixerReplaced
                 };
 
             }

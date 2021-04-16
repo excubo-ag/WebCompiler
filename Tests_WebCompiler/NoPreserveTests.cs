@@ -13,7 +13,7 @@ namespace Tests_WebCompiler
         public void CreatePipeline()
         {
             pipeline = (file) => new CompilationStep(file)
-            .With(new SassCompiler(new SassSettings()))
+            .With(new SassCompiler(new SassSettings(), new WebCompiler.Configuration.CssAutoprefixSettings()))
             .Then(new CssMinifier(new CssMinifySettings { TermSemicolons = false }))
             .Then(new Place("../../../output/", "../../../TestCases/Scss/"))
             .Then(new Cleaner());
