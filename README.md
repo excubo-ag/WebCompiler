@@ -129,7 +129,19 @@ dotnet tool webcompiler -h
 
 #### Command line / terminal
 
-Simply call `webcompiler` (or `dotnet tool webcompiler` for local install) with the appropriate options, e.g. `webcompiler -r wwwroot`.
+##### Global
+You can simply call `webcompiler` with the appropriate options, e.g.
+```powershell 
+webcompiler -r wwwroot
+```
+##### Local
+```powershell
+dotnet run tool webcompiler -r wwwroot
+```
+or can simply call:
+```powershell
+dotnet webcompiler -r wwwroot
+```
 
 #### MSBuild
 
