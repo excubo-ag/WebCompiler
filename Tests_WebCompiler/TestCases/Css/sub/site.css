@@ -400,11 +400,9 @@ a, .btn-link {
   .sidebar {
     width: 250px;
     height: 100vh;
-    position: -webkit-sticky;
     position: sticky;
     top: 0; }
   .main .top-row {
-    position: -webkit-sticky;
     position: sticky;
     top: 0; }
   .main > div {
