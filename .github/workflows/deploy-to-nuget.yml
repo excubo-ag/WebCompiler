@@ -1,7 +1,7 @@
 name: Deploy nupkg
 
 env:
-  dotnet_version: 5.0.301
+  dotnet_version: '6.0.x'
   project_name: "WebCompiler/WebCompiler.csproj"
 
 on:
@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-dotnet@v1.8.1
       with:
         dotnet-version: ${{ env.dotnet_version }}
+        include-prerelease: true
     - name: Install dependencies
       run: dotnet restore
     - name: Build
