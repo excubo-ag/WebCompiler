@@ -9,7 +9,7 @@
     <AssemblyName>Excubo.WebCompiler</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoprefixerHost" Version="3.0.6" />
+    <PackageReference Include="AutoprefixerHost" Version="3.0.7" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore" Version="3.9.1" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64" Version="3.9.1" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.osx-x64" Version="3.9.1" />
