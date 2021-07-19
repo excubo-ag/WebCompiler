@@ -39,9 +39,9 @@ namespace WebCompiler.Compile
 
             if (File.Exists(output_file))
             {
-                // determine if this file with all its dependencies is newer than the output file, which necessitates compilation.
-                var dependencies = GetDependencies(file).Append(file).ToList();
                 var last_write_output = new FileInfo(output_file).LastWriteTimeUtc;
+                // determine if this file with all its dependencies is newer than the output file, which necessitates compilation.
+                var dependencies = GetDependencies(file);
                 var needs_compilation = dependencies.Select(d => new FileInfo(d).LastWriteTimeUtc).Any(last_write_input => last_write_input > last_write_output);
 
                 if (!needs_compilation)
@@ -108,24 +108,35 @@ namespace WebCompiler.Compile
             }
         }
 
-        private IEnumerable<string> GetDependencies(string file)
+        private List<string> GetDependencies(string file)
         {
-            var content = File.ReadAllText(file, Encoding);
-            var info = new FileInfo(file);
-            //match both <@import "myFile.scss";> and <@import url("myFile.scss");> syntax
-            var matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
-            foreach (var match in matches.Where(m => m != null))
+            var dependencies = new HashSet<string> { file };
+            var candidates = new HashSet<string> { file };
+            while (candidates.Any())
             {
-                var importedfiles = GetFileInfos(info, match);
-                foreach (var importedfile in importedfiles)
+                var candidate = candidates.First();
+                _ = candidates.Remove(candidate);
+
+                var content = File.ReadAllText(candidate, Encoding);
+                //match both <@import "myFile.scss";> and <@import url("myFile.scss");> syntax
+                var matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
+                if (matches.Any())
                 {
-                    yield return importedfile;
-                    foreach (var dependency in GetDependencies(importedfile))
+                    var info = new FileInfo(candidate);
+                    foreach (var match in matches.Where(m => m != null))
                     {
-                        yield return dependency;
+                        var importedfiles = GetFileInfos(info, match);
+                        foreach (var importedfile in importedfiles)
+                        {
+                            if (dependencies.Add(importedfile)) // only consider the dependency a candidate, if we haven't encountered it yet.
+                            {
+                                _ = candidates.Add(importedfile);
+                            }
+                        }
                     }
                 }
             }
+            return dependencies.ToList();
         }
 
         private static IEnumerable<string> GetFileInfos(FileInfo info, Match match)
