@@ -1,6 +1,6 @@
 ﻿using AutoprefixerHost;
+using DartSassHost;
 using JavaScriptEngineSwitcher.ChakraCore;
-using LibSassHost;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,7 +60,6 @@ namespace WebCompiler.Compile
                     IndentWidth = settings.IndentWidth,
                     LineFeedType = settings.LineFeed,
                     OutputStyle = settings.OutputStyle,
-                    Precision = settings.Precision,
                     SourceMap = settings.SourceMap,
                     InlineSourceMap = settings.SourceMap
                 };
@@ -68,7 +67,8 @@ namespace WebCompiler.Compile
                 {
                     options.IncludePaths.Add(settings.IncludePath);
                 }
-                var compile_result = LibSassHost.SassCompiler.CompileFile(file, tmp_output_file, file, options);
+                var compiler = new DartSassHost.SassCompiler(new ChakraCoreJsEngineFactory());
+                var compile_result = compiler.CompileFile(file, tmp_output_file, file, options);
                 var replaced = ReplaceIfNewer(output_file, compile_result.CompiledContent);
                 if (!autoprefix_settings.Enabled)
                 {

@@ -6,7 +6,7 @@ using WebCompiler.Configuration.Settings;
 
 namespace Tests_WebCompiler
 {
-    public class AutoPipelineScssTests : TestsBase
+    public class AutoPipelineRealTests : TestsBase
     {
         [SetUp]
         public void CreatePipeline()
@@ -17,13 +17,13 @@ namespace Tests_WebCompiler
                 {
                     Css = new CssMinifySettings
                     {
-                        TermSemicolons = false
+                        TermSemicolons = true
                     }
                 }
             }, "../../../TestCases/Scss/").TryCompile(file);
-            input = "../../../TestCases/Scss/test.scss";
-            output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css", "../../../TestCases/Scss/test.min.css.gz" };
-            expected_output = "../../../TestCases/GzCss/test.min.css.gz";
+            input = "../../../TestCases/Scss/site.scss";
+            output_files = new List<string> { "../../../TestCases/Scss/site.css", "../../../TestCases/Scss/site.min.css", "../../../TestCases/Scss/site.min.css.gz" };
+            expected_output = "../../../TestCases/GzCss/site.min.css.gz";
             DeleteTemporaryFiles();
         }
         [Test]
