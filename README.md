@@ -25,9 +25,9 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 #### Changes in version 3.X.Y
 
-Replaced the underlying SASS compiler from libsass to dart-sass. This is a necessary change, as libsass is discontinued. There are two breaking changes when working with the config json file:
+The underlying SASS compiler is changed from libsass to dart-sass. This is a necessary change, as libsass is discontinued. There are two breaking changes when working with the config json file:
 
-- `CompilerSettings.Sass.OutputStyle`: The valid values are now `Expanded` or `Compressed`.
+- `CompilerSettings.Sass.OutputStyle`: The valid values are now `Expanded` or `Compressed`. The former default value of `Nested` is now invalid.
 - The property `CompilerSettings.Sass.Precision` does not exist anymore.
 
 ```json
