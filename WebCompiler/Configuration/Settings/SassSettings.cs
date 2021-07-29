@@ -1,5 +1,4 @@
 ﻿using DartSassHost;
-using System;
 
 namespace WebCompiler.Configuration.Settings
 {
