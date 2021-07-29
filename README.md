@@ -23,6 +23,27 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 3.X.Y
+
+The underlying SASS compiler is changed from libsass to dart-sass. This is a necessary change, as libsass is discontinued. There are two breaking changes when working with the config json file:
+
+- `CompilerSettings.Sass.OutputStyle`: The valid values are now `Expanded` or `Compressed`. The former default value of `Nested` is now invalid.
+- The property `CompilerSettings.Sass.Precision` does not exist anymore.
+
+```json
+  "CompilerSettings": {
+    "Sass": {
+      "IndentType": "Space",
+      "IndentWidth": 2,
+      "OutputStyle": "Expanded", // was: "Nested"
+      //"Precision": 5, // Remove this
+      "RelativeUrls": true,
+      "LineFeed": "Lf",
+      "SourceMap": false
+    }
+  }
+```
+
 #### Changes in version 2.4.X
 
 Added support for .NET 5. You will most likely only notice that when using webcompiler in a docker context, but that's covered now as well!
@@ -276,8 +297,7 @@ The default configuration is
     "Sass": {
       "IndentType": "Space",
       "IndentWidth": 2,
-      "OutputStyle": "Nested",
-      "Precision": 5,
+      "OutputStyle": "Expanded",
       "RelativeUrls": true,
       "LineFeed": "Lf",
       "SourceMap": false

@@ -1,27 +1,27 @@
 ﻿@charset "UTF-8";
 div {
-  background: url(../foo.png); }
+  background: url(../foo.png);}
 
 div {
-  background: url(../bar.png); }
+  background: url(../bar.png);}
 
 body {
   background-color: blue;
-  content: "✔ æøå"; }
+  content: "✔ æøå";}
 
 #test1 {
-  color: red; }
+  color: red;}
 
 /*#test2{
     color: blue;
 }*/
 #test3 {
   color: green;
-  -webkit-transition: all .5s;
-  -o-transition: all .5s;
-  transition: all .5s; }
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;}
 
 .parent .child {
   width: 64px;
-  height: 24px; }
+  height: 24px;}
 /*# sourceMappingURL=..\..\..\TestCases\Scss\test.css.map */
