@@ -24,8 +24,18 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build -c Release --no-restore
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.8.1
+      with:
+        dotnet-version: 5.0.x
+        include-prerelease: true
     - name: Test
       run: dotnet test -c Release --no-restore
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.8.1
+      with:
+        dotnet-version: ${{ env.dotnet_version }}
+        include-prerelease: true
     - name: Pack
       run: dotnet pack -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -c Release -o app/packed --no-restore ${{ env.project_name }}
     - name: Deploy to nuget
