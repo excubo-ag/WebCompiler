@@ -67,8 +67,10 @@ namespace WebCompiler.Compile
                 {
                     options.IncludePaths.Add(settings.IncludePath);
                 }
-                var compiler = new DartSassHost.SassCompiler(new ChakraCoreJsEngineFactory());
-                var compile_result = compiler.CompileFile(file, tmp_output_file, file, options);
+                using (var compiler = new DartSassHost.SassCompiler(new ChakraCoreJsEngineFactory()))
+                {
+                    var compile_result = compiler.CompileFile(file, tmp_output_file, file, options);
+                }
                 var replaced = ReplaceIfNewer(output_file, compile_result.CompiledContent);
                 if (!autoprefix_settings.Enabled)
                 {
