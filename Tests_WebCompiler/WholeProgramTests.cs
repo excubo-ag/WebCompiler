@@ -118,6 +118,9 @@ namespace Tests_WebCompiler
         [Test]
         public void RejectOutdatedConfig()
         {
+            var originalError = Console.Error;
+            var scopedError = new StringWriter();
+            Console.SetError(scopedError);
             var temporary_files = new List<string>
             {
             };
@@ -162,6 +165,8 @@ namespace Tests_WebCompiler
                     File.Delete(tmp_file);
                 }
             }
+            Assert.IsTrue(scopedError.ToString().Contains("Error reading configuration from file"));
+            Console.SetError(originalError);
         }
         [Test]
         public void UseConfigWithRecursion()
