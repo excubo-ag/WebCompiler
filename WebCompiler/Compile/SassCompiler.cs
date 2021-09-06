@@ -154,7 +154,8 @@ namespace WebCompiler.Compile
                 string file_path = Path.GetDirectoryName(value) ?? string.Empty;
 
                 if (value.EndsWith(".scss", StringComparison.InvariantCultureIgnoreCase) ||
-                    value.EndsWith(".sass", StringComparison.InvariantCultureIgnoreCase))
+                    value.EndsWith(".sass", StringComparison.InvariantCultureIgnoreCase) ||
+                    value.EndsWith(".css", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (File.Exists(Path.Combine(info.DirectoryName, value)))
                     {
@@ -174,6 +175,10 @@ namespace WebCompiler.Compile
                     else if (File.Exists(Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".scss")))
                     {
                         yield return Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".scss");
+                    }
+                    else if (File.Exists(Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".css")))
+                    {
+                        yield return Path.Combine(info.DirectoryName, file_path, "_" + file_name + ".css");
                     }
                 }
             }
