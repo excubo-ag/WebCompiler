@@ -110,6 +110,7 @@ namespace WebCompiler.Compile
             }
         }
 
+        internal static readonly Regex SassDependencyRegex = new Regex(@"(?<=@(import|use|forward)(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
         private List<string> GetDependencies(string file)
         {
             var dependencies = new HashSet<string> { file };
@@ -121,7 +122,7 @@ namespace WebCompiler.Compile
 
                 var content = File.ReadAllText(candidate, Encoding);
                 //match both <@import "myFile.scss";> and <@import url("myFile.scss");> syntax
-                var matches = Regex.Matches(content, @"(?<=@import(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
+                var matches = SassDependencyRegex.Matches(content);
                 if (matches.Any())
                 {
                     var info = new FileInfo(candidate);
