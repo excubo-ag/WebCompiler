@@ -21,7 +21,7 @@
   <PropertyGroup>
     <PackageId>Excubo.WebCompiler</PackageId>
     <VersionPrefix>3.0.0</VersionPrefix>
-    <VersionSuffix>preview-9</VersionSuffix>
+    <VersionSuffix>preview-10</VersionSuffix>
   </PropertyGroup>
   <!--Self Include-->
   <ItemGroup>
