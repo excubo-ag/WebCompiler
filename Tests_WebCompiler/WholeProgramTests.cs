@@ -244,7 +244,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"));
             foreach (var output_file in output_files)
             {
                 Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
@@ -288,7 +288,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"));
             foreach (var output_file in output_files)
             {
                 Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
@@ -337,7 +337,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"));
             foreach (var output_file in output_files)
             {
                 Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
@@ -392,7 +392,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"));
+            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"));
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
