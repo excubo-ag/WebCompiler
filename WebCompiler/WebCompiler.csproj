@@ -9,7 +9,7 @@
     <AssemblyName>Excubo.WebCompiler</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoprefixerHost" Version="3.0.12" />
+    <PackageReference Include="AutoprefixerHost" Version="3.0.13" />
     <PackageReference Include="DartSassHost" Version="1.0.0-preview6" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.13.1" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.1.6" />
