@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="AutoprefixerHost" Version="3.0.13" />
     <PackageReference Include="DartSassHost" Version="1.0.0-preview6" />
-    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.13.1" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.13.2" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.1.6" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.1.6" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" Version="7.1.6" />
