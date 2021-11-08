@@ -2,7 +2,7 @@
   <Import Project="package.csproj" Condition="Exists('package.csproj')" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>webcompiler</ToolCommandName>
     <Nullable>enable</Nullable>
@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoprefixerHost" Version="3.0.15" />
-    <PackageReference Include="DartSassHost" Version="1.0.0-preview6" />
+    <PackageReference Include="DartSassHost" Version="1.0.0-preview7" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.13.3" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.1.7" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.1.7" />
