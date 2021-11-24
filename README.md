@@ -23,6 +23,10 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 3.1.Y
+
+Support for netcoreapp3.1 and net5.0 were dropped. The nupkg file was getting outrageously large due to dependencies and duplication across the target frameworks.
+
 #### Changes in version 3.X.Y
 
 The underlying SASS compiler is changed from libsass to dart-sass. This is a necessary change, as libsass is discontinued. There are two breaking changes when working with the config json file:
