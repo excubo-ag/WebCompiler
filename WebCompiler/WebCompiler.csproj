@@ -20,6 +20,6 @@
     <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm64" Version="7.2.0" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.2.0" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.2.0" />
-    <PackageReference Include="NUglify" Version="1.16.4" />
+    <PackageReference Include="NUglify" Version="1.17.2" />
   </ItemGroup>
 </Project>
