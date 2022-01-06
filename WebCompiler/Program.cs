@@ -208,10 +208,8 @@ File format to specify compiler configuration (-c|--config):
                     {
                         Console.WriteLine($"{item} is a directory, but option -r is not used. Ignoring {item} and all items in it.");
                     }
-                    foreach (var file in Recurse(item))
+                    foreach (var file in Helpers.FileFolderHelpers.Recurse(item))
                     {
-                        if (IsFileExcluded(base_path, file, config)) continue;
-                        
                         var result = compilers.TryCompile(file);
                         if (result.Errors != null)
                         {
@@ -243,21 +241,6 @@ File format to specify compiler configuration (-c|--config):
             return 0;
         }
 
-        private static bool IsFileExcluded(string basePath, string file, Config config)
-        {
-            var relativeFilePath = file.Replace(basePath, string.Empty);
-
-            if (config.CompilerSettings.Sass.RecursiveExcludeFolders == null)
-                return config.CompilerSettings.Sass.RecursiveExcludeFiles != null &&
-                       config.CompilerSettings.Sass.RecursiveExcludeFiles.Contains(relativeFilePath);
-
-            if (config.CompilerSettings.Sass.RecursiveExcludeFolders.Any(file.StartsWith))
-                return true;
-
-            return config.CompilerSettings.Sass.RecursiveExcludeFiles != null &&
-                   config.CompilerSettings.Sass.RecursiveExcludeFiles.Contains(relativeFilePath);
-        }
-
         private static string GetCommonBase(List<string> paths)
         {
             paths = paths.Select(p => Path.GetFullPath(p)).ToList();
@@ -287,24 +270,6 @@ File format to specify compiler configuration (-c|--config):
                 if (error.FileName != null)
                 {
                     Console.Error.WriteLine($"-- in file {error.FileName} L{error.LineNumber}:{error.ColumnNumber}");
-                }
-            }
-        }
-
-        private static IEnumerable<string> Recurse(string directory)
-        {
-            foreach (var file in Directory.GetFiles(directory))
-            {
-                if (!Path.GetFileName(file).StartsWith('_'))
-                {
-                    yield return file;
-                }
-            }
-            foreach (var subdir in Directory.GetDirectories(directory))
-            {
-                foreach (var file in Recurse(subdir))
-                {
-                    yield return file;
                 }
             }
         }

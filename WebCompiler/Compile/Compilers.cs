@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using WebCompiler.Configuration;
+using System.Collections.Generic;
 
 namespace WebCompiler.Compile
 {
@@ -15,9 +16,16 @@ namespace WebCompiler.Compile
         private readonly Compiler place;
         private readonly Compiler cleanup;
         private readonly Compiler autoprefix;
+        private readonly List<string> _ignoreFiles;
+        private readonly List<string> _ignoreFolders;
+        private readonly string _basePath;
 
         public Compilers(Config config, string base_path)
         {
+            _ignoreFiles = config.CompilerSettings.IgnoreFiles;
+            _ignoreFolders = config.CompilerSettings.IgnoreFolders;
+            _basePath = base_path;
+
             sass = config.Autoprefix.Enabled ? new SassCompiler(config.CompilerSettings.Sass, config.Autoprefix) : new SassCompiler(config.CompilerSettings.Sass);
             css_minifier = config.Minifiers.Enabled ? new CssMinifier(config.Minifiers.Css) : terminating_compiler;
             js_minifier = config.Minifiers.Enabled ? new JavascriptMinifier(config.Minifiers.Javascript) : terminating_compiler;
@@ -29,7 +37,9 @@ namespace WebCompiler.Compile
         private static CompilationStep Compile(string file) => new CompilationStep(file);
         public CompilationStep TryCompile(string file)
         {
-            switch (Path.GetExtension(file).ToUpperInvariant())
+            if(SkipProcessingThisFile(file, _basePath)) return new CompilationStep(file);
+            
+            switch (Path.GetExtension(file)?.ToUpperInvariant())
             {
                 case ".SCSS":
                 case ".SASS":
@@ -70,6 +80,31 @@ namespace WebCompiler.Compile
                 default:
                     return Compile(file).With(terminating_compiler);
             }
+        }
+
+        private bool SkipProcessingThisFile(string file, string base_path)
+        {
+            if(_ignoreFolders.Count > 0)
+            {
+                var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
+                foreach(var ignoreFolder in _ignoreFolders)
+                {
+                    var ignorePathForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFolder));
+                    if(string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+                }
+            }
+
+            if(_ignoreFiles.Count > 0)
+            {
+                var absoluteFilePath = Path.GetFullPath(file);
+                foreach(var ignoreFile in _ignoreFiles)
+                {
+                    var ignoreFileNameForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFile));
+                    if(string.Equals(absoluteFilePath, ignoreFileNameForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+                }
+            }
+
+            return false;
         }
     }
 }
