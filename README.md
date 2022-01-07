@@ -30,13 +30,11 @@ Simply add the following to CompilerSettings.json:
 
 ```json
   "CompilerSettings": {
-     "Sass": {
-       "RecursiveExcludeFolders": ["./wwwroot/", "./bin/", "./obj/"],
-       "RecursiveExcludeFiles":
-          [
-            "./sass/_variables.scss"
-          ]
-    }
+     "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/"],
+     "IgnoreFiles":
+        [
+          "./sass/_variables.scss"
+        ]
   }
 ```
 
