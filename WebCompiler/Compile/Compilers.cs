@@ -87,10 +87,10 @@ namespace WebCompiler.Compile
             if(_ignoreFolders.Count > 0)
             {
                 var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
-                foreach(var ignoreFolder in _ignoreFolders)
+                foreach (var ignoreFolder in _ignoreFolders)
                 {
                     var ignorePathForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFolder));
-                    if(string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+                    if (string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
                 }
             }
 
@@ -100,7 +100,7 @@ namespace WebCompiler.Compile
                 foreach(var ignoreFile in _ignoreFiles)
                 {
                     var ignoreFileNameForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFile));
-                    if(string.Equals(absoluteFilePath, ignoreFileNameForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+                    if (string.Equals(absoluteFilePath, ignoreFileNameForComparison, StringComparison.OrdinalIgnoreCase)) return true;
                 }
             }
 
