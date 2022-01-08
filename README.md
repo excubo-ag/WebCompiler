@@ -31,10 +31,7 @@ Simply add the following to CompilerSettings.json:
 ```json
   "CompilerSettings": {
      "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/"],
-     "IgnoreFiles":
-        [
-          "./sass/_variables.scss"
-        ]
+     "IgnoreFiles": ["./sass/_variables.scss"]
   }
 ```
 
@@ -58,7 +55,7 @@ The underlying SASS compiler is changed from libsass to dart-sass. This is a nec
       //"Precision": 5, // Remove this
       "RelativeUrls": true,
       "LineFeed": "Lf",
-      "SourceMap": false,
+      "SourceMap": false
     }
   }
 ```

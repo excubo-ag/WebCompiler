@@ -16,15 +16,15 @@ namespace WebCompiler.Compile
         private readonly Compiler place;
         private readonly Compiler cleanup;
         private readonly Compiler autoprefix;
-        private readonly List<string> _ignoreFiles;
-        private readonly List<string> _ignoreFolders;
-        private readonly string _basePath;
+        private readonly List<string> ignorefiles;
+        private readonly List<string> ignorefolders;
+        private readonly string base_path;
 
         public Compilers(Config config, string base_path)
         {
-            _ignoreFiles = config.CompilerSettings.IgnoreFiles;
-            _ignoreFolders = config.CompilerSettings.IgnoreFolders;
-            _basePath = base_path;
+            ignorefiles = config.CompilerSettings.IgnoreFiles;
+            ignorefolders = config.CompilerSettings.IgnoreFolders;
+            this.base_path = base_path;
 
             sass = config.Autoprefix.Enabled ? new SassCompiler(config.CompilerSettings.Sass, config.Autoprefix) : new SassCompiler(config.CompilerSettings.Sass);
             css_minifier = config.Minifiers.Enabled ? new CssMinifier(config.Minifiers.Css) : terminating_compiler;
@@ -37,7 +37,10 @@ namespace WebCompiler.Compile
         private static CompilationStep Compile(string file) => new CompilationStep(file);
         public CompilationStep TryCompile(string file)
         {
-            if(SkipProcessingThisFile(file, _basePath)) return new CompilationStep(file);
+            if(SkipProcessingThisFile(file, base_path))
+            {
+                return new CompilationStep(file);
+            }
             
             switch (Path.GetExtension(file)?.ToUpperInvariant())
             {
@@ -84,22 +87,22 @@ namespace WebCompiler.Compile
 
         private bool SkipProcessingThisFile(string file, string base_path)
         {
-            if(_ignoreFolders.Count > 0)
+            if(ignorefolders.Count > 0)
             {
                 var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
-                foreach (var ignoreFolder in _ignoreFolders)
+                foreach (var ignoreFolder in ignorefolders)
                 {
-                    var ignorePathForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFolder));
+                    var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder));
                     if (string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
                 }
             }
 
-            if(_ignoreFiles.Count > 0)
+            if(ignorefiles.Count > 0)
             {
                 var absoluteFilePath = Path.GetFullPath(file);
-                foreach(var ignoreFile in _ignoreFiles)
+                foreach(var ignoreFile in ignorefiles)
                 {
-                    var ignoreFileNameForComparison = Path.GetFullPath(Path.Combine(_basePath, ignoreFile));
+                    var ignoreFileNameForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFile));
                     if (string.Equals(absoluteFilePath, ignoreFileNameForComparison, StringComparison.OrdinalIgnoreCase)) return true;
                 }
             }

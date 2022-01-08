@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DartSassHost;
+﻿using DartSassHost;
 
 namespace WebCompiler.Configuration.Settings
 {
