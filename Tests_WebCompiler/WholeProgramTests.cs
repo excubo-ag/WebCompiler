@@ -444,5 +444,91 @@ namespace Tests_WebCompiler
             }
             Directory.Delete("Css");
         }
+
+        [Test]
+        public void ScssFilesAndFoldersConfiguredToBeIgnoredAreIgnored()
+        {
+            var temporary_files = new List<string>
+            {
+            };
+            output_files = new List<string>
+            {
+                "../../../TestCases/Scss/site.css",
+                "../../../TestCases/Scss/test.css",
+                "../../../TestCases/Scss/sub/foo.css",
+                "../../../TestCases/Scss/sub/relative.css"
+            };
+            var non_output_files = new List<string>
+            {
+                // suppressed by IgnoreFolders
+                "../../../TestCases/Scss/IgnoreFolder/globalVariables.css",
+                // suppressed by IgnoreFiles
+                "../../../TestCases/Scss/error.css",
+                "../../../TestCases/Scss/globalVariables.css",
+                // supressed by config: no gzip and no minification
+                "../../../TestCases/Scss/site.min.css",
+                "../../../TestCases/Scss/site.min.css.gz"
+            };
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+            DeleteTemporaryFiles();
+
+            var config = @"{
+  ""Minifiers"": {
+    ""GZip"": false,
+    ""Enabled"": false
+  },
+  ""CompilerSettings"": {
+    ""IgnoreFolders"": [
+        ""./IgnoreFolder""
+    ],
+    ""IgnoreFiles"": [
+        ""./error.scss"",
+        ""globalVariables.scss""
+    ],
+    ""Sass"": {
+      ""IndentType"": ""Space"",
+      ""IndentWidth"": 2,
+      ""OutputStyle"": ""Expanded"",
+      ""RelativeUrls"": true,
+      ""LineFeed"": ""Lf"",
+      ""SourceMap"": true
+    }
+  },
+  ""Output"": {
+    ""Preserve"": true
+  }
+}";
+            File.WriteAllText("webcompilerconfiguration.json", config);
+            var programArgs = new[] { "-c", "webcompilerconfiguration.json", "-r", "../../../TestCases/Scss" };
+            Assert.DoesNotThrow(() => Program.Main(programArgs));
+            Assert.AreEqual(0, Program.Main(programArgs));
+            File.Delete("webcompilerconfiguration.json");
+            foreach (var output_file in output_files)
+            {
+                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+            }
+            foreach (var non_output_file in non_output_files)
+            {
+                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+            }
+            DeleteTemporaryFiles();
+            foreach (var tmp_file in temporary_files)
+            {
+                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+            }
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
+                }
+            }
+        }
     }
 }

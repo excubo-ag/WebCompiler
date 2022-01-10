@@ -23,6 +23,18 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 3.2.Y
+
+Supports excluding certain files and folders when using recursive mode
+Simply add the following to CompilerSettings.json:
+
+```json
+  "CompilerSettings": {
+     "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/"],
+     "IgnoreFiles": ["./sass/_variables.scss"]
+  }
+```
+
 #### Changes in version 3.1.Y
 
 Support for netcoreapp3.1 and net5.0 were dropped. The nupkg file was getting outrageously large due to dependencies and duplication across the target frameworks.
