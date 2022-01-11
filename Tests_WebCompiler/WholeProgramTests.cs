@@ -453,6 +453,7 @@ namespace Tests_WebCompiler
             };
             output_files = new List<string>
             {
+                "../../../TestCases/Scss/IgnoreFolder/SubFolder/test.css",
                 "../../../TestCases/Scss/site.css",
                 "../../../TestCases/Scss/test.css",
                 "../../../TestCases/Scss/sub/foo.css",
@@ -462,6 +463,9 @@ namespace Tests_WebCompiler
             {
                 // suppressed by IgnoreFolders
                 "../../../TestCases/Scss/IgnoreFolder/globalVariables.css",
+                "../../../TestCases/Scss/IgnoreFolderAndSubFolders/globalVariables.css",
+                "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder1/test.css",
+                "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder2/test.css",
                 // suppressed by IgnoreFiles
                 "../../../TestCases/Scss/error.css",
                 "../../../TestCases/Scss/globalVariables.css",
@@ -485,7 +489,8 @@ namespace Tests_WebCompiler
   },
   ""CompilerSettings"": {
     ""IgnoreFolders"": [
-        ""./IgnoreFolder""
+        ""./IgnoreFolder/"",
+        ""./IgnoreFolderAndSubFolders/*""
     ],
     ""IgnoreFiles"": [
         ""./error.scss"",

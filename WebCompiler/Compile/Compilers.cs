@@ -90,10 +90,47 @@ namespace WebCompiler.Compile
             if(ignorefolders.Count > 0)
             {
                 var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
+                
+                if (!Path.EndsInDirectorySeparator(pathForComparison))
+                {
+                    pathForComparison += Path.DirectorySeparatorChar;
+                }
+                
                 foreach (var ignoreFolder in ignorefolders)
                 {
-                    var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder));
-                    if (string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+                    var ignoreSubDirectories = ignoreFolder.EndsWith("*");
+                    if (ignoreSubDirectories)
+                    {
+                        var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder.TrimEnd('*')));
+                        
+                        if (!Path.EndsInDirectorySeparator(ignorePathForComparison))
+                        {
+                            ignorePathForComparison += Path.DirectorySeparatorChar;
+                        }
+                        
+                        var underneathIgnoreFolder = pathForComparison.ToUpperInvariant()
+                            .StartsWith(ignorePathForComparison.ToUpperInvariant());
+                        
+                        if (underneathIgnoreFolder)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder));
+
+                        if (!Path.EndsInDirectorySeparator(ignorePathForComparison))
+                        {
+                            ignorePathForComparison += Path.DirectorySeparatorChar;
+                        }
+                        
+                        if (string.Equals(pathForComparison, ignorePathForComparison,
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
 
