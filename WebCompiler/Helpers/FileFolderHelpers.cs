@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileSystemGlobbing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,21 +7,16 @@ namespace WebCompiler.Helpers
 {
     public static class FileFolderHelpers
     {
-        public static IEnumerable<string> Recurse(string directory)
+        public static IEnumerable<string> Recurse(string directory, List<string> ignoreGlobs)
         {
-            foreach (var file in Directory.GetFiles(directory))
+            ignoreGlobs.Add("**/_*.*"); // Also Ignore all files that start with _
+
+            var matcher = new Matcher();
+            matcher.AddInclude("**/*");
+            matcher.AddExcludePatterns(ignoreGlobs);
+            foreach (string file in matcher.GetResultsInFullPath(directory))
             {
-                if (!Path.GetFileName(file).StartsWith('_'))
-                {
-                    yield return file;
-                }
-            }
-            foreach (var subdir in Directory.GetDirectories(directory))
-            {
-                foreach (var file in Recurse(subdir))
-                {
-                    yield return file;
-                }
+                yield return file;
             }
         }
     }

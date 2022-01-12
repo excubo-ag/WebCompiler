@@ -16,14 +16,10 @@ namespace WebCompiler.Compile
         private readonly Compiler place;
         private readonly Compiler cleanup;
         private readonly Compiler autoprefix;
-        private readonly List<string> ignorefiles;
-        private readonly List<string> ignorefolders;
         private readonly string base_path;
 
         public Compilers(Config config, string base_path)
         {
-            ignorefiles = config.CompilerSettings.IgnoreFiles;
-            ignorefolders = config.CompilerSettings.IgnoreFolders;
             this.base_path = base_path;
 
             sass = config.Autoprefix.Enabled ? new SassCompiler(config.CompilerSettings.Sass, config.Autoprefix) : new SassCompiler(config.CompilerSettings.Sass);
@@ -37,11 +33,6 @@ namespace WebCompiler.Compile
         private static CompilationStep Compile(string file) => new CompilationStep(file);
         public CompilationStep TryCompile(string file)
         {
-            if(SkipProcessingThisFile(file, base_path))
-            {
-                return new CompilationStep(file);
-            }
-            
             switch (Path.GetExtension(file)?.ToUpperInvariant())
             {
                 case ".SCSS":
@@ -83,47 +74,6 @@ namespace WebCompiler.Compile
                 default:
                     return Compile(file).With(terminating_compiler);
             }
-        }
-
-        private bool SkipProcessingThisFile(string file, string base_path)
-        {
-            if(ignorefolders.Count > 0)
-            {
-                var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
-                
-                if (!Path.EndsInDirectorySeparator(pathForComparison))
-                {
-                    pathForComparison += Path.DirectorySeparatorChar;
-                }
-                
-                foreach (var ignoreFolder in ignorefolders)
-                {
-                    var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder));
-
-                    if (!Path.EndsInDirectorySeparator(ignorePathForComparison))
-                    {
-                        ignorePathForComparison += Path.DirectorySeparatorChar;
-                    }
-                    
-                    if (string.Equals(pathForComparison, ignorePathForComparison,
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            if(ignorefiles.Count > 0)
-            {
-                var absoluteFilePath = Path.GetFullPath(file);
-                foreach(var ignoreFile in ignorefiles)
-                {
-                    var ignoreFileNameForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFile));
-                    if (string.Equals(absoluteFilePath, ignoreFileNameForComparison, StringComparison.OrdinalIgnoreCase)) return true;
-                }
-            }
-
-            return false;
         }
     }
 }

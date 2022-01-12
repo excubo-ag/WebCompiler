@@ -461,8 +461,10 @@ namespace Tests_WebCompiler
             };
             var non_output_files = new List<string>
             {
-                // suppressed by IgnoreFolders
+                // suppressed by Ignore
                 "../../../TestCases/Scss/IgnoreFolder/globalVariables.css",
+                "../../../TestCases/Scss/IgnoreFolder2/globalVariables.css",
+                "../../../TestCases/Scss/IgnoreFolder2/SubFolder/test.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/globalVariables.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder1/test.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder2/test.css",
@@ -488,15 +490,12 @@ namespace Tests_WebCompiler
     ""Enabled"": false
   },
   ""CompilerSettings"": {
-    ""IgnoreFolders"": [
-        ""./IgnoreFolder/"",
-        ""./IgnoreFolderAndSubFolders/"",
-        ""./IgnoreFolderAndSubFolders/SubFolder1/"",
-        ""./IgnoreFolderAndSubFolders/SubFolder2/""
-    ],
-    ""IgnoreFiles"": [
-        ""./error.scss"",
-        ""globalVariables.scss""
+    ""Ignore"": [
+        ""IgnoreFolder/*.scss"",
+        ""IgnoreFolder2/**/*"",
+        ""IgnoreFolderAndSubFolders/**/*.scss"",
+        ""error.scss"",
+        ""globalVar*.scss""
     ],
     ""Sass"": {
       ""IndentType"": ""Space"",
