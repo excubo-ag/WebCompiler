@@ -32,7 +32,7 @@ Simply add the following to CompilerSettings.json:
   "CompilerSettings": {
      "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/", "./wwwroot/sass/"],
      "IgnoreFiles": ["./sass/_variables.scss"]
-  }~~~~
+  }
 ```
 
 #### Changes in version 3.1.Y
