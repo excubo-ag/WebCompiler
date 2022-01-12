@@ -25,14 +25,14 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 #### Changes in version 3.2.Y
 
-Supports excluding certain files and folders when using recursive mode
+Supports excluding certain files and folders (nb. Sub folders must be specified specifically if wanting to be ignored) when using recursive mode
 Simply add the following to CompilerSettings.json:
 
 ```json
   "CompilerSettings": {
-     "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/"],
+     "IgnoreFolders": ["./wwwroot/", "./bin/", "./obj/", "./wwwroot/sass/"],
      "IgnoreFiles": ["./sass/_variables.scss"]
-  }
+  }~~~~
 ```
 
 #### Changes in version 3.1.Y

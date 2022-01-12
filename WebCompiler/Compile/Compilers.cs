@@ -90,10 +90,26 @@ namespace WebCompiler.Compile
             if(ignorefolders.Count > 0)
             {
                 var pathForComparison = Path.GetFullPath(Path.GetDirectoryName(file));
+                
+                if (!Path.EndsInDirectorySeparator(pathForComparison))
+                {
+                    pathForComparison += Path.DirectorySeparatorChar;
+                }
+                
                 foreach (var ignoreFolder in ignorefolders)
                 {
                     var ignorePathForComparison = Path.GetFullPath(Path.Combine(this.base_path, ignoreFolder));
-                    if (string.Equals(pathForComparison, ignorePathForComparison, StringComparison.OrdinalIgnoreCase)) return true;
+
+                    if (!Path.EndsInDirectorySeparator(ignorePathForComparison))
+                    {
+                        ignorePathForComparison += Path.DirectorySeparatorChar;
+                    }
+                    
+                    if (string.Equals(pathForComparison, ignorePathForComparison,
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
                 }
             }
 
