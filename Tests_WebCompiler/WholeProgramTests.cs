@@ -461,14 +461,13 @@ namespace Tests_WebCompiler
             };
             var non_output_files = new List<string>
             {
-                // suppressed by Ignore
+                // suppressed by Ignore Globs
                 "../../../TestCases/Scss/IgnoreFolder/globalVariables.css",
                 "../../../TestCases/Scss/IgnoreFolder2/globalVariables.css",
                 "../../../TestCases/Scss/IgnoreFolder2/SubFolder/test.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/globalVariables.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder1/test.css",
                 "../../../TestCases/Scss/IgnoreFolderAndSubFolders/SubFolder2/test.css",
-                // suppressed by IgnoreFiles
                 "../../../TestCases/Scss/error.css",
                 "../../../TestCases/Scss/globalVariables.css",
                 // supressed by config: no gzip and no minification
