@@ -16,7 +16,7 @@ namespace WebCompiler.Configuration
         /// </summary>
         /// <typeparam name="string"></typeparam>
         /// <returns></returns>
-        public List<string> Ignore { get; set; } = new List<string>(){IgnoreUnderscorePrefixedFilesGlobPattern};
+        public List<string> Ignore { get; set; } = new List<string>() { IgnoreUnderscorePrefixedFilesGlobPattern };
 
         private const string IgnoreUnderscorePrefixedFilesGlobPattern = "**/_*.*";
     }

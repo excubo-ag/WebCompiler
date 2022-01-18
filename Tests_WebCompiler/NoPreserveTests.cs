@@ -28,13 +28,15 @@ namespace Tests_WebCompiler
         /// </summary>
         /// <returns></returns>
         [Test]
-        public async Task CallNoRecompilation()
+        public Task CallNoRecompilation()
         {
             var timestamp = ProcessFile();
             //await Task.Delay(100); // create a delay, because if things happen fast enough, the accuracy of the file timestamp is too low to detect the change in file
             var new_timestamp = ProcessFile();
             Assert.AreEqual(timestamp, new_timestamp, "Compiling a second time shouldn't alter the file");
+            return Task.CompletedTask;
         }
+
         [Test]
         public async Task CallTest()
         {
