@@ -9,8 +9,6 @@ namespace WebCompiler.Helpers
     {
         public static IEnumerable<string> Recurse(string directory, List<string> ignoreGlobs)
         {
-            ignoreGlobs.Add("**/_*.*"); // Also Ignore all files that start with _
-
             var matcher = new Matcher();
             matcher.AddInclude("**/*");
             matcher.AddExcludePatterns(ignoreGlobs);

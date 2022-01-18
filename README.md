@@ -26,11 +26,15 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 #### Changes in version 3.3.Y
 
 *Breaking Change / Warning*: This change removes the key of IgnoreFolders and IgnoreFiles per 3.2.Y and in favour of an "Ignore" key with support for [File Globbing support](https://docs.microsoft.com/en-us/dotnet/core/extensions/file-globbing).
+
+If no Ignore value is defined in the CompilerSettings.json then **/_*.* (files prefixed with _) will be ignored.
+If you wish to continue this behaviour and also ignore other patterns, ensure to also include this pattern.
+
 Simply add the following to CompilerSettings.json:
 
 ```json
   "CompilerSettings": {
-     "Ignore": [ "wwwroot/*.scss", "wwwroot/css/specific-file.scss", "wwwroot/_lib/**/*.scss", "bin/**/*", "obj/**/*" ],
+     "Ignore": [ "**/_*.*", "wwwroot/*.scss", "wwwroot/css/specific-file.scss", "wwwroot/_lib/**/*.scss", "bin/**/*", "obj/**/*" ],
   }
 ```
 
@@ -370,8 +374,9 @@ This project is just starting. You can help in many different ways:
 
 `Excubo.WebCompiler` depends on nuget packages for the compilation tasks:
 
-| Language | Library |
+| Language | Library | Comments
 |----------|---------|
 | Sass     | [LibSassHost](https://github.com/Taritsyn/LibSassHost) |
+| Sass     | [DartSassHost](https://github.com/Taritsyn/DartSassHost) | WebCompiler 3.X.Y+
 | Autoprefix | [AutoprefixHost](https://github.com/Taritsyn/AutoprefixerHost) |
 | CSS/JS   | [NUglify](https://github.com/xoofx/NUglify) | 
