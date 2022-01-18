@@ -208,7 +208,7 @@ File format to specify compiler configuration (-c|--config):
                     {
                         Console.WriteLine($"{item} is a directory, but option -r is not used. Ignoring {item} and all items in it.");
                     }
-                    foreach (var file in Helpers.FileFolderHelpers.Recurse(item))
+                    foreach (var file in Helpers.FileFolderHelpers.Recurse(item, config.CompilerSettings.Ignore))
                     {
                         var result = compilers.TryCompile(file);
                         if (result.Errors != null)
