@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JavaScriptEngineSwitcher.ChakraCore;
+using JavaScriptEngineSwitcher.Core;
 using WebCompiler.Configuration;
 using WebCompiler.Configuration.Settings;
 
@@ -67,7 +69,7 @@ namespace WebCompiler.Compile
                     options.IncludePaths.Add(settings.IncludePath);
                 }
                 CompilationResult? compile_result;
-                using (var compiler = new DartSassHost.SassCompiler(JsEngineFactory.Instance))
+                using (var compiler = new DartSassHost.SassCompiler())
                 {
                     compile_result = compiler.CompileFile(file, tmp_output_file, file, options);
                 }
@@ -82,7 +84,7 @@ namespace WebCompiler.Compile
                 }
 
                 var map_file = Path.Combine(Path.GetDirectoryName(file)!, Path.GetFileNameWithoutExtension(file) + ".css.map");
-                using var autoprefixer = new Autoprefixer(JsEngineFactory.Instance, autoprefix_settings.ProcessingOptions);
+                using var autoprefixer = new Autoprefixer(autoprefix_settings.ProcessingOptions);
                 var result = autoprefixer.Process(compile_result.CompiledContent, output_file, tmp_output_file, map_file, compile_result.SourceMap);
                 var autoPrefixerReplaced = ReplaceIfNewer(output_file, result.ProcessedContent);
                 return new CompilerResult
