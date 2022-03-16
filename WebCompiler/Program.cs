@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JavaScriptEngineSwitcher.ChakraCore;
+using JavaScriptEngineSwitcher.Core;
 using WebCompiler.Compile;
 using WebCompiler.Configuration;
 
@@ -46,6 +48,12 @@ namespace WebCompiler
     }
     internal static class Program
     {
+        static Program()
+        {
+            JsEngineSwitcher.Current.EngineFactories.AddChakraCore();
+            JsEngineSwitcher.Current.DefaultEngineName = ChakraCoreJsEngine.EngineName;
+        }
+
         private static readonly JsonSerializerOptions json_serializer_options = CreateDefaultOptions();
         private static JsonSerializerOptions CreateDefaultOptions()
         {

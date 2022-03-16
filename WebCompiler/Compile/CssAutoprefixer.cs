@@ -33,7 +33,7 @@ namespace WebCompiler.Compile
 
             try
             {
-                using var autoprefixer = new Autoprefixer(JsEngineFactory.Instance, settings.ProcessingOptions);
+                using var autoprefixer = new Autoprefixer(settings.ProcessingOptions);
                 var result = autoprefixer.Process(File.ReadAllText(file), file, tmp_output_file, map_file, string.Empty);
 
                 var created = ReplaceIfNewer(output_file, result.ProcessedContent);
