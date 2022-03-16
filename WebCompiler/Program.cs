@@ -72,7 +72,7 @@ namespace WebCompiler
         {
             Console.WriteLine(
 @"
-Excubo.WebCompiler
+ExcuboLinux.WebCompiler
 
 Usage:
   webcompiler file1 file2 ... [options]

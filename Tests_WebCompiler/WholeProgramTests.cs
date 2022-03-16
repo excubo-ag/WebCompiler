@@ -56,7 +56,7 @@ namespace Tests_WebCompiler
                 Console.SetOut(tw);
                 Assert.DoesNotThrow(() => Program.Main("-h"));
                 Assert.AreEqual(0, Program.Main("-h"));
-                Assert.IsTrue(tw.ToString().Contains("Excubo.WebCompiler"));
+                Assert.IsTrue(tw.ToString().Contains("ExcuboLinux.WebCompiler"));
                 Assert.IsTrue(tw.ToString().Contains("Usage"));
             }
             using (var tw = new StringWriter())
@@ -64,7 +64,7 @@ namespace Tests_WebCompiler
                 Console.SetOut(tw);
                 Assert.DoesNotThrow(() => Program.Main("--help"));
                 Assert.AreEqual(0, Program.Main("--help"));
-                Assert.IsTrue(tw.ToString().Contains("Excubo.WebCompiler"));
+                Assert.IsTrue(tw.ToString().Contains("ExcuboLinux.WebCompiler"));
                 Assert.IsTrue(tw.ToString().Contains("Usage"));
             }
         }

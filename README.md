@@ -1,15 +1,13 @@
-## Excubo.WebCompiler
+## ExcuboLinux.WebCompiler
 
-[![Nuget](https://img.shields.io/nuget/v/Excubo.WebCompiler)](https://www.nuget.org/packages/Excubo.WebCompiler/)
-[![Nuget](https://img.shields.io/nuget/dt/Excubo.WebCompiler)](https://www.nuget.org/packages/Excubo.WebCompiler/)
-[![GitHub](https://img.shields.io/github/license/excubo-ag/WebCompiler)](https://github.com/excubo-ag/WebCompiler/)
+[![GitHub](https://img.shields.io/github/license/excubo-ag/WebCompiler)](https://github.com/8399Saalsat/WebCompiler/)
 
-`Excubo.WebCompiler` is a dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
+`ExcuboLinux.WebCompiler` is a dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
 
 This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules have been removed, to facilitate a pure dotnet core implementation.
 As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
 
-:warning: A common mistake is to add the package `Excubo.WebCompiler` as a nuget package reference to a project (e.g. by installing it via the nuget package manager in Visual Studio). This does not work! Instead, one needs to install it as a `dotnet tool`. See the "Getting started" section further down on this page.
+:warning: A common mistake is to add the package `ExcuboLinux.WebCompiler` as a nuget package reference to a project (e.g. by installing it via the nuget package manager in Visual Studio). This does not work! Instead, one needs to install it as a `dotnet tool`. See the "Getting started" section further down on this page.
 
 ### Features
 
@@ -135,15 +133,7 @@ Please get in touch if you want to [contribute](#Contributing) to any of the fol
 
 #### Global
 
-##### 1. Install the tool as dotnet global tool
-
-`Excubo.Webcompiler` is distributed as a [nuget package](https://www.nuget.org/packages/Excubo.WebCompiler/). You can install it in a command line using
-
-```
-dotnet tool install Excubo.WebCompiler --global
-```
-
-##### 2. Call `webcompiler`
+##### 1. Call `webcompiler`
 
 ```
 webcompiler -r wwwroot
@@ -151,7 +141,7 @@ webcompiler -r wwwroot
 
 #### Local
 
-It's also possible to use `Excubo.Webcompiler` as a local tool (ideal for CI environments)
+It's also possible to use `ExcuboLinux.Webcompiler` as a local tool (ideal for CI environments)
 
 ##### 1. Create a new tool manifest
 
@@ -159,10 +149,10 @@ It's also possible to use `Excubo.Webcompiler` as a local tool (ideal for CI env
 dotnet new tool-manifest
 ```
 
-##### 2. Add Excubo.Webcompiler
+##### 2. Add ExcuboLinux.Webcompiler
 
 ```
-dotnet tool install Excubo.WebCompiler
+dotnet tool install ExcuboLinux.WebCompiler
 ```
 
 ##### 3. Restore
@@ -209,16 +199,16 @@ In this example, `webcompiler` is executed on the folder `wwwroot` inside your p
 
 #### Docker
 
-The integration into docker images is as straight-forward as installing the tool and invoking it. However, there's a caveat that some users ran into, which is the use of `alpine`-based images, such as `mcr.microsoft.com/dotnet/sdk:5.0-alpine`. `Excubo.WebCompiler` will not work on this image, as some fundamental libraries are missing on `alpine`. The `alpine` distribution is usually intended to create small resulting images. If this is the goal, the best approach is to perform build/compilation operations in a non-`alpine` distribution, and then finally copy only the resulting files to an `alpine` based image intended only for execution. Learn more about it [here, in Microsoft's usage for dotnet](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-5.0) and [here, in the docker documentation about multi-stage-build](https://docs.docker.com/develop/develop-images/multistage-build/).
+The integration into docker images is as straight-forward as installing the tool and invoking it. However, there's a caveat that some users ran into, which is the use of `alpine`-based images, such as `mcr.microsoft.com/dotnet/sdk:5.0-alpine`. `ExcuboLinux.WebCompiler` will not work on this image, as some fundamental libraries are missing on `alpine`. The `alpine` distribution is usually intended to create small resulting images. If this is the goal, the best approach is to perform build/compilation operations in a non-`alpine` distribution, and then finally copy only the resulting files to an `alpine` based image intended only for execution. Learn more about it [here, in Microsoft's usage for dotnet](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-5.0) and [here, in the docker documentation about multi-stage-build](https://docs.docker.com/develop/develop-images/multistage-build/).
 
 #### MSBuild with execution of webcompiler only if it is installed
 
 ##### Global
-This configuration will not break the build if `Excubo.WebCompiler` is not installed. This can be helpful, e.g. if compilation is only necessary on the build server.
+This configuration will not break the build if `ExcuboLinux.WebCompiler` is not installed. This can be helpful, e.g. if compilation is only necessary on the build server.
 
 ```xml
   <Target Name="TestWebCompiler">
-    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
+    <!-- Test if ExcuboLinux.WebCompiler is installed (recommended) -->
     <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
@@ -229,7 +219,7 @@ This configuration will not break the build if `Excubo.WebCompiler` is not insta
   </Target>
 ```
 
-The first target simply tests whether `Excubo.WebCompiler` is installed at all. The second target then executes `webcompiler` recursively on the `wwwroot` folder, if it is installed. 
+The first target simply tests whether `ExcuboLinux.WebCompiler` is installed at all. The second target then executes `webcompiler` recursively on the `wwwroot` folder, if it is installed. 
 
 ##### Local
 
@@ -249,7 +239,7 @@ If you only rely on webcompiler, it may be preferable to use the below `PreBuild
 
 ```xml
  <Target Name="ToolRestore" BeforeTargets="PreBuildEvent">
-        <Exec Command="dotnet tool update excubo.webcompiler" StandardOutputImportance="high" />
+        <Exec Command="dotnet tool update ExcuboLinux.webcompiler" StandardOutputImportance="high" />
     </Target>
 ```
 
@@ -372,7 +362,7 @@ This project is just starting. You can help in many different ways:
 
 ### Libraries
 
-`Excubo.WebCompiler` depends on nuget packages for the compilation tasks:
+`ExcuboLinux.WebCompiler` depends on nuget packages for the compilation tasks:
 
 | Language | Library | Comments
 |----------|---------|
