@@ -9,7 +9,7 @@
     <AssemblyName>Excubo.WebCompiler</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoprefixerHost" Version="3.0.17" />
+    <PackageReference Include="AutoprefixerHost" Version="3.0.18" />
     <PackageReference Include="DartSassHost" Version="1.0.0-preview7" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.3" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.2.3" />
@@ -21,6 +21,6 @@
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.2.3" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.2.3" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="6.0.0" />
-    <PackageReference Include="NUglify" Version="1.17.14" />
+    <PackageReference Include="NUglify" Version="1.19.0" />
   </ItemGroup>
 </Project>
