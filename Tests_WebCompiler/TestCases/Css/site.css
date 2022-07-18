@@ -300,7 +300,8 @@ a, .btn-link {
   width: 15vw;}
 
 .sidebar .top-row {
-  background-color: #fafafae8;}
+  background-color: rgba(250, 250, 250, 0.9098039216);
+}
 
 .sidebar .navbar-brand {
   font-size: 1.1rem;}
