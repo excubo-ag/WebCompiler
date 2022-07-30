@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 using WebCompiler.Compile;
+using WebCompiler.Configuration;
 using WebCompiler.Configuration.Settings;
 
 namespace Tests_WebCompiler
@@ -12,6 +13,7 @@ namespace Tests_WebCompiler
         {
             pipeline = (file) => new CompilationStep(file)
                 .With(new SassCompiler(new SassSettings()))
+                .Then(new CssAutoprefixer(new CssAutoprefixSettings()))
                 .Then(new CssMinifier(new CssMinifySettings { TermSemicolons = false }))
                 .Then(new Zipper())
                 .Then(new Place("../../../TestCases/Scss/", "../../../TestCases/Scss/"))

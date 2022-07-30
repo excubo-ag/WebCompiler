@@ -454,8 +454,10 @@ namespace Tests_WebCompiler
             output_files = new List<string>
             {
                 "../../../TestCases/Scss/IgnoreFolder/SubFolder/test.css",
+                "../../../TestCases/Scss/_variables.css",
                 "../../../TestCases/Scss/site.css",
                 "../../../TestCases/Scss/test.css",
+                "../../../TestCases/Scss/sub/_bar.css",
                 "../../../TestCases/Scss/sub/foo.css",
                 "../../../TestCases/Scss/sub/relative.css"
             };
