@@ -374,8 +374,8 @@ This project is just starting. You can help in many different ways:
 
 `Excubo.WebCompiler` depends on nuget packages for the compilation tasks:
 
-| Language | Library | Comments
-|----------|---------|
+| Language | Library | Comments |
+|----------|---------| ---------|
 | Sass     | [LibSassHost](https://github.com/Taritsyn/LibSassHost) |
 | Sass     | [DartSassHost](https://github.com/Taritsyn/DartSassHost) | WebCompiler 3.X.Y+
 | Autoprefix | [AutoprefixHost](https://github.com/Taritsyn/AutoprefixerHost) |
