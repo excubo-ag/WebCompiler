@@ -23,6 +23,10 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 3.6.Y
+
+Added support for .NET 8. Note that this release depends on preview version of `Microsoft.Extensions.FileSystemGlobbing` package when targeting .NET 8.
+
 #### Changes in version 3.3.Y
 
 *Breaking Change / Warning*: This change removes the key of IgnoreFolders and IgnoreFiles per 3.2.Y and in favour of an "Ignore" key with support for [File Globbing support](https://docs.microsoft.com/en-us/dotnet/core/extensions/file-globbing).
