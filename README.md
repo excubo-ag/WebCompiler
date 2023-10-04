@@ -25,7 +25,7 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 #### Changes in version 3.6.Y
 
-Added support for .NET 8. Note that this release depends on preview version of `Microsoft.Extensions.FileSystemGlobbing` package when targeting .NET 8.
+Added support for .NET 8. Note that this release depends on release candidate version of `Microsoft.Extensions.FileSystemGlobbing` package when targeting .NET 8.
 
 #### Changes in version 3.3.Y
 
