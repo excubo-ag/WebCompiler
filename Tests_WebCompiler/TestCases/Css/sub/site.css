@@ -288,7 +288,6 @@ a, .btn-link {
 
 .main .top-row a:first-child {
   overflow: hidden;
-  -o-text-overflow: ellipsis;
      text-overflow: ellipsis; }
 
 .sidebar {
@@ -352,7 +351,7 @@ a, .btn-link {
   overflow: auto;
   -webkit-transition: -webkit-filter .4s ease;
   transition: -webkit-filter .4s ease;
-  -o-transition: filter .4s ease;
+  transition: filter .4s ease;
   transition: filter .4s ease;
   transition: filter .4s ease, -webkit-filter .4s ease; }
 
