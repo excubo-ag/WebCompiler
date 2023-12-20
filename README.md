@@ -342,7 +342,7 @@ The default configuration is
 
 2. change config file
 
-Change anything in the generated config file according to your needs. If you need help with the available settings, please refer to the documentation of [LibSassHost](https://github.com/Taritsyn/LibSassHost) or [NUglify](https://github.com/xoofx/NUglify).
+Change anything in the generated config file according to your needs. If you need help with the available settings, please refer to the documentation of [DartSassHost](https://github.com/Taritsyn/DartSassHost) or [NUglify](https://github.com/xoofx/NUglify).
 
 3. Make webcompiler use these options
 
