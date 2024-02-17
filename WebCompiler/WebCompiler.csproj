@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoprefixerHost" Version="3.0.33" />
-    <PackageReference Include="DartSassHost" Version="1.0.10" />
+    <PackageReference Include="DartSassHost" Version="1.0.11" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.23.2" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.4.4" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.4.4" />
@@ -21,6 +21,6 @@
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.4.4" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.4.4" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0" />
-    <PackageReference Include="NUglify" Version="1.21.2" />
+    <PackageReference Include="NUglify" Version="1.21.4" />
   </ItemGroup>
 </Project>
