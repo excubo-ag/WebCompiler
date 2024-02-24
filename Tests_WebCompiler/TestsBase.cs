@@ -35,25 +35,25 @@ namespace Tests_WebCompiler
         {
             var timestamp = ProcessFile();
             var new_timestamp = ProcessFile();
-            Assert.AreEqual(timestamp, new_timestamp, "Compiling a second time should not alter the file");
+            Assert.That(timestamp, Is.EqualTo(new_timestamp), "Compiling a second time should not alter the file");
             TestEqual(expected_output, output_files.Last());
         }
         protected DateTime ProcessFile()
         {
             CompilationStep result = null;
             Assert.DoesNotThrow(() => result = pipeline(input), "Compiling should not result in exception");
-            Assert.IsNotNull(result, "Compilation result may not be null");
-            Assert.IsTrue(result.Errors == null || !result.Errors.Any(), "Compilation should not result in error");
-            Assert.AreEqual(Path.GetFullPath(output_files.Last()), Path.GetFullPath(result.OutputFile), "Unexpected output file");
+            Assert.That(result, Is.Not.Null, "Compilation result may not be null");
+            Assert.That(result.Errors == null || !result.Errors.Any(), Is.True, "Compilation should not result in error");
+            Assert.That(Path.GetFullPath(output_files.Last()), Is.EqualTo(Path.GetFullPath(result.OutputFile)), "Unexpected output file");
             foreach (var file in output_files)
             {
-                Assert.IsTrue(File.Exists(file), $"Output file or intermediate file {file} should exist");
+                Assert.That(File.Exists(file), $"Output file or intermediate file {file} should exist");
             }
             if (unexpected_files != null)
             {
                 foreach (var file in unexpected_files)
                 {
-                    Assert.IsFalse(File.Exists(file), $"File {file} should NOT exist, but does");
+                    Assert.That(File.Exists(file), Is.False, $"File {file} should NOT exist, but does");
                 }
             }
             return new FileInfo(output_files.Last()).LastWriteTimeUtc;
@@ -71,13 +71,13 @@ namespace Tests_WebCompiler
             {
                 var normalisedExpected = Regex.Replace(Decompressed(expected), @"\r\n?|\n", string.Empty).Replace('\\', '/');
                 var normalisedActual = Regex.Replace(Decompressed(value), @"\r\n?|\n", string.Empty).Replace('\\', '/');
-                Assert.AreEqual(normalisedExpected, normalisedActual, "Compressed files should have the same content when decompressed");
+                Assert.That(normalisedExpected, Is.EqualTo(normalisedActual), "Compressed files should have the same content when decompressed");
             }
             else
             {
                 var normalisedExpected = Regex.Replace(File.ReadAllText(expected, Compiler.Encoding), @"\r\n?|\n", string.Empty).Replace('\\', '/');
                 var normalisedActual = Regex.Replace(File.ReadAllText(value, Compiler.Encoding), @"\r\n?|\n", string.Empty).Replace('\\', '/');
-                Assert.AreEqual(normalisedExpected, normalisedActual, "Files should be identical");
+                Assert.That(normalisedExpected, Is.EqualTo(normalisedActual), "Files should be identical");
             }
         }
     }

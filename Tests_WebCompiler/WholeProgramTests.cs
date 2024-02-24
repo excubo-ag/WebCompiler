@@ -55,67 +55,108 @@ namespace Tests_WebCompiler
             {
                 Console.SetOut(tw);
                 Assert.DoesNotThrow(() => Program.Main("-h"));
-                Assert.AreEqual(0, Program.Main("-h"));
-                Assert.IsTrue(tw.ToString().Contains("Excubo.WebCompiler"));
-                Assert.IsTrue(tw.ToString().Contains("Usage"));
+                Assert.That(Program.Main("-h"), Is.EqualTo(0));
+                Assert.That(tw.ToString().Contains("Excubo.WebCompiler"), Is.True);
+                Assert.That(tw.ToString().Contains("Usage"), Is.True);
             }
             using (var tw = new StringWriter())
             {
                 Console.SetOut(tw);
                 Assert.DoesNotThrow(() => Program.Main("--help"));
-                Assert.AreEqual(0, Program.Main("--help"));
-                Assert.IsTrue(tw.ToString().Contains("Excubo.WebCompiler"));
-                Assert.IsTrue(tw.ToString().Contains("Usage"));
+                Assert.That(Program.Main("--help"), Is.EqualTo(0));
+                Assert.That(tw.ToString().Contains("Excubo.WebCompiler"), Is.True);
+                Assert.That(tw.ToString().Contains("Usage"), Is.True);
             }
-        }
-        [Test]
-        public void UseConfig()
-        {
-            var temporary_files = new List<string>
+		}
+		[Test]
+		public void UseConfig()
+		{
+			var temporary_files = new List<string>
+			{
+			};
+			output_files = new List<string>
+			{
+				"../../../TestCases/Scss/site.css"
+			};
+			var non_output_files = new List<string> // supressed by config: no gzip and no minification
             {
-            };
-            output_files = new List<string>
-            {
-                "../../../TestCases/Scss/site.css"
-            };
-            var non_output_files = new List<string> // supressed by config: no gzip and no minification
-            {
-                "../../../TestCases/Scss/site.min.css",
-                "../../../TestCases/Scss/site.min.css.gz"
-            };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
-            DeleteTemporaryFiles();
-            File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
-            File.Delete("webcompilerconfiguration.json");
-            foreach (var output_file in output_files)
-            {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
-            }
-            foreach (var non_output_file in non_output_files)
-            {
-                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
-            }
-            DeleteTemporaryFiles();
-            foreach (var tmp_file in temporary_files)
-            {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
-            }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
-        }
-        [Test]
+				"../../../TestCases/Scss/site.min.css",
+				"../../../TestCases/Scss/site.min.css.gz"
+			};
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+			DeleteTemporaryFiles();
+			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
+			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+			File.Delete("webcompilerconfiguration.json");
+			foreach (var output_file in output_files)
+			{
+				Assert.That(File.Exists(output_file), Is.True, $"Output {output_file} should exist");
+			}
+			foreach (var non_output_file in non_output_files)
+			{
+				Assert.That(File.Exists(non_output_file), Is.False, $"Non-Output {non_output_file} should NOT exist");
+			}
+			DeleteTemporaryFiles();
+			foreach (var tmp_file in temporary_files)
+			{
+				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
+			}
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+		}
+		[Test]
+		public void UseConfigWithOverride()
+		{
+			var temporary_files = new List<string>
+			{
+			};
+            // supressed by config: no gzip and no minification, but then overriden by flags
+			output_files = new List<string>
+			{
+				"../../../TestCases/Scss/site.css",
+				"../../../TestCases/Scss/site.min.css",
+				"../../../TestCases/Scss/site.min.css.gz"
+			};
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+			DeleteTemporaryFiles();
+			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
+			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json", "-m", "enable", "-z", "enable"));
+			File.Delete("webcompilerconfiguration.json");
+			foreach (var output_file in output_files)
+			{
+				Assert.That(File.Exists(output_file), Is.True, $"Output {output_file} should exist");
+			}
+			DeleteTemporaryFiles();
+			foreach (var tmp_file in temporary_files)
+			{
+				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
+			}
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+		}
+		[Test]
         public void RejectOutdatedConfig()
         {
             var originalError = Console.Error;
@@ -143,20 +184,20 @@ namespace Tests_WebCompiler
             DeleteTemporaryFiles();
             File.WriteAllText("webcompilerconfiguration.json", OutdatedConfigFile);
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
-            Assert.AreNotEqual(0, Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+            Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.Not.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
             {
-                Assert.IsFalse(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), Is.False, $"Output {output_file} should exist");
             }
             foreach (var non_output_file in non_output_files)
             {
-                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+                Assert.That(File.Exists(non_output_file), Is.False, $"Non-Output {non_output_file} should NOT exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsFalse(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -165,7 +206,7 @@ namespace Tests_WebCompiler
                     File.Delete(tmp_file);
                 }
             }
-            Assert.IsTrue(scopedError.ToString().Contains("Error reading configuration from file"));
+            Assert.That(scopedError.ToString().Contains("Error reading configuration from file"), Is.True);
             Console.SetError(originalError);
         }
         [Test]
@@ -199,16 +240,16 @@ namespace Tests_WebCompiler
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
             {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), Is.True, $"Output {output_file} should exist");
             }
             foreach (var non_output_file in non_output_files)
             {
-                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+                Assert.That(File.Exists(non_output_file), Is.False, $"Non-Output {non_output_file} should NOT exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -247,12 +288,12 @@ namespace Tests_WebCompiler
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"));
             foreach (var output_file in output_files)
             {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -291,12 +332,12 @@ namespace Tests_WebCompiler
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"));
             foreach (var output_file in output_files)
             {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -340,12 +381,12 @@ namespace Tests_WebCompiler
             Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"));
             foreach (var output_file in output_files)
             {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -396,7 +437,7 @@ namespace Tests_WebCompiler
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsFalse(File.Exists(tmp_file), $"Temporary {tmp_file} should not exist");
+                Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should not exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -428,12 +469,12 @@ namespace Tests_WebCompiler
             _ = Directory.CreateDirectory("Css");
             File.Copy("../../../TestCases/Css/site.css", "Css/site.css", overwrite: true);
             Assert.DoesNotThrow(() => Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"));
-            Assert.IsTrue(File.Exists(output_files.Last()), "output needs to exist");
+            Assert.That(File.Exists(output_files.Last()), "output needs to exist");
             File.Delete("Css/site.css");
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsFalse(File.Exists(tmp_file), $"Temporary {tmp_file} should not exist");
+                Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should not exist");
             }
             foreach (var tmp_file in temporary_files)
             {
@@ -514,20 +555,20 @@ namespace Tests_WebCompiler
             File.WriteAllText("webcompilerconfiguration.json", config);
             var programArgs = new[] { "-c", "webcompilerconfiguration.json", "-r", "../../../TestCases/Scss" };
             Assert.DoesNotThrow(() => Program.Main(programArgs));
-            Assert.AreEqual(0, Program.Main(programArgs));
+            Assert.That(Program.Main(programArgs), Is.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
             {
-                Assert.IsTrue(File.Exists(output_file), $"Output {output_file} should exist");
+                Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
             }
             foreach (var non_output_file in non_output_files)
             {
-                Assert.IsFalse(File.Exists(non_output_file), $"Non-Output {non_output_file} should NOT exist");
+                Assert.That(File.Exists(non_output_file), Is.False, $"Non-Output {non_output_file} should NOT exist");
             }
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
-                Assert.IsTrue(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
+                Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
             foreach (var tmp_file in temporary_files)
             {

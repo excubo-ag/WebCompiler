@@ -13,7 +13,7 @@ namespace Tests_WebCompiler
         {
             var compiler = new SassCompiler(new SassSettings());
             var result = compiler.Compile(new List<(string File, bool Created)> { (File: "../../../TestCases/Scss/error.scss", Created: false) });
-            Assert.IsTrue(result.Errors != null && result.Errors.Any());
+            Assert.That(result.Errors != null && result.Errors.Any());
         }
     }
 }
