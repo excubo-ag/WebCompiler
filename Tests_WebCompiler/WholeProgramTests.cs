@@ -8,8 +8,8 @@ using WebCompiler;
 namespace Tests_WebCompiler
 {
     public class WholeProgramTests : TestsBase
-    {
-        private const string DefaultConfigFile = @"{
+	{
+		private const string DefaultConfigFile = @"{
   ""Minifiers"": {
     ""GZip"": false,
     ""Enabled"": false
@@ -28,7 +28,27 @@ namespace Tests_WebCompiler
     ""Preserve"": true
   }
 }";
-        private const string OutdatedConfigFile = @"{
+		private const string ConfigFileIgnoringSiteScss = @"{
+  ""Minifiers"": {
+    ""GZip"": false,
+    ""Enabled"": false
+  },
+  ""CompilerSettings"": {
+    ""Ignore"": [ ""**/_*.*"", ""site.scss"" ],
+    ""Sass"": {
+      ""IndentType"": ""Space"",
+      ""IndentWidth"": 2,
+      ""OutputStyle"": ""Expanded"",
+      ""RelativeUrls"": true,
+      ""LineFeed"": ""Lf"",
+      ""SourceMap"": true
+    }
+  },
+  ""Output"": {
+    ""Preserve"": true
+  }
+}";
+		private const string OutdatedConfigFile = @"{
   ""Minifiers"": {
     ""GZip"": false,
     ""Enabled"": false
@@ -92,6 +112,53 @@ namespace Tests_WebCompiler
 			}
 			DeleteTemporaryFiles();
 			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
+			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+			File.Delete("webcompilerconfiguration.json");
+			foreach (var output_file in output_files)
+			{
+				Assert.That(File.Exists(output_file), Is.True, $"Output {output_file} should exist");
+			}
+			foreach (var non_output_file in non_output_files)
+			{
+				Assert.That(File.Exists(non_output_file), Is.False, $"Non-Output {non_output_file} should NOT exist");
+			}
+			DeleteTemporaryFiles();
+			foreach (var tmp_file in temporary_files)
+			{
+				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
+			}
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+		}
+		[Test]
+		public void UseConfigIgnoreFile()
+		{
+			var temporary_files = new List<string>
+			{
+			};
+			output_files = new List<string>
+			{
+			};
+			var non_output_files = new List<string>
+            {
+				"../../../TestCases/Scss/site.css", // ignored through config ignore
+				"../../../TestCases/Scss/site.min.css",
+				"../../../TestCases/Scss/site.min.css.gz"
+			};
+			foreach (var tmp_file in temporary_files)
+			{
+				if (File.Exists(tmp_file))
+				{
+					File.Delete(tmp_file);
+				}
+			}
+			DeleteTemporaryFiles();
+			File.WriteAllText("webcompilerconfiguration.json", ConfigFileIgnoringSiteScss);
 			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)

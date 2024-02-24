@@ -223,6 +223,16 @@ File format to specify compiler configuration (-c|--config):
 				}
 				else if (File.Exists(item))
 				{
+					// Determine whether the file, even though it is explicitly specified in the CLI, is subject to exclusion in config.
+					var parentDir = Path.GetDirectoryName(item);
+					if (parentDir != null)
+					{
+						if (!Helpers.FileFolderHelpers.Test(parentDir, config.CompilerSettings.Ignore, Path.GetFullPath(item)))
+						{
+							// The item is ignored, as recursing the parent directory.
+							continue;
+						}
+					}
 					var result = compilers.TryCompile(item);
 					if (result.Errors != null)
 					{
