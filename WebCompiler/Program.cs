@@ -55,6 +55,7 @@ namespace WebCompiler
 				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 				PropertyNameCaseInsensitive = true,
 				WriteIndented = true,
+				ReadCommentHandling = JsonCommentHandling.Skip,
 			};
 			options.Converters.Add(new JsonStringEnumConverter());
 			return options;

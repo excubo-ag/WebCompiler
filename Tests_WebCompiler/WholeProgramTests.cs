@@ -34,7 +34,11 @@ namespace Tests_WebCompiler
     ""Enabled"": false
   },
   ""CompilerSettings"": {
-    ""Ignore"": [ ""**/_*.*"", ""site.scss"" ],
+    // Ignore a file
+    ""Ignore"": [ 
+        ""**/_*.*"", 
+        ""site.scss"" /* This file would normally be handled */
+    ],
     ""Sass"": {
       ""IndentType"": ""Space"",
       ""IndentWidth"": 2,
@@ -74,7 +78,6 @@ namespace Tests_WebCompiler
             using (var tw = new StringWriter())
             {
                 Console.SetOut(tw);
-                Assert.DoesNotThrow(() => Program.Main("-h"));
                 Assert.That(Program.Main("-h"), Is.EqualTo(0));
                 Assert.That(tw.ToString().Contains("Excubo.WebCompiler"), Is.True);
                 Assert.That(tw.ToString().Contains("Usage"), Is.True);
@@ -82,7 +85,6 @@ namespace Tests_WebCompiler
             using (var tw = new StringWriter())
             {
                 Console.SetOut(tw);
-                Assert.DoesNotThrow(() => Program.Main("--help"));
                 Assert.That(Program.Main("--help"), Is.EqualTo(0));
                 Assert.That(tw.ToString().Contains("Excubo.WebCompiler"), Is.True);
                 Assert.That(tw.ToString().Contains("Usage"), Is.True);
@@ -112,7 +114,7 @@ namespace Tests_WebCompiler
 			}
 			DeleteTemporaryFiles();
 			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
-			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+			Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)
 			{
@@ -159,7 +161,7 @@ namespace Tests_WebCompiler
 			}
 			DeleteTemporaryFiles();
 			File.WriteAllText("webcompilerconfiguration.json", ConfigFileIgnoringSiteScss);
-			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
+			Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)
 			{
@@ -204,7 +206,7 @@ namespace Tests_WebCompiler
 			}
 			DeleteTemporaryFiles();
 			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
-			Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json", "-m", "enable", "-z", "enable"));
+            Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json", "-m", "enable", "-z", "enable"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)
 			{
@@ -250,7 +252,6 @@ namespace Tests_WebCompiler
             }
             DeleteTemporaryFiles();
             File.WriteAllText("webcompilerconfiguration.json", OutdatedConfigFile);
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"));
             Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.Not.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -303,7 +304,7 @@ namespace Tests_WebCompiler
             }
             DeleteTemporaryFiles();
             File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"));
+            Assert.That(Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
             {
@@ -352,7 +353,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
@@ -396,7 +397,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
@@ -445,7 +446,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
@@ -500,7 +501,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.DoesNotThrow(() => Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"), Is.EqualTo(0));
             DeleteTemporaryFiles();
             foreach (var tmp_file in temporary_files)
             {
@@ -535,7 +536,7 @@ namespace Tests_WebCompiler
             DeleteTemporaryFiles();
             _ = Directory.CreateDirectory("Css");
             File.Copy("../../../TestCases/Css/site.css", "Css/site.css", overwrite: true);
-            Assert.DoesNotThrow(() => Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"));
+            Assert.That(Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"), Is.EqualTo(0));
             Assert.That(File.Exists(output_files.Last()), "output needs to exist");
             File.Delete("Css/site.css");
             DeleteTemporaryFiles();
@@ -621,7 +622,6 @@ namespace Tests_WebCompiler
 }";
             File.WriteAllText("webcompilerconfiguration.json", config);
             var programArgs = new[] { "-c", "webcompilerconfiguration.json", "-r", "../../../TestCases/Scss" };
-            Assert.DoesNotThrow(() => Program.Main(programArgs));
             Assert.That(Program.Main(programArgs), Is.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
