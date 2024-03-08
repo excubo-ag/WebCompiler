@@ -146,7 +146,7 @@ namespace WebCompiler.Compile
         {
             var url = match.Groups["url"].Value.Replace("'", "\"").Replace("(", "").Replace(")", "").Replace(";", "").Trim();
 
-            foreach (var name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var name in url.Split(new[] { "\",", "\n" }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
 
