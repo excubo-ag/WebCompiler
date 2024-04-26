@@ -21,6 +21,6 @@
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.4.5" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.4.5" />
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0" />
-    <PackageReference Include="NUglify" Version="1.21.4" />
+    <PackageReference Include="NUglify" Version="1.21.7" />
   </ItemGroup>
 </Project>
