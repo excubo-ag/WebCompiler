@@ -23,6 +23,10 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 3.8.14
+
+Support for net7.0 was dropped. The nupkg file was getting outrageously large due to dependencies and duplication across the target frameworks.
+
 #### Changes in version 3.3.Y
 
 *Breaking Change / Warning*: This change removes the key of IgnoreFolders and IgnoreFiles per 3.2.Y and in favour of an "Ignore" key with support for [File Globbing support](https://docs.microsoft.com/en-us/dotnet/core/extensions/file-globbing).
