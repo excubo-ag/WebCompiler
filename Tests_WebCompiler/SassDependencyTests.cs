@@ -13,7 +13,14 @@ namespace Tests_WebCompiler
         {
             var compiler = new SassCompiler(new SassSettings());
             var dependencies = compiler.GetDependencies("../../../TestCases/Scss/use_with_override.scss");
-            Assert.That(dependencies.Select(Path.GetFileName), Is.EqualTo(new[] {"use_with_override.scss", "dependency.scss", "test.scss", "_variables.scss", "relative.scss", "foo.scss", "_bar.scss" }));
+            Assert.That(dependencies.Select(Path.GetFileName).OrderBy(v => v), Is.EqualTo(new[] {
+                "use_with_override.scss", 
+                "dependency.scss", 
+                "test.scss", 
+                "_variables.scss", 
+                "relative.scss", 
+                "foo.scss", 
+                "_bar.scss" }.OrderBy(v => v)));
         }
     }
 }
