@@ -1,0 +1,7 @@
+﻿@use "dependency.scss" with (
+/* Overrides */
+$color: #ff0000, );
+
+@import "test.scss", "_variables.scss";
+
+@use "sub/relative.scss" as *;

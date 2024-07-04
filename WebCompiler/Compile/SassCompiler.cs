@@ -111,7 +111,7 @@ namespace WebCompiler.Compile
         }
 
         internal static readonly Regex SassDependencyRegex = new Regex(@"(?<=@(import|use|forward)(?:[\s]+))(?:(?:\(\w+\)))?\s*(?:url)?(?<url>[^;]+)", RegexOptions.Multiline);
-        private List<string> GetDependencies(string file)
+        public List<string> GetDependencies(string file)
         {
             var dependencies = new HashSet<string> { file };
             var candidates = new HashSet<string> { file };
@@ -141,11 +141,15 @@ namespace WebCompiler.Compile
             }
             return dependencies.ToList();
         }
-
+        private static Regex PathWithOverrideRegex = new Regex(@"(""[^""]+"")\s+(with|as)");
         private static IEnumerable<string> GetFileInfos(FileInfo info, Match match)
         {
             var url = match.Groups["url"].Value.Replace("'", "\"").Replace("(", "").Replace(")", "").Replace(";", "").Trim();
-
+            var matches = PathWithOverrideRegex.Matches(url);
+            if (matches.Any() && matches[0].Groups.Count > 1)
+            {
+                url = matches[0].Groups[1].Value;
+            }
             foreach (var name in url.Split(new[] { "\"," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var value = name.Replace("\"", "").Replace('/', Path.DirectorySeparatorChar).Trim();
