@@ -219,21 +219,28 @@ The integration into docker images is as straight-forward as installing the tool
 
 ##### Global
 This configuration will not break the build if `Excubo.WebCompiler` is not installed. This can be helpful, e.g. if compilation is only necessary on the build server.
+It will also check to see if you're executing inside a `Microsoft.NET.Sdk.Razor` project, and shut off compression accordingly.
 
 ```xml
-  <Target Name="TestWebCompiler">
-    <!-- Test if Excubo.WebCompiler is installed (recommended) -->
-    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-    </Exec>
-  </Target>
+<Target Name="CompileStaticAssets" AfterTargets="CoreCompile" >
+    <PropertyGroup>
+        <!-- Compression should be disabled by default if we're in a Razor Class Library -->
+        <WebCompilerCompression Condition="'$(RazorLangVersion)' != ''">disabled</WebCompilerCompression>
+        <WebCompilerCompression Condition="'$(RazorLangVersion)' == ''">enabled</WebCompilerCompression>
+    </PropertyGroup>
 
-  <Target Name="CompileStaticAssets" AfterTargets="CoreCompile;TestWebCompiler" Condition="'$(ErrorCode)' == '0'">
-    <Exec Command="webcompiler -r wwwroot" StandardOutputImportance="high" StandardErrorImportance="high" />
-  </Target>
+    <!-- Test if WebCompiler is installed -->
+    <Exec Command="webcompiler -h" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" LogStandardErrorAsError="false" IgnoreExitCode="true">
+        <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+
+    <!-- Execute the WebCompiler task if the test was successful -->
+    <Exec Command="webcompiler -r wwwroot --zip ${WebCompilerCompression}" StandardOutputImportance="high" StandardErrorImportance="high" Condition="'$(ErrorCode)' == '0'" />
+</Target>
 ```
 
-The first target simply tests whether `Excubo.WebCompiler` is installed at all. The second target then executes `webcompiler` recursively on the `wwwroot` folder, if it is installed. 
+The `PropertyGroup` tests for Razor. The first `Exec` command simply tests whether `Excubo.WebCompiler` is installed at all. The second `Exec` command then executes `webcompiler` 
+recursively on the `wwwroot` folder if it is installed, and using compression if we're NOT in a Razor Class Library or Blazor project.
 
 ##### Local
 
