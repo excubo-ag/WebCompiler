@@ -16,12 +16,10 @@ namespace Tests_WebCompiler
                 .Then(new CssAutoprefixer(new CssAutoprefixSettings()))
                 .Then(new CssMinifier(new CssMinifySettings { TermSemicolons = false }))
                 .Then(new Zipper())
-                .Then(new Place("../../../TestCases/", "../../../TestCases/Scss/"))
                 .Then(new Cleaner());
             input = "../../../TestCases/Scss/test.scss";
-            output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/test.min.css.gz" };
+            output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css.gz" };
             expected_output = "../../../TestCases/GzCss/test.min.css.gz";
-            DeleteOutputFiles();
         }
         [Test]
         public void CallTest() => Test();

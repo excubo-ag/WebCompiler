@@ -13,10 +13,31 @@ namespace Tests_WebCompiler
     {
         protected Func<string, CompilationStep> pipeline;
         protected string input;
+        protected List<string> input_files;
         protected List<string> output_files;
         protected List<string> unexpected_files;
+        protected List<string> temporary_files;
         protected string expected_output;
         [TearDown]
+        protected void DeleteTestCreatedFiles()
+        {
+            DeleteTemporaryFiles();
+            DeleteOutputFiles();
+            var generated_files = output_files?.Concat(temporary_files ?? Enumerable.Empty<string>()).ToList() ?? new List<string>();
+            var dirs = generated_files.Select(Path.GetDirectoryName).Select(Path.GetFullPath).ToList();
+            var input_dirs = (input_files ?? Enumerable.Empty<string>()).Append(input).Select(Path.GetDirectoryName).Where(d => d != null).Select(Path.GetFullPath).ToList();
+            foreach (var dir in dirs.OrderByDescending(d => d.Count(c => c == '\\' || c == '/')))
+            {
+                if (input_dirs.Any(dir.StartsWith))
+                {
+                    continue;
+                }
+                if (Directory.Exists(dir))
+                {
+                    Directory.Delete(dir); 
+                }
+            }
+        }
         protected void DeleteOutputFiles()
         {
             if (output_files == null)
@@ -28,6 +49,20 @@ namespace Tests_WebCompiler
                 if (File.Exists(file))
                 {
                     File.Delete(file);
+                }
+            }
+        }
+        protected void DeleteTemporaryFiles()
+        {
+            if (temporary_files == null)
+            {
+                return;
+            }
+            foreach (var tmp_file in temporary_files)
+            {
+                if (File.Exists(tmp_file))
+                {
+                    File.Delete(tmp_file);
                 }
             }
         }

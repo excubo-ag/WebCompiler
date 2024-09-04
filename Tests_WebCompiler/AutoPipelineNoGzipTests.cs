@@ -25,7 +25,6 @@ namespace Tests_WebCompiler
             input = "../../../TestCases/Scss/test.scss";
             output_files = new List<string> { "../../../TestCases/Scss/test.css", "../../../TestCases/Scss/test.min.css" };
             expected_output = "../../../TestCases/MinCss/test.min.css";
-            DeleteOutputFiles();
         }
         [Test]
         public void CallTest() => Test();

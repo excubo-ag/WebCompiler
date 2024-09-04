@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WebCompiler;
+using WebCompiler.Helpers;
 
 namespace Tests_WebCompiler
 {
@@ -93,7 +94,7 @@ namespace Tests_WebCompiler
 		[Test]
 		public void UseConfig()
 		{
-			var temporary_files = new List<string>
+			temporary_files = new List<string>
 			{
 			};
 			output_files = new List<string>
@@ -105,16 +106,11 @@ namespace Tests_WebCompiler
 				"../../../TestCases/Scss/site.min.css",
 				"../../../TestCases/Scss/site.min.css.gz"
 			};
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
+            DeleteTemporaryFiles();
 			DeleteOutputFiles();
 			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
-			Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
+            input = "../../../TestCases/Scss/site.scss";
+            Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)
 			{
@@ -128,19 +124,12 @@ namespace Tests_WebCompiler
 			foreach (var tmp_file in temporary_files)
 			{
 				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
-			}
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
+            }
 		}
 		[Test]
 		public void UseConfigIgnoreFile()
 		{
-			var temporary_files = new List<string>
+		    temporary_files = new List<string>
 			{
 			};
 			output_files = new List<string>
@@ -152,14 +141,8 @@ namespace Tests_WebCompiler
 				"../../../TestCases/Scss/site.min.css",
 				"../../../TestCases/Scss/site.min.css.gz"
 			};
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
-			DeleteOutputFiles();
+            DeleteTemporaryFiles();
+            DeleteOutputFiles();
 			File.WriteAllText("webcompilerconfiguration.json", ConfigFileIgnoringSiteScss);
 			Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
@@ -175,19 +158,12 @@ namespace Tests_WebCompiler
 			foreach (var tmp_file in temporary_files)
 			{
 				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
-			}
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
-		}
+            }
+        }
 		[Test]
 		public void UseConfigWithOverride()
 		{
-			var temporary_files = new List<string>
+			temporary_files = new List<string>
 			{
 			};
             // supressed by config: no gzip and no minification, but then overriden by flags
@@ -197,15 +173,10 @@ namespace Tests_WebCompiler
 				"../../../TestCases/Scss/site.min.css",
 				"../../../TestCases/Scss/site.min.css.gz"
 			};
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
-			DeleteOutputFiles();
+            DeleteTemporaryFiles();
+            DeleteOutputFiles();
 			File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
+            input = "../../../TestCases/Scss/site.scss";
             Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json", "-m", "enable", "-z", "enable"), Is.EqualTo(0));
 			File.Delete("webcompilerconfiguration.json");
 			foreach (var output_file in output_files)
@@ -216,22 +187,15 @@ namespace Tests_WebCompiler
 			foreach (var tmp_file in temporary_files)
 			{
 				Assert.That(File.Exists(tmp_file), Is.True, $"Temporary {tmp_file} should exist");
-			}
-			foreach (var tmp_file in temporary_files)
-			{
-				if (File.Exists(tmp_file))
-				{
-					File.Delete(tmp_file);
-				}
-			}
-		}
+            }
+        }
 		[Test]
         public void RejectOutdatedConfig()
         {
             var originalError = Console.Error;
             var scopedError = new StringWriter();
             Console.SetError(scopedError);
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
             };
             output_files = new List<string>
@@ -243,15 +207,10 @@ namespace Tests_WebCompiler
                 "../../../TestCases/Scss/site.min.css",
                 "../../../TestCases/Scss/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
             File.WriteAllText("webcompilerconfiguration.json", OutdatedConfigFile);
+            input = "../../../TestCases/Scss/site.scss";
             Assert.That(Program.Main("../../../TestCases/Scss/site.scss", "-c", "webcompilerconfiguration.json"), Is.Not.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -267,20 +226,14 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             Assert.That(scopedError.ToString().Contains("Error reading configuration from file"), Is.True);
             Console.SetError(originalError);
         }
         [Test]
         public void UseConfigWithRecursion()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
             };
             output_files = new List<string>
@@ -295,15 +248,10 @@ namespace Tests_WebCompiler
                 "../../../TestCases/Scss/sub/relative.min.css",
                 "../../../TestCases/Scss/sub/relative.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
             File.WriteAllText("webcompilerconfiguration.json", DefaultConfigFile);
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Scss/sub", new List<string>()).ToList();
             Assert.That(Program.Main("../../../TestCases/Scss/sub", "-r", "-c", "webcompilerconfiguration.json"), Is.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
             foreach (var output_file in output_files)
@@ -319,18 +267,11 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
         }
         [Test]
         public void OutputAtSamePlace()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
                 "../../../TestCases/Css/site.min.css",
                 "../../../TestCases/Css/test.min.css",
@@ -345,14 +286,9 @@ namespace Tests_WebCompiler
                 "../../../TestCases/Css/test.min.css.gz",
                 "../../../TestCases/Css/sub/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Css", new List<string>()).Append("../../../TestCases/Js/test.js").Append("../../../TestCases/MinCss/site.min.css").ToList();
             Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
@@ -363,18 +299,11 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
         }
         [Test]
         public void OutputAtSamePlaceUnnecessarilySpecified()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
                 "../../../TestCases/Css/site.min.css",
                 "../../../TestCases/Css/test.min.css",
@@ -389,14 +318,9 @@ namespace Tests_WebCompiler
                 "../../../TestCases/Css/test.min.css.gz",
                 "../../../TestCases/Css/sub/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Css", new List<string>()).Append("../../../TestCases/Js/test.js").Append("../../../TestCases/MinCss/site.min.css").ToList();
             Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
@@ -407,18 +331,11 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
         }
         [Test]
         public void OutputWithPreservation()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
                 "../../../TestCases/Css/site.min.css",
                 "../../../TestCases/Css/site.min.css.gz",
@@ -438,14 +355,9 @@ namespace Tests_WebCompiler
                 "../../../output/path/Css/test.min.css.gz",
                 "../../../output/path/Css/sub/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Css", new List<string>()).Append("../../../TestCases/Js/test.js").Append("../../../TestCases/MinCss/site.min.css").ToList();
             Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
@@ -456,24 +368,12 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
-            Directory.Delete("../../../output/path/Css/sub");
-            Directory.Delete("../../../output/path/Js");
-            Directory.Delete("../../../output/path/MinCss");
-            Directory.Delete("../../../output/path/Css");
-            Directory.Delete("../../../output/path");
-            Directory.Delete("../../../output");
         }
+
         [Test]
         public void OutputWithoutPreserve()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
                 "../../../TestCases/Css/site.min.css",
                 "../../../TestCases/Css/site.min.css.gz",
@@ -493,32 +393,20 @@ namespace Tests_WebCompiler
                 "../../../output/path/Css/test.min.css.gz",
                 "../../../output/path/Css/sub/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
-            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d"), Is.EqualTo(0));
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Css", new List<string>()).Append("../../../TestCases/Js/test.js").Append("../../../TestCases/MinCss/site.min.css").ToList();
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path/", "-p", "d", "-z", "enable"), Is.EqualTo(0));
             DeleteOutputFiles();
             foreach (var tmp_file in temporary_files)
             {
                 Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should not exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
         }
         [Test]
         public void OutputPathNotFullyUsed()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
                 "Css/site.min.css"
             };
@@ -526,16 +414,11 @@ namespace Tests_WebCompiler
             {
                 "wwwroot/css/site.min.css"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
             _ = Directory.CreateDirectory("Css");
             File.Copy("../../../TestCases/Css/site.css", "Css/site.css", overwrite: true);
+            input = "Css/site.css";
             Assert.That(Program.Main("Css/site.css", "-o", "wwwroot/css", "-p", "d", "-z", "d"), Is.EqualTo(0));
             Assert.That(File.Exists(output_files.Last()), "output needs to exist");
             File.Delete("Css/site.css");
@@ -544,20 +427,12 @@ namespace Tests_WebCompiler
             {
                 Assert.That(File.Exists(tmp_file), Is.False, $"Temporary {tmp_file} should not exist");
             }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
-            Directory.Delete("Css");
         }
 
         [Test]
         public void ScssFilesAndFoldersConfiguredToBeIgnoredAreIgnored()
         {
-            var temporary_files = new List<string>
+            temporary_files = new List<string>
             {
             };
             output_files = new List<string>
@@ -587,13 +462,7 @@ namespace Tests_WebCompiler
                 "../../../TestCases/Scss/site.min.css",
                 "../../../TestCases/Scss/site.min.css.gz"
             };
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
-            }
+            DeleteTemporaryFiles();
             DeleteOutputFiles();
 
             var config = @"{
@@ -623,6 +492,14 @@ namespace Tests_WebCompiler
   }
 }";
             File.WriteAllText("webcompilerconfiguration.json", config);
+            input_files = FileFolderHelpers.RecurseRespectingExclusions("../../../TestCases/Scss", new List<string>
+            {
+                "IgnoreFolder/*.scss",
+                "IgnoreFolder2/**/*",
+                "IgnoreFolderAndSubFolders/**/*.scss",
+                "error.scss",
+                "globalVar*.scss"
+            }).ToList();
             var programArgs = new[] { "-c", "webcompilerconfiguration.json", "-r", "../../../TestCases/Scss" };
             Assert.That(Program.Main(programArgs), Is.EqualTo(0));
             File.Delete("webcompilerconfiguration.json");
@@ -638,13 +515,6 @@ namespace Tests_WebCompiler
             foreach (var tmp_file in temporary_files)
             {
                 Assert.That(File.Exists(tmp_file), $"Temporary {tmp_file} should exist");
-            }
-            foreach (var tmp_file in temporary_files)
-            {
-                if (File.Exists(tmp_file))
-                {
-                    File.Delete(tmp_file);
-                }
             }
         }
     }

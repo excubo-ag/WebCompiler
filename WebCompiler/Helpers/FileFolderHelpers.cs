@@ -5,7 +5,7 @@ namespace WebCompiler.Helpers
 {
 	public static class FileFolderHelpers
 	{
-		public static IEnumerable<string> Recurse(string directory, List<string> ignoreGlobs)
+		public static IEnumerable<string> RecurseRespectingExclusions(string directory, List<string> ignoreGlobs)
 		{
 			var matcher = new Matcher();
 			matcher.AddInclude("**/*");
@@ -15,7 +15,7 @@ namespace WebCompiler.Helpers
 				yield return file;
 			}
 		}
-		public static bool Test(string directory, List<string> ignoreGlobs, string file)
+		public static bool TestFileForExclusion(string directory, List<string> ignoreGlobs, string file)
 		{
 			var matcher = new Matcher();
 			matcher.AddInclude("**/*");

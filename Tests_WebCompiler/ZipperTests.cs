@@ -13,7 +13,6 @@ namespace Tests_WebCompiler
             input = "../../../TestCases/Css/test.css";
             output_files = new List<string> { "../../../TestCases/Css/test.css.gz" };
             expected_output = "../../../TestCases/GzCss/test.css.gz";
-            DeleteOutputFiles();
         }
         [Test]
         public void CallTest() => Test();

@@ -207,9 +207,10 @@ File format to specify compiler configuration (-c|--config):
 				{
 					if (!recurse)
 					{
-						Console.WriteLine($"{item} is a directory, but option -r is not used. Ignoring {item} and all items in it.");
+						Console.Error.WriteLine($"{item} is a directory, but option -r is not used. Ignoring {item} and all items in it.");
+						continue;
 					}
-					foreach (var file in Helpers.FileFolderHelpers.Recurse(item, config.CompilerSettings.Ignore))
+					foreach (var file in Helpers.FileFolderHelpers.RecurseRespectingExclusions(item, config.CompilerSettings.Ignore))
 					{
 						var result = compilers.TryCompile(file);
 						if (result.Errors != null)
@@ -228,7 +229,7 @@ File format to specify compiler configuration (-c|--config):
 					var parentDir = Path.GetDirectoryName(item);
 					if (parentDir != null)
 					{
-						if (!Helpers.FileFolderHelpers.Test(parentDir, config.CompilerSettings.Ignore, Path.GetFullPath(item)))
+						if (!Helpers.FileFolderHelpers.TestFileForExclusion(parentDir, config.CompilerSettings.Ignore, Path.GetFullPath(item)))
 						{
 							// The item is ignored, as recursing the parent directory.
 							continue;
