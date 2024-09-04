@@ -25,7 +25,7 @@ namespace Tests_WebCompiler
             input = "../../../TestCases/MinCss/site.min.css";
             output_files = new List<string> { "../../../TestCases/MinCss/site.min.css.gz" };
             expected_output = "../../../TestCases/GzCss/site.min.css.gz";
-            DeleteTemporaryFiles();
+            DeleteOutputFiles();
         }
         [Test]
         public void CallTest() => Test();

@@ -17,7 +17,7 @@ namespace Tests_WebCompiler
         protected List<string> unexpected_files;
         protected string expected_output;
         [TearDown]
-        protected void DeleteTemporaryFiles()
+        protected void DeleteOutputFiles()
         {
             if (output_files == null)
             {

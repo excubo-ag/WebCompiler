@@ -14,7 +14,7 @@ namespace Tests_WebCompiler
             input = "../../../TestCases/Js/test.js";
             output_files = new List<string> { "../../../TestCases/Js/test.min.js" };
             expected_output = "../../../TestCases/MinJs/test.min.js";
-            DeleteTemporaryFiles();
+            DeleteOutputFiles();
         }
         [Test]
         public void CallTest() => Test();
