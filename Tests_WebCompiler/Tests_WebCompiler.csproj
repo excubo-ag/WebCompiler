@@ -6,7 +6,7 @@
     <RootNamespace>Tests_WebCompiler</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="4.2.1" />
+    <PackageReference Include="NUnit" Version="4.2.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

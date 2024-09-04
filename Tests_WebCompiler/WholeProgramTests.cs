@@ -353,7 +353,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css"), Is.EqualTo(0));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
@@ -397,7 +397,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases"), Is.EqualTo(0));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../TestCases", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");
@@ -446,7 +446,7 @@ namespace Tests_WebCompiler
                 }
             }
             DeleteTemporaryFiles();
-            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path"), Is.EqualTo(0));
+            Assert.That(Program.Main("../../../TestCases/Js/test.js", "../../../TestCases/MinCss/site.min.css", "-r", "../../../TestCases/Css", "-o", "../../../output/path", "-z", "enable"), Is.EqualTo(0));
             foreach (var output_file in output_files)
             {
                 Assert.That(File.Exists(output_file), $"Output {output_file} should exist");

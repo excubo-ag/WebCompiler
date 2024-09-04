@@ -23,6 +23,11 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 4.X.Y
+
+The default value for zipping minified assets has changed from `true` to `false`. This has no effect to pre-existing configuration files.
+The change was made in anticipation of a new feature in the net9.0 SDK.
+
 #### Changes in version 3.8.14
 
 Support for net7.0 was dropped. The nupkg file was getting outrageously large due to dependencies and duplication across the target frameworks.

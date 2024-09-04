@@ -15,6 +15,7 @@ namespace Tests_WebCompiler
             {
                 Minifiers = new MinificationSettings
                 {
+                    GZip = true,
                     Css = new CssMinifySettings
                     {
                         TermSemicolons = true
