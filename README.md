@@ -4,7 +4,7 @@
 [![Nuget](https://img.shields.io/nuget/dt/Excubo.WebCompiler)](https://www.nuget.org/packages/Excubo.WebCompiler/)
 [![GitHub](https://img.shields.io/github/license/excubo-ag/WebCompiler)](https://github.com/excubo-ag/WebCompiler/)
 
-`Excubo.WebCompiler` is a dotnet global tool that compiles Scss files (other languages on the road map, see [how to contribute](#Contributing)).
+`Excubo.WebCompiler` is a dotnet global tool that compiles Scss files, minimizes css / js assets, and gzips files.
 
 This project is based on [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler). However, the dependency to node and the node modules have been removed, to facilitate a pure dotnet core implementation.
 As a benefit, this implementation is cross-platform (x64 linux/win are tested, please help by testing other platforms!).
@@ -126,9 +126,7 @@ Options:
 
 Recommended default usage: `webcompiler -r wwwroot`.
 
-### Roadmap
-
-#### language support
+### Language support
 
 Due to the removal of node as a dependency (as opposed to [madskristensen/WebCompiler](https://github.com/madskristensen/WebCompiler)), support for languages other than Scss is not yet available.
 Please get in touch if you want to [contribute](#Contributing) to any of the following languages, or if you want to add yet another language.
@@ -199,7 +197,7 @@ webcompiler -r wwwroot
 ```powershell
 dotnet run tool webcompiler -r wwwroot
 ```
-or can simply call:
+or you can simply call:
 ```powershell
 dotnet webcompiler -r wwwroot
 ```
@@ -284,6 +282,12 @@ For automatic compilation whenever the content of source files change, add the f
     <Watch Include="**\*.scss" />
 </ItemGroup>
 ```
+
+##### Using net8.0 or newer
+
+`dotnet watch` no longer supports running tools, see https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch#arguments. As a workaround (see https://github.com/excubo-ag/WebCompiler/issues/95), integrate the MSBuild target `CompileStaticAssets` above, then run `dotnet watch build -t:CompileStaticAssets --no-restore`.
+
+##### Using net7.0 or older
 
 Run `dotnet watch tool run webcompiler` with the appropriate options in a terminal, e.g.
 `dotnet watch tool run webcompiler -r wwwroot`.
