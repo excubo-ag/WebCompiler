@@ -23,6 +23,10 @@ As a benefit, this implementation is cross-platform (x64 linux/win are tested, p
 
 ### Changelog
 
+#### Changes in version 4.0.1
+
+Drop of support for net6.0. Add support for net9.0.
+
 #### Changes in version 4.X.Y
 
 The default value for zipping minified assets has changed from `true` to `false`. This has no effect to pre-existing configuration files.
