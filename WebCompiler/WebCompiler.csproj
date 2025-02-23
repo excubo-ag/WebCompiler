@@ -2,15 +2,15 @@
   <Import Project="package.csproj" Condition="Exists('package.csproj')" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net9.0</TargetFrameworks>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>webcompiler</ToolCommandName>
     <Nullable>enable</Nullable>
     <AssemblyName>Excubo.WebCompiler</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoprefixerHost" Version="3.0.36" />
-    <PackageReference Include="DartSassHost" Version="1.0.14" />
+    <PackageReference Include="AutoprefixerHost" Version="3.1.0" />
+    <PackageReference Include="DartSassHost" Version="1.1.0" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.24.2" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.4.5" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.4.5" />
@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm64" Version="7.4.5" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.4.5" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.4.5" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.1" />
-    <PackageReference Include="NUglify" Version="1.21.11" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.2" />
+    <PackageReference Include="NUglify" Version="1.21.12" />
   </ItemGroup>
 </Project>
