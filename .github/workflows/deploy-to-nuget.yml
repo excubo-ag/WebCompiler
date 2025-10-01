@@ -29,4 +29,4 @@ jobs:
     - name: Pack
       run: dotnet pack -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg -c Release -o app/packed --no-restore ${{ env.project_name }}
     - name: Deploy to nuget
-      run: dotnet nuget push -s https://api.nuget.org/v3/index.json app/packed/*.nupkg -k ${{ secrets.NUGETKEY }} > push_log || grep "409" push_log
+      run: dotnet nuget push -s https://api.nuget.org/v3/index.json app/packed/*.nupkg -k ${{ secrets.NUGETKEY }}
