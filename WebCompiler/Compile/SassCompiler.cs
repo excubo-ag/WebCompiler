@@ -61,6 +61,7 @@ namespace WebCompiler.Compile
                     OutputStyle = settings.OutputStyle,
                     SourceMap = settings.SourceMap,
                     InlineSourceMap = settings.SourceMap,
+                    OmitSourceMapUrl = settings.OmitSourceMapUrl,
                 };
                 if (settings.IncludePath != null)
                 {

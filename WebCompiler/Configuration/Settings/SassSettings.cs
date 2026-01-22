@@ -11,5 +11,6 @@ namespace WebCompiler.Configuration.Settings
         public bool RelativeUrls { get; set; } = true;
         public string? SourceMapRoot { get; set; }
         public LineFeedType LineFeed { get; set; } = LineFeedType.Lf;
+        public bool OmitSourceMapUrl { get; set; } = false;
     }
 }
