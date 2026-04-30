@@ -55,9 +55,6 @@ namespace WebCompiler.Compile
             {
                 var options = new CompilationOptions
                 {
-                    IndentType = settings.IndentType,
-                    IndentWidth = settings.IndentWidth,
-                    LineFeedType = settings.LineFeed,
                     OutputStyle = settings.OutputStyle,
                     SourceMap = settings.SourceMap,
                     InlineSourceMap = settings.SourceMap,

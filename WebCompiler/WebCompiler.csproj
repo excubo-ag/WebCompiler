@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoprefixerHost" Version="3.2.0" />
-    <PackageReference Include="DartSassHost" Version="1.1.1" />
-    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.29.1" />
+    <PackageReference Include="DartSassHost" Version="2.0.5" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.31.0" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.5.0" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.5.0" />
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" Version="7.5.0" />
