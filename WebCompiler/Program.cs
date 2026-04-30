@@ -126,13 +126,9 @@ File format to specify compiler configuration (-c|--config):
         ""compilers"": {
             ""sass"": {
                 ""includePath"": """",
-                ""indentType"": ""space"",
-                ""indentWidth"": 2,
                 ""outputStyle"": ""nested"",
-                ""Precision"": 5,
                 ""relativeUrls"": true,
                 ""sourceMapRoot"": """",
-                ""lineFeed"": """",
                 ""sourceMap"": false
             },
         },

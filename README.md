@@ -350,11 +350,8 @@ The default configuration is
   },
   "CompilerSettings": {
     "Sass": {
-      "IndentType": "Space",
-      "IndentWidth": 2,
       "OutputStyle": "Expanded",
       "RelativeUrls": true,
-      "LineFeed": "Lf",
       "SourceMap": false
     }
   },
